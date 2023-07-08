@@ -15,11 +15,8 @@ import {
 import React, { useState, useEffect } from "react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import SettingsIcon from "@mui/icons-material/Settings";
-import PolicyIcon from "@mui/icons-material/Policy";
-import FeedbackIcon from "@mui/icons-material/Feedback";
-import HelpCenterIcon from "@mui/icons-material/HelpCenter";
 import { useRouter } from "next/router";
+
 interface Items {
     id: number;
     status: boolean;
