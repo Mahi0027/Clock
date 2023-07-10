@@ -1,28 +1,19 @@
 import React, { useState, useRef, useEffect } from "react";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
-import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
-import RadioGroup from "@mui/material/RadioGroup";
-import Radio from "@mui/material/Radio";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import ListItemButton from "@mui/material/ListItemButton";
 import Typography from "@mui/material/Typography";
 import ResponsiveTimePickers from "./components/ResponsiveTimePickers";
 
 function SetTime() {
-    const [time, setTime] = useState(new Date());
+    const [time, setTime] = useState<Date>(new Date());
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState("");
 
-    const handleChangeTime = (value: string) => {
-        console.log("sdf", value);
-        // setTime(value);
+    const handleChangeTime = (value: Date) => {
+        setTime(new Date(value));
     };
     const handleClickListItem = () => {
         setOpen(true);
@@ -39,9 +30,7 @@ function SetTime() {
             <ListItemButton sx={{ pl: 9 }} onClick={handleClickListItem}>
                 <ListItemText
                     primary={
-                        <Typography variant="body1">
-                            Change date & time
-                        </Typography>
+                        <Typography variant="body1">Change time</Typography>
                     }
                 />
             </ListItemButton>
@@ -63,11 +52,17 @@ export interface ConfirmationDialogRawProps {
     value: string;
     open: boolean;
     onClose: (value?: string) => void;
-    handleChangeTime: (value: string) => void;
+    handleChangeTime: (value: Date) => void;
 }
 
 function ConfirmationDialogRaw(props: ConfirmationDialogRawProps) {
-    const { handleChangeTime, onClose, value: valueProp, open, ...other } = props;
+    const {
+        handleChangeTime,
+        onClose,
+        value: valueProp,
+        open,
+        ...other
+    } = props;
     const [value, setValue] = useState(valueProp);
     const radioGroupRef = useRef<HTMLElement>(null);
 
@@ -84,7 +79,6 @@ function ConfirmationDialogRaw(props: ConfirmationDialogRawProps) {
     };
 
     const handleCancel = () => {
-        alert("cloose");
         onClose();
     };
 
@@ -97,14 +91,8 @@ function ConfirmationDialogRaw(props: ConfirmationDialogRawProps) {
     }, [value]);
 
     return (
-        <Dialog
-            // sx={{ "& .MuiDialog-paper": { width: "80%", maxHeight: 435 } }}
-            // maxWidth="xs"
-            // TransitionProps={{ onEntering: handleEntering }}
-            open={open}
-            {...other}
-        >
-            <DialogTitle>Date & time</DialogTitle>
+        <Dialog open={open} {...other}>
+            <DialogTitle>Time</DialogTitle>
             <DialogContent dividers>
                 <ResponsiveTimePickers
                     action={handleCancel}
