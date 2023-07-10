@@ -12,10 +12,6 @@ function SetTime() {
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState("");
 
-    useEffect(() => {
-        console.log("set time is ", time);
-    }, [time]);
-
     const handleChangeTime = (value: Date) => {
         setTime(new Date(value));
     };
