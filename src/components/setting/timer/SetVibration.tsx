@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import Typography from "@mui/material/Typography";
@@ -9,7 +9,6 @@ function SetVibration() {
     const handleToggle = () => {
         setCheck(!check);
     };
-
     return (
         <ListItemButton sx={{ pl: 9 }} onChange={handleToggle} disableRipple>
             <ListItemText

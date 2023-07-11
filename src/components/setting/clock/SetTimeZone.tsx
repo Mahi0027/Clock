@@ -33,11 +33,6 @@ function SetTimeZone() {
             setValue(newValue);
         }
     };
-
-    useEffect(() => {
-        console.log(value);
-        
-    },[value])
     return (
         <>
             <ListItemButton sx={{ pl: 9 }} onClick={handleClickListItem}>
