@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import Typography from "@mui/material/Typography";
@@ -9,13 +9,12 @@ function SetVibration() {
     const handleToggle = () => {
         setCheck(!check);
     };
+
     return (
         <ListItemButton sx={{ pl: 9 }} onChange={handleToggle} disableRipple>
             <ListItemText
                 primary={
-                    <Typography variant="body1">
-                        Timer Vibration
-                    </Typography>
+                    <Typography variant="body1">Timer Vibration</Typography>
                 }
             />
             <Switch edge="end" checked={check} />
