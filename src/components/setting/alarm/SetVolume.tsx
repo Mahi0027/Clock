@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import ListItemText from "@mui/material/ListItemText";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
@@ -13,10 +13,7 @@ function SetVolume() {
     const handleChangeVolume = (event: Event, newValue: number | number[]) => {
         setVolume(newValue as number);
     };
-    useEffect(() => {
-        console.log("volumne: ",volume);
-        
-    }, [volume]);
+    
     return (
         <ListItem sx={{ pl: 9 }}>
             <Box sx={{ width: "100vw" }}>
