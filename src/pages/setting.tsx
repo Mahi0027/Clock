@@ -5,27 +5,37 @@ import Divider from "@mui/material/Divider";
 import ClockSetting from "@/components/setting/clock";
 import AlarmSetting from "@/components/setting/alarm";
 import TimerSetting from "@/components/setting/timer";
+import PersonalizeSetting from "@/components/setting/personalize";
+import { Paper } from "@mui/material";
+import Layout from "@/components/Layout";
 function setting() {
     return (
         <>
-            <TopNavbar
-                heading={"Setting"}
-                menuItemsProps={["Privacy policy", "Send feedback", "Help"]}
-                homepage={false}
-            />
-            <List
-                sx={{
-                    bgcolor: "background.paper",
-                }}
-                component="nav"
-                aria-labelledby="nested-list-subheader"
-            >
-                <ClockSetting />
-                <Divider />
-                <AlarmSetting />
-                <Divider />
-                <TimerSetting />
-            </List>
+            <Layout>
+                <Paper>
+                    <TopNavbar
+                        heading={"Setting"}
+                        menuItemsProps={[
+                            "Privacy policy",
+                            "Send feedback",
+                            "Help",
+                        ]}
+                        homepage={false}
+                    />
+                    <List
+                        component="nav"
+                        aria-labelledby="nested-list-subheader"
+                    >
+                        <PersonalizeSetting />
+                        <Divider />
+                        <ClockSetting />
+                        <Divider />
+                        <AlarmSetting />
+                        <Divider />
+                        <TimerSetting />
+                    </List>
+                </Paper>
+            </Layout>
         </>
     );
 }

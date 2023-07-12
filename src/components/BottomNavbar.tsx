@@ -5,11 +5,12 @@ import {
     Stack,
     Typography,
 } from "@mui/material";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import HourglassBottomIcon from "@mui/icons-material/HourglassBottom";
 import TimerOutlinedIcon from "@mui/icons-material/TimerOutlined";
+import { DataContext } from "@/contexts/DataComponent";
 interface Temp {
     id: number;
     value: string;
@@ -33,22 +34,30 @@ const temp: readonly Temp[] = [
     },
 ];
 function BottomNavbar() {
+    const { mode, updateMode } = useContext(DataContext);
     const [navValue, setNavValue] = useState<Number>(0);
     const [message, setMessage] = useState<null | string>(null);
     useEffect(() => {
         console.log(navValue);
         let text = temp.filter(({ id, value }, index) => navValue === id);
-        console.log(text)
+        console.log(text);
         setMessage(text[0].value);
-
     }, [navValue]);
+
+    useEffect(() => {
+        console.log("addddddddd",mode);
+        
+    }, [mode]);
+    
 
     return (
         <>
             <Stack sx={{ textAlign: "center" }}>
                 <Typography
                     variant="h3"
-                    sx={{ marginTop: "40vh" }}
+                    sx={{
+                        marginTop: "50%",
+                    }}
                 >
                     {message}
                 </Typography>
@@ -64,12 +73,12 @@ function BottomNavbar() {
                         }}
                     >
                         <BottomNavigationAction
-                            label="Alarm"
-                            icon={<AccessAlarmIcon />}
-                        />
-                        <BottomNavigationAction
                             label="Clock"
                             icon={<AccessTimeIcon />}
+                        />
+                        <BottomNavigationAction
+                            label="Alarm"
+                            icon={<AccessAlarmIcon />}
                         />
                         <BottomNavigationAction
                             label="Timer"
