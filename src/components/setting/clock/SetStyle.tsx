@@ -62,7 +62,6 @@ function SetStyle() {
     );
 }
 
-/* dialog box */
 interface SimpleDialogProps {
     openDialog: boolean;
     chosenClockStyle: number;
