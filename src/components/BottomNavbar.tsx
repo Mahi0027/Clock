@@ -1,6 +1,7 @@
 import {
     BottomNavigation,
     BottomNavigationAction,
+    Box,
     Paper,
     Stack,
     Typography,
@@ -52,6 +53,8 @@ function BottomNavbar() {
 
     return (
         <>
+        <Box>
+
             <Stack sx={{ textAlign: "center" }}>
                 <Typography
                     variant="h3"
@@ -91,6 +94,7 @@ function BottomNavbar() {
                     </BottomNavigation>
                 </Paper>
             </Stack>
+        </Box>
         </>
     );
 }

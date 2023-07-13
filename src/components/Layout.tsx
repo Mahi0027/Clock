@@ -1,11 +1,13 @@
 import { useContext, useEffect, useState } from "react";
-import { ThemeProvider, createTheme } from "@mui/material";
+import { Box, Paper, ThemeProvider, createTheme } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import { DataContext } from "@/contexts/DataComponent";
+import { amber, deepOrange, grey } from "@mui/material/colors";
 
+/* only theme change component */
 const Layout = ({ children }) => {
     // const [darkMode, setDarkMode] = useState(false);
-    const {mode} = useContext(DataContext);
+    const { mode } = useContext(DataContext);
 
     // useEffect(() => {
     //     // Check if dark mode preference is set
@@ -27,8 +29,10 @@ const Layout = ({ children }) => {
 
     return (
         <ThemeProvider theme={theme}>
-            <CssBaseline />
-            {children}
+            <Box sx={{ backgroundColor: "#212121" }}>
+                <CssBaseline />
+                {children}
+            </Box>
         </ThemeProvider>
     );
 };
