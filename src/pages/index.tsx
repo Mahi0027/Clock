@@ -20,17 +20,19 @@ export default function Home() {
     return (
         <>
             <Layout>
-                    <TopNavbar
-                        heading={"Clock"}
-                        menuItemsProps={[
-                            "Setting",
-                            "Privacy policy",
-                            "Send feedback",
-                            "Help",
-                        ]}
-                        homepage={true}
-                    />
-                    <BottomNavbar />
+                <TopNavbar
+                    heading={"Clock"}
+                    menuItemsProps={[
+                        "Setting",
+                        "Privacy policy",
+                        "Send feedback",
+                        "Help",
+                    ]}
+                    homepage={true}
+                />
+            </Layout>
+            <Layout>
+                <BottomNavbar />
             </Layout>
         </>
     );

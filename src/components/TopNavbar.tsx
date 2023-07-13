@@ -8,6 +8,7 @@ import {
     Typography,
     Divider,
     Box,
+    Paper,
 } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -66,14 +67,13 @@ const TopNavbar = ({ heading, menuItemsProps, homepage }) => {
         setMenuItems(items.filter(({ name }) => menuItemsProps.includes(name)));
     }, []);
     return (
-        <Box sx={{height: '47px'}}>
-            <AppBar position="fixed" elevation={0} color="inherit" enableColorOnDark>
+        <Paper sx={{height: '47px'}}>
+            <AppBar position="fixed" elevation={0}>
                 <Toolbar>
                     {!homepage && (
                         <IconButton
                             size="large"
                             edge="start"
-                            color="inherit"
                             aria-label="back button"
                             id="back-button"
                             onClick={() => {
@@ -89,7 +89,6 @@ const TopNavbar = ({ heading, menuItemsProps, homepage }) => {
                     <IconButton
                         size="large"
                         edge="end"
-                        color="inherit"
                         aria-label="more option"
                         id="resource-button"
                         onClick={handleClick}
@@ -132,7 +131,7 @@ const TopNavbar = ({ heading, menuItemsProps, homepage }) => {
                     </Menu>
                 </Toolbar>
             </AppBar>
-        </Box>
+        </Paper>
     );
 };
 

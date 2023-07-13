@@ -6,13 +6,12 @@ import ClockSetting from "@/components/setting/clock";
 import AlarmSetting from "@/components/setting/alarm";
 import TimerSetting from "@/components/setting/timer";
 import PersonalizeSetting from "@/components/setting/personalize";
-import { Paper } from "@mui/material";
+import { Box, Paper } from "@mui/material";
 import Layout from "@/components/Layout";
 function setting() {
     return (
         <>
             <Layout>
-                <Paper>
                     <TopNavbar
                         heading={"Setting"}
                         menuItemsProps={[
@@ -34,7 +33,6 @@ function setting() {
                         <Divider />
                         <TimerSetting />
                     </List>
-                </Paper>
             </Layout>
         </>
     );
