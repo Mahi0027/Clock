@@ -35,7 +35,6 @@ const temp: readonly Temp[] = [
     },
 ];
 function BottomNavbar() {
-    const { mode, updateMode } = useContext(DataContext);
     const [navValue, setNavValue] = useState<Number>(0);
     const [message, setMessage] = useState<null | string>(null);
     useEffect(() => {
@@ -45,10 +44,6 @@ function BottomNavbar() {
         setMessage(text[0].value);
     }, [navValue]);
 
-    useEffect(() => {
-        console.log("addddddddd",mode);
-        
-    }, [mode]);
     
 
     return (

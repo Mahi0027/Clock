@@ -11,7 +11,7 @@ import Layout from "@/components/Layout";
 function setting() {
     return (
         <>
-            <Layout>
+            {/* <Layout> */}
                     <TopNavbar
                         heading={"Setting"}
                         menuItemsProps={[
@@ -33,7 +33,7 @@ function setting() {
                         <Divider />
                         <TimerSetting />
                     </List>
-            </Layout>
+            {/* </Layout> */}
         </>
     );
 }
