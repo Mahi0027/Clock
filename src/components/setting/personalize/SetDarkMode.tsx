@@ -18,6 +18,7 @@ type initialStateTypes = {
     currentTheme: string;
     allThemes: string[];
 };
+/* set dark mode. */
 function SetDarkMode() {
     const stateData = useSelector(state => state.theme);
     const dispatch = useDispatch();
