@@ -7,9 +7,6 @@ const DataComponent = ({ children }) => {
     const updateMode = (newData) => {
         setMode(newData);
     };
-    useEffect(() => {
-        console.log("mode change: ",mode);        
-    }, [mode]);
     
     return (
         <DataContext.Provider value={{ mode, updateMode }}>

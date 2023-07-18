@@ -1,0 +1,2 @@
+export const GET_SECOND_FLAG = "GET_SECOND_FLAG";
+export const SET_SECOND_FLAG = "SET_SECOND_FLAG";

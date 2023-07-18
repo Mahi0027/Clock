@@ -1,42 +1,45 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemButton from "@mui/material/ListItemButton";
 import Typography from "@mui/material/Typography";
 import CustomDialog from "@/components/miscellaneous/CustomDialog";
+import { useDispatch, useSelector } from "react-redux";
+import { initialStatesTypes } from "@/redux/features/setting/alarm/snooze/snoozeReducer";
+import { getAllSnoozeIntervals, setSnoozeInterval } from "@/redux";
 
-const options = ["Never"];
-for (let i = 1; i <= 30; i++) {
-    options.push(i + (i == 1 ? " minute" : " minutes"));
-}
 function SetSnooze() {
     const [open, setOpen] = useState(false);
-    const [value, setValue] = useState(options[2]);
-    const handleClickListItem = () => {
-        setOpen(true);
-    };
+    const stateData: initialStatesTypes = useSelector(
+        (state: any) => state.snooze
+    );
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(getAllSnoozeIntervals());
+    }, [dispatch]);
+
     const handleClose = (newValue?: string) => {
         setOpen(false);
-
         if (newValue) {
-            setValue(newValue);
+            dispatch(setSnoozeInterval(newValue));
         }
     };
     return (
         <>
-            <ListItemButton sx={{ pl: 9 }} onClick={handleClickListItem}>
+            <ListItemButton sx={{ pl: 9 }} onClick={() => setOpen(true)}>
                 <ListItemText
                     primary={
                         <Typography variant="body1">Snooze length</Typography>
                     }
-                    secondary={value}
+                    secondary={stateData.currentSnoozeInterval}
                 />
             </ListItemButton>
             <CustomDialog
                 id="time-zone-menu"
                 title="Snooze length"
-                data={options}
+                data={stateData.allSnoozeIntervals}
                 keepMounted
-                value={value}
+                value={stateData.currentSnoozeInterval}
                 open={open}
                 onClose={handleClose}
             />
