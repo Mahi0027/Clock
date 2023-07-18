@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
@@ -11,52 +11,41 @@ import Dialog from "@mui/material/Dialog";
 import { blue } from "@mui/material/colors";
 import MemoryIcon from "@mui/icons-material/Memory";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-
-interface ClockStyleTemplate {
-    id: number;
-    name: string;
-}
-const clockStyles: ClockStyleTemplate[] = [
-    {
-        id: 0,
-        name: "Analog",
-    },
-    {
-        id: 1,
-        name: "Digital",
-    },
-];
+import { useDispatch, useSelector } from "react-redux";
+import { initialStatesTypes } from "@/redux/features/setting/clock/style/styleReducer";
+import { fetchAllStyles, setStyle } from "@/redux";
 
 function SetStyle() {
+    const stateData: initialStatesTypes = useSelector(
+        (state: any) => state.clockStyle
+    );
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(fetchAllStyles());
+    }, [dispatch]);
+
     const [openDialog, setOpenDialog] = useState<boolean>(false);
     const [chosenClockStyle, setChosenClockStyle] = useState<number>(0);
-    const handleClickOpen = () => {
-        setOpenDialog(true);
-    };
-    const onClose = () => {
+
+    const onSetClockStyle = (value: string) => {
         setOpenDialog(false);
-    };
-    const onSetClockStyle = (value: number) => {
-        setOpenDialog(false);
-        setChosenClockStyle(value);
+        dispatch(setStyle(value));
     };
     return (
         <>
-            <ListItemButton sx={{ pl: 9 }} onClick={handleClickOpen}>
+            <ListItemButton sx={{ pl: 9 }} onClick={() => setOpenDialog(true)}>
                 <ListItemText
                     primary={<Typography variant="body1">Style</Typography>}
-                    secondary={
-                        clockStyles.find(({ id }) => id == chosenClockStyle)
-                            ?.name
-                    }
+                    secondary={stateData.currentStyle}
                 />
             </ListItemButton>
             {/* set clock style dialog box */}
             <SetClockStyle
                 openDialog={openDialog}
-                chosenClockStyle={chosenClockStyle}
+                stateData={stateData}
                 onSetClockStyle={onSetClockStyle}
-                onClose={onClose}
+                setOpenDialog={setOpenDialog}
             />
         </>
     );
@@ -64,34 +53,32 @@ function SetStyle() {
 
 interface SimpleDialogProps {
     openDialog: boolean;
-    chosenClockStyle: number;
-    onSetClockStyle: (value: number) => void;
-    onClose: () => void;
+    stateData: initialStatesTypes;
+    onSetClockStyle: (value: string) => void;
+    setOpenDialog: (value: boolean) => void;
 }
 
 function SetClockStyle({
     openDialog,
-    chosenClockStyle,
+    stateData,
     onSetClockStyle,
-    onClose,
+    setOpenDialog,
 }: SimpleDialogProps) {
-    const handleClose = () => {
-        onClose();
-    };
-
-    const handleChangeClockStyle = (value: number) => {
+    const handleChangeClockStyle = (value: string) => {
         onSetClockStyle(value);
     };
     return (
-        <Dialog onClose={handleClose} open={openDialog}>
+        <Dialog onClose={() => setOpenDialog(false)} open={openDialog}>
             <DialogTitle>Set clock style</DialogTitle>
             <List sx={{ pt: 0 }}>
-                {clockStyles.map(({ id, name }, index) => (
-                    <ListItem key={id} disableGutters>
+                {stateData.allStyles.map((value, index) => (
+                    <ListItem key={index} disableGutters>
                         <ListItemButton
-                            key={id}
-                            onClick={() => handleChangeClockStyle(id)}
-                            selected={id === chosenClockStyle ? true : false}
+                            key={index}
+                            onClick={() => handleChangeClockStyle(value)}
+                            selected={
+                                value === stateData.currentStyle ? true : false
+                            }
                         >
                             <ListItemAvatar>
                                 <Avatar
@@ -100,12 +87,17 @@ function SetClockStyle({
                                         color: blue[600],
                                     }}
                                 >
-                                    {id ? <AccessTimeIcon /> : <MemoryIcon />}
+                                    {index ? (
+                                        <AccessTimeIcon />
+                                    ) : (
+                                        <MemoryIcon />
+                                    )}
                                 </Avatar>
                             </ListItemAvatar>
                             <ListItemText
                                 primary={
-                                    name.charAt(0).toUpperCase() + name.slice(1)
+                                    value.charAt(0).toUpperCase() +
+                                    value.slice(1)
                                 }
                             />
                         </ListItemButton>
@@ -115,6 +107,5 @@ function SetClockStyle({
         </Dialog>
     );
 }
-
 
 export default SetStyle;

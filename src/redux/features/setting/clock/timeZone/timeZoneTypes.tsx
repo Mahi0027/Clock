@@ -1,0 +1,2 @@
+export const GET_ALL_TIME_ZONES = "GET_ALL_TIME_ZONES";
+export const SET_TIME_ZONE = "SET_TIME_ZONE";

@@ -38,9 +38,7 @@ function BottomNavbar() {
     const [navValue, setNavValue] = useState<Number>(0);
     const [message, setMessage] = useState<null | string>(null);
     useEffect(() => {
-        console.log(navValue);
         let text = temp.filter(({ id, value }, index) => navValue === id);
-        console.log(text);
         setMessage(text[0].value);
     }, [navValue]);
 

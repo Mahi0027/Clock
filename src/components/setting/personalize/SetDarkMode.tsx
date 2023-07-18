@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
@@ -13,38 +13,33 @@ import LightModeIcon from "@mui/icons-material/LightMode";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllThemes, setTheme } from "@/redux";
+import { initialStatesTypes } from "@/redux/features/setting/personalize/theme/themeReducer";
 
-type initialStateTypes = {
-    currentTheme: string;
-    allThemes: string[];
-};
 /* set dark mode. */
 function SetDarkMode() {
-    const stateData = useSelector(state => state.theme);
+    /* get state and dispatch */
+    const [openDialog, setOpenDialog] = useState<boolean>(false);
+    const stateData: initialStatesTypes = useSelector(
+        (state: any) => state.theme
+    );
     const dispatch = useDispatch();
-    console.log(stateData, dispatch);
 
     useEffect(() => {
+        /* get all themes */
         dispatch(fetchAllThemes());
-    }, []);
+    }, [dispatch]);
 
-    const [openDialog, setOpenDialog] = useState<boolean>(false);
-    const handleClickOpen = () => {
-        setOpenDialog(true);
-    };
-    const onClose = () => {
-        setOpenDialog(false);
-    };
     const onSetMode = (value: string) => {
         setOpenDialog(false);
         dispatch(setTheme(value));
     };
+
     return (
         <>
-            <ListItemButton sx={{ pl: 9 }} onClick={handleClickOpen}>
+            <ListItemButton sx={{ pl: 9 }} onClick={() => setOpenDialog(true)}>
                 <ListItemText
                     primary={<Typography variant="body1">Modes</Typography>}
-                    secondary={stateData["currentTheme"]}
+                    secondary={stateData.currentTheme}
                 />
             </ListItemButton>
             {/* set modes dialog box */}
@@ -52,7 +47,7 @@ function SetDarkMode() {
                 openDialog={openDialog}
                 stateData={stateData}
                 onSetMode={onSetMode}
-                onClose={onClose}
+                setOpenDialog={setOpenDialog}
             />
         </>
     );
@@ -60,37 +55,32 @@ function SetDarkMode() {
 
 interface SimpleDialogProps {
     openDialog: boolean;
-    stateData: initialStateTypes;
+    stateData: initialStatesTypes;
     onSetMode: (value: string) => void;
-    onClose: () => void;
+    setOpenDialog: (value: boolean) => void;
 }
 
 function SetMode({
     openDialog,
     stateData,
     onSetMode,
-    onClose,
+    setOpenDialog,
 }: SimpleDialogProps) {
-    const handleClose = () => {
-        onClose();
-    };
-
     const handleChangeMode = (value: string) => {
         onSetMode(value);
     };
+
     return (
-        <Dialog onClose={handleClose} open={openDialog}>
+        <Dialog onClose={() => setOpenDialog(false)} open={openDialog}>
             <DialogTitle>Set mode</DialogTitle>
             <List sx={{ pt: 0 }}>
-                {stateData["allThemes"].map((value, index) => (
+                {stateData.allThemes.map((value, index) => (
                     <ListItem key={index} disableGutters>
                         <ListItemButton
                             key={index}
                             onClick={() => handleChangeMode(value)}
                             selected={
-                                value === stateData["currentTheme"]
-                                    ? true
-                                    : false
+                                value === stateData.currentTheme ? true : false
                             }
                         >
                             <ListItemAvatar>

@@ -4,9 +4,9 @@ import {
 } from "./themeTypes";
 
 /* type defined start */
-type initialStateTypes = {
-    currentTheme: string;
+export type initialStatesTypes = {
     allThemes: string[];
+    currentTheme: string;
 };
 type actionType = {
     type: string;
@@ -16,14 +16,14 @@ type actionType = {
 
 /* theme array and state initialization start */
 const allThemes = ["light", "dark"];
-const initialState: initialStateTypes = {
-    currentTheme: allThemes[0],
+const initialStates: initialStatesTypes = {
     allThemes: [],
+    currentTheme: allThemes[0],
 };
 /* theme array and state initialization end */
 
 /* theme reducer function start */
-const themeReducer = (state = initialState, action: actionType) => {
+const themeReducer = (state = initialStates, action: actionType) => {
     switch (action.type) {
         case FETCH_ALL_THEMES:
             return {
