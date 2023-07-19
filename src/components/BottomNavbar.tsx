@@ -49,14 +49,14 @@ function BottomNavbar() {
         <Box>
 
             <Stack sx={{ textAlign: "center" }}>
-                <Typography
+                {/* <Typography
                     variant="h3"
                     sx={{
                         marginTop: "50%",
                     }}
                 >
                     {message}
-                </Typography>
+                </Typography> */}
                 <Paper
                     sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}
                     elevation={5}

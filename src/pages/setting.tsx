@@ -12,6 +12,7 @@ function setting() {
     return (
         <>
             {/* <Layout> */}
+
                     <TopNavbar
                         heading={"Setting"}
                         menuItemsProps={[

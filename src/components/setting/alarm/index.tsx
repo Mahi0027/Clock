@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -18,30 +18,39 @@ import SetSilent from "./SetSilent";
 import SetSnooze from "./SetSnooze";
 import SetVolume from "./SetVolume";
 import SetWeekOn from "./SetWeekOn";
+import { useTheme } from "@mui/material";
+import { useSelector } from "react-redux";
+import { initialStatesTypes } from "@/redux/features/setting/personalize/theme/themeReducer";
 
 function AlarmSetting() {
     const [open, setOpen] = useState<boolean>(true);
     const [showSeconds, setShowSeconds] = useState<boolean>(true);
+    const stateData:initialStatesTypes = useSelector((state: any) => state.theme);
+    useEffect(() => {
+        console.log(stateData);
+        
+    }, [stateData.currentTheme]);
+    
     
     const handleClick = () => {
         setOpen(!open);
     };
-    const handleToggleShowSecond = () => {
-        setShowSeconds(!showSeconds);
-    };
+    // const handleToggleShowSecond = () => {
+    //     setShowSeconds(!showSeconds);
+    // };
 
     return (
         <>
             <ListItemButton onClick={handleClick}>
                 <ListItemIcon>
-                    <AccessAlarmIcon color="info" />
+                    <AccessAlarmIcon />
                 </ListItemIcon>
                 <ListItemText
                     primary={<Typography variant="h6">Alarm</Typography>}
                 />
                 {open ? <ExpandLess /> : <ExpandMore />}
             </ListItemButton>
-            <Collapse in={open} timeout="auto" unmountOnExit>
+            <Collapse in={open} timeout="auto">
                 <List component="div" disablePadding>
                     <SetSilent />
                     <SetSnooze />
