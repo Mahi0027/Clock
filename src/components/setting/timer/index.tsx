@@ -22,7 +22,7 @@ function TimerSetting() {
         <>
             <ListItemButton onClick={handleClick}>
                 <ListItemIcon>
-                    <TimerOutlinedIcon color="info" />
+                    <TimerOutlinedIcon />
                 </ListItemIcon>
                 <ListItemText
                     primary={<Typography variant="h6">Timer</Typography>}

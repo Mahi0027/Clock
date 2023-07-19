@@ -7,6 +7,10 @@ import {
 export type initialStatesTypes = {
     allThemes: string[];
     currentTheme: string;
+    style: {
+        backgroundColor: string,
+        color: string
+    };
 };
 type actionType = {
     type: string;
@@ -19,6 +23,10 @@ const allThemes = ["light", "dark"];
 const initialStates: initialStatesTypes = {
     allThemes: [],
     currentTheme: allThemes[0],
+    style: {
+        backgroundColor: "#ffffff",
+        color: "#000000",
+    },
 };
 /* theme array and state initialization end */
 
@@ -34,6 +42,11 @@ const themeReducer = (state = initialStates, action: actionType) => {
             return {
                 ...state,
                 currentTheme: action.payload,
+                style: {
+                    backgroundColor:
+                        action.payload === "light" ? "#ffffff" : "#000000",
+                    color: action.payload === "light" ? "#000000" : "#ffffff",
+                },
             };
         default:
             return state;

@@ -24,7 +24,7 @@ function ClockSetting() {
         <>
             <ListItemButton onClick={handleClick}>
                 <ListItemIcon>
-                    <AccessTimeIcon color="info" />
+                    <AccessTimeIcon />
                 </ListItemIcon>
                 <ListItemText
                     primary={<Typography variant="h6">Clock</Typography>}

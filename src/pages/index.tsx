@@ -19,7 +19,7 @@ export default function Home() {
     const [mode, setMode] = useState(0);
     return (
         <>
-            {/* <Layout> */}
+
                 <TopNavbar
                     heading={"Clock"}
                     menuItemsProps={[
@@ -33,7 +33,6 @@ export default function Home() {
             {/* </Layout> */}
             {/* <Layout> */}
                 <BottomNavbar />
-            {/* </Layout> */}
         </>
     );
 }
