@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import ListItemText from "@mui/material/ListItemText";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
@@ -7,13 +7,16 @@ import VolumeUp from "@mui/icons-material/VolumeUp";
 import Slider from "@mui/material/Slider";
 import Box from "@mui/material/Box";
 import ListItem from "@mui/material/ListItem";
+import { useDispatch, useSelector } from "react-redux";
+import { initialStatesTypes } from "@/redux/features/setting/alarm/volume/volumeReducer";
+import { setVolume } from "@/redux";
 
 function SetVolume() {
-    const [volume, setVolume] = useState<number>(30);
-    const handleChangeVolume = (event: Event, newValue: number | number[]) => {
-        setVolume(newValue as number);
-    };
-    
+    const stateData: initialStatesTypes = useSelector(
+        (state: any) => state.volume
+    );
+    const dispatch = useDispatch();
+
     return (
         <ListItem sx={{ pl: 9 }}>
             <Box sx={{ width: "100vw" }}>
@@ -31,8 +34,12 @@ function SetVolume() {
                     <VolumeDown />
                     <Slider
                         aria-label="Volume"
-                        value={volume}
-                        onChange={handleChangeVolume}
+                        value={stateData.currentValue}
+                        min={stateData.minValue}
+                        max={stateData.maxValue}
+                        onChange={(event: Event, newValue: number | number[]) =>
+                            dispatch(setVolume(newValue as number))
+                        }
                         valueLabelDisplay="auto"
                     />
                     <VolumeUp />

@@ -27,3 +27,10 @@ export {
     getAllSnoozeIntervals,
     setSnoozeInterval,
 } from "./features/setting/alarm/snooze/snoozeActions";
+
+export { setVolume } from "./features/setting/alarm/volume/volumeActions";
+
+export {
+    getAllWeekOnValues,
+    setWeekOnValue,
+} from "./features/setting/alarm/weekOn/weekOnActions";

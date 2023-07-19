@@ -5,6 +5,8 @@ import secondReducer from "./features/setting/clock/second/secondReducer";
 import timeZoneReducer from "./features/setting/clock/timeZone/timeZoneReducer";
 import silentReducer from "./features/setting/alarm/silent/silentReducer";
 import snoozeReducer from "./features/setting/alarm/snooze/snoozeReducer";
+import volumeReducer from "./features/setting/alarm/volume/volumeReducer";
+import weekOnReducer from "./features/setting/alarm/weekOn/weekOnReducer";
 
 const rootReducer = combineReducers({
     theme: themeReducer,
@@ -13,6 +15,8 @@ const rootReducer = combineReducers({
     timeZone: timeZoneReducer,
     silent: silentReducer,
     snooze: snoozeReducer,
+    volume: volumeReducer,
+    weekOn: weekOnReducer,
 });
 
 export default rootReducer;
