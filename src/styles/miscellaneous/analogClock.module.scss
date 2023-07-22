@@ -1,0 +1,78 @@
+#clockContainer {
+    position: relative;
+    display: flex;
+    min-height: 50vh;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+}
+
+#drop {
+    position: relative;
+    width: 50vh;
+    height: 50vh;
+    box-shadow: inset 20px 20px 20px rgba(0, 0, 0, 0.05),
+        25px 35px 20px rgba(0, 0, 0, 0.05),
+        25px 30px 30px rgba(0, 0, 0, 0.05),
+        inset -20px -20px 25px rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+}
+
+#clock {
+    width: 50vh;
+    height: 50vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: url('../../../public/images/clock/clock9.png') no-repeat;
+    background-size: cover;
+}
+
+#clock::before {
+    content: '';
+    position: absolute;
+    width: 1vh;
+    height: 1vh;
+    background: #4d4b4b;
+    border-radius: 50%;
+    z-index: 1000;
+}
+
+#hour,
+#minute,
+#second {
+    position: absolute;
+    background: black;
+    border-radius: 10px;
+}
+
+#hour {
+    width: 1%;
+    height: 25%;
+    top: 25.1%;
+    left: 49.3%;
+    opacity: 0.8;
+    transform-origin: bottom;
+    z-index: 1;
+}
+
+#minute {
+    width: 1%;
+    height: 36%;
+    top: 13.9%;
+    left: 49.9%;
+    opacity: 0.75;
+    transform-origin: bottom;
+    z-index: 2;
+}
+
+#second {
+    background-color: rgba($color: #bb0000, $alpha: 1.0);
+    width: 0.5%;
+    height: 36%;
+    top: 13.9%;
+    left: 49.7%;
+    opacity: 0.75;
+    transform-origin: bottom;
+    z-index: 3;
+}

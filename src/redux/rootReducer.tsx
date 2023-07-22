@@ -7,6 +7,7 @@ import silentReducer from "./features/setting/alarm/silent/silentReducer";
 import snoozeReducer from "./features/setting/alarm/snooze/snoozeReducer";
 import volumeReducer from "./features/setting/alarm/volume/volumeReducer";
 import weekOnReducer from "./features/setting/alarm/weekOn/weekOnReducer";
+import BottomNavbar from "./features/bottomNavbar/reducer";
 
 const rootReducer = combineReducers({
     theme: themeReducer,
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
     snooze: snoozeReducer,
     volume: volumeReducer,
     weekOn: weekOnReducer,
+    homePage: BottomNavbar,
 });
 
 export default rootReducer;
