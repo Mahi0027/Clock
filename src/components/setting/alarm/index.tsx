@@ -26,11 +26,6 @@ function AlarmSetting() {
     const [open, setOpen] = useState<boolean>(true);
     const [showSeconds, setShowSeconds] = useState<boolean>(true);
     const stateData:initialStatesTypes = useSelector((state: any) => state.theme);
-    useEffect(() => {
-        console.log(stateData);
-        
-    }, [stateData.currentTheme]);
-    
     
     const handleClick = () => {
         setOpen(!open);

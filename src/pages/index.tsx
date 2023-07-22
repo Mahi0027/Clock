@@ -1,38 +1,52 @@
-import { createContext, useState } from "react";
-import Head from "next/head";
-import Image from "next/image";
+import { useEffect, useState } from "react";
 import { Inter } from "next/font/google";
-import styles from "@/styles/Home.module.scss";
-import Box from "@mui/material/Box";
-import { BottomNavigation, BottomNavigationAction, Paper } from "@mui/material";
-import RestoreIcon from "@mui/icons-material/Restore";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
+import { Stack } from "@mui/material";
 import BottomNavbar from "@/components/BottomNavbar";
 import TopNavbar from "@/components/TopNavbar";
-import Layout from "@/components/Layout";
+import AnalogClock from "@/components/miscellaneous/AnalogClock";
+import styles from "@/styles/Home.module.scss";
+import DigitalClock from "@/components/miscellaneous/DigitalClock";
+import { initialStatesTypes } from "@/redux/features/bottomNavbar/reducer";
+import { useSelector } from "react-redux";
+import ClockHome from "@/components/home/clock";
+import AlarmHome from "@/components/home/alarm";
+import TimerHome from "@/components/home/timer";
+import StopwatchHome from "@/components/home/stopwatch";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
-    const [value, setValue] = useState(0);
-    const [mode, setMode] = useState(0);
+    const stateData: initialStatesTypes = useSelector(
+        (state: any) => state.homePage
+    );
+
+    useEffect(() => {
+        console.log("start: ", stateData);
+    }, []);
+
+    useEffect(() => {
+        console.log("updated: ", stateData);
+    }, [stateData.currentHomePage]);
+
     return (
         <>
-
-                <TopNavbar
-                    heading={"Clock"}
-                    menuItemsProps={[
-                        "Setting",
-                        "Privacy policy",
-                        "Send feedback",
-                        "Help",
-                    ]}
-                    homepage={true}
-                />
-            {/* </Layout> */}
-            {/* <Layout> */}
-                <BottomNavbar />
+            <TopNavbar
+                heading={"Clock"}
+                menuItemsProps={[
+                    "Setting",
+                    "Privacy policy",
+                    "Send feedback",
+                    "Help",
+                ]}
+                homepage={true}
+            />
+            <Stack className={styles.container}>
+                {stateData.currentHomePage === 0 && <ClockHome />}
+                {stateData.currentHomePage === 1 && <AlarmHome />}
+                {stateData.currentHomePage === 2 && <TimerHome />}
+                {stateData.currentHomePage === 3 && <StopwatchHome />}
+            </Stack>
+            <BottomNavbar />
         </>
     );
 }

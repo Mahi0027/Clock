@@ -16,7 +16,6 @@ const Layout = ({ children }: any) => {
         backgroundColor: "#f8f9fa",
     });
     useEffect(() => {
-        console.log("CurrentTheme:", stateData.currentTheme);
         if (stateData.currentTheme === "light") {
             setMyTheme({
                 // color: "black",

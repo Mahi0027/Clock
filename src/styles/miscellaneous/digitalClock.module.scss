@@ -1,0 +1,28 @@
+.container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+}
+
+.clock {
+    font-family: 'Tektur', Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    color: #000000;
+    font-size: 70px;
+}
+
+.session {
+    font-size: 0.3em;
+    margin-left: 2%;
+    vertical-align: text-top;
+}
+
+.date {
+    font-family: 'Tektur', Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    color: #000000;
+    font-size: 30px;
+}

@@ -34,3 +34,5 @@ export {
     getAllWeekOnValues,
     setWeekOnValue,
 } from "./features/setting/alarm/weekOn/weekOnActions";
+
+export { setCurrentHomePage } from "./features/bottomNavbar/actions";
