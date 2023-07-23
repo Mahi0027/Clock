@@ -3,10 +3,7 @@ import { Inter } from "next/font/google";
 import { Stack } from "@mui/material";
 import BottomNavbar from "@/components/BottomNavbar";
 import TopNavbar from "@/components/TopNavbar";
-import AnalogClock from "@/components/miscellaneous/AnalogClock";
 import styles from "@/styles/Home.module.scss";
-import DigitalClock from "@/components/miscellaneous/DigitalClock";
-import { initialStatesTypes } from "@/redux/features/bottomNavbar/reducer";
 import { useSelector } from "react-redux";
 import ClockHome from "@/components/home/clock";
 import AlarmHome from "@/components/home/alarm";
@@ -16,17 +13,29 @@ import StopwatchHome from "@/components/home/stopwatch";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
-    const stateData: initialStatesTypes = useSelector(
-        (state: any) => state.homePage
-    );
+    const stateData = useSelector((state: any) => state);
+    const [myTheme, setMyTheme] = useState({});
 
     useEffect(() => {
-        console.log("start: ", stateData);
+        console.log("start: ", stateData.homePage);
     }, []);
+
+
+    useEffect(() => {
+        if (stateData.theme.currentTheme === "light") {
+            setMyTheme({
+                backgroundColor: "#fff",
+            });
+        } else {
+            setMyTheme({
+                backgroundColor: "#000000",
+            });
+        }
+    }, [stateData.theme.currentTheme]);
 
     useEffect(() => {
         console.log("updated: ", stateData);
-    }, [stateData.currentHomePage]);
+    }, [stateData.homePage.currentHomePage]);
 
     return (
         <>
@@ -40,11 +49,11 @@ export default function Home() {
                 ]}
                 homepage={true}
             />
-            <Stack className={styles.container}>
-                {stateData.currentHomePage === 0 && <ClockHome />}
-                {stateData.currentHomePage === 1 && <AlarmHome />}
-                {stateData.currentHomePage === 2 && <TimerHome />}
-                {stateData.currentHomePage === 3 && <StopwatchHome />}
+            <Stack className={styles.container} sx={myTheme}>
+                {stateData.homePage.currentHomePage === 0 && <ClockHome />}
+                {stateData.homePage.currentHomePage === 1 && <AlarmHome />}
+                {stateData.homePage.currentHomePage === 2 && <TimerHome />}
+                {stateData.homePage.currentHomePage === 3 && <StopwatchHome />}
             </Stack>
             <BottomNavbar />
         </>
