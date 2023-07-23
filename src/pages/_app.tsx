@@ -10,7 +10,7 @@ export default function App({ Component, pageProps }: AppProps) {
     return (
         <Provider store={store}>
             <Layout>
-                <Paper>
+                <Paper sx={{boxShadow:0}}>
                     <Component {...pageProps} />
                 </Paper>
             </Layout>

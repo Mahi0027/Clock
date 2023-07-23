@@ -16,9 +16,20 @@ const months = [
     "November",
     "December",
 ];
-
 function DigitalClock() {
-    const [dateObj, setDateObj] = useState(new Date());
+    const stateData = useSelector((state: any) => state);
+    const dispatch = useDispatch();
+    const time = calcTime();
+    const [dateObj, setDateObj] = useState(
+        new Date(
+            time.year,
+            time.month,
+            time.day,
+            time.hour,
+            time.minute,
+            time.second
+        )
+    );
     const [htime, setHtime] = useState(dateObj.getHours().toString());
     const [mtime, setMtime] = useState(dateObj.getMinutes().toString());
     const [stime, setStime] = useState(dateObj.getSeconds().toString());
@@ -28,14 +39,8 @@ function DigitalClock() {
     const [session, setSession] = useState("");
     const [clockStyle, setClockStyle] = useState({});
     const [hydrated, setHydrated] = useState(false);
-    const stateData = useSelector((state: any) => state);
-    const dispatch = useDispatch();
 
     useEffect(() => {
-        console.log("sdfsfsdafsdfsdfsfsdfsaf:", new Date(calcTime()));
-        
-        console.log(dateObj, stateData);
-        console.log("timee1: ", dateObj, htime, mtime, stime);
         setHydrated(true);
         if (stateData.theme.currentTheme === "dark") {
             setClockStyle({
@@ -47,7 +52,17 @@ function DigitalClock() {
             });
         }
         let interval = setInterval(() => {
-            setDateObj(new Date());
+            const time = calcTime();
+            setDateObj(
+                new Date(
+                    time.year,
+                    time.month,
+                    time.day,
+                    time.hour,
+                    time.minute,
+                    time.second
+                )
+            );
         }, 1000);
         return () => {
             clearInterval(interval);
@@ -56,8 +71,6 @@ function DigitalClock() {
 
     /* when time change(every second) */
     useEffect(() => {
-        console.log("timee2: ", dateObj, htime, mtime, stime);
-
         setMtime(() => {
             let currentMinute = dateObj.getMinutes().toString();
             if (Number(currentMinute) < 10) {
@@ -92,15 +105,25 @@ function DigitalClock() {
     }, [mtime]);
 
     function calcTime() {
-        return new Intl.DateTimeFormat([], {
-            timeZone: "America/Bahia",
-            year: "numeric",
-            month: "numeric",
-            day: "numeric",
-            hour: "numeric",
-            minute: "numeric",
-            second: "numeric",
-        }).format();
+        const currentDate = new Date();
+        const time = currentDate.toLocaleString("en-US", {
+            timeZone: stateData.timeZone.currentTimeZone,
+        });
+        const splitTime = time.split(" ");
+        const dateSplit = splitTime[0].replace(",", "").split("/");
+        const timeSplit = splitTime[1].split(":");
+        if (splitTime[2] === "PM") {
+            timeSplit[0] = (12 + Number(timeSplit[0])).toString();
+        }
+        const data = {
+            day: Number(dateSplit[1]),
+            month: Number(dateSplit[0]) - 1,
+            year: Number(dateSplit[2]),
+            hour: Number(timeSplit[0]),
+            minute: Number(timeSplit[1]),
+            second: Number(timeSplit[2]),
+        };
+        return data;
     }
 
     if (!hydrated) {
@@ -127,6 +150,11 @@ function DigitalClock() {
                 <span className="minutes">{month}</span>
                 <span>/</span>
                 <span className="seconds">{year}</span>
+            </div>
+            <div className={styles.date} style={clockStyle}>
+                <span className={styles.timezone}>
+                    {stateData.timeZone.currentTimeZone}
+                </span>
             </div>
         </div>
     );

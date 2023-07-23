@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography";
 import CustomDialog from "@/components/miscellaneous/CustomDialog";
 import { useDispatch, useSelector } from "react-redux";
 import { initialStatesTypes } from "@/redux/features/setting/clock/timeZone/timeZoneReducer";
-import { getAllTimeZones, setTimeZone } from "@/redux";
+import { fetchTimeZone, getAllTimeZones, setTimeZone } from "@/redux";
 
 function SetTimeZone() {
     const [open, setOpen] = useState(false);
@@ -15,7 +15,7 @@ function SetTimeZone() {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(getAllTimeZones());
+        dispatch(fetchTimeZone());
     }, [dispatch]);
 
     const handleClose = (newValue?: string) => {
