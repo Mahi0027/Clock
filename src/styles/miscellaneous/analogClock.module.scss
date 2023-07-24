@@ -1,14 +1,14 @@
 #clockContainer {
     position: relative;
     display: flex;
-    min-height: 50vh;
     justify-content: center;
     align-items: center;
-    height: 90vh;
+    height: auto;
 }
 
 #drop {
     position: relative;
+    margin-top: 15vh;
     width: 50vh;
     height: 50vh;
     box-shadow: inset 20px 20px 20px rgba(0, 0, 0, 0.05),
@@ -49,8 +49,8 @@
 #hour {
     width: 1%;
     height: 25%;
-    top: 25.1%;
-    left: 49.3%;
+    top: 25%;
+    left: 49.5%;
     opacity: 0.8;
     transform-origin: bottom;
     z-index: 1;
@@ -59,8 +59,8 @@
 #minute {
     width: 1%;
     height: 36%;
-    top: 13.9%;
-    left: 49.9%;
+    top: 14.2%;
+    left: 49.5%;
     opacity: 0.75;
     transform-origin: bottom;
     z-index: 2;
@@ -75,4 +75,12 @@
     opacity: 0.75;
     transform-origin: bottom;
     z-index: 3;
+}
+
+.timezone {
+    font-family: 'Tektur', Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    margin-top: 5vh;
+    font-size: 0.9em !important;
+    opacity: 0.8;
 }
