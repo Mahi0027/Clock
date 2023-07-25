@@ -27,18 +27,22 @@ function AnalogClock() {
     useEffect(() => {
         if (stateData.theme.currentTheme === "dark") {
             setDropStyle({
-                "box-shadow":
-                    "inset 20px 20px 20px rgba(255, 255, 255, 0.05),25px 35px 20px rgba(255, 255, 255, 0.05),25px 30px 30px rgba(255, 255, 255, 0.05),inset -20px -20px 25px rgba(0, 0, 0, 0.9)",
+                boxShadow:
+                    "inset 20px 20px 20px rgba(0, 0, 0, 0.05),25px 35px 20px rgba(0, 0, 0, 0.05),25px 30px 30px rgba(0, 0, 0, 0.05),inset -20px -20px 25px rgba(0, 0, 0, 0.9)",
             });
             setClockStyle({
+                background: `url(/images/clock/${stateData.analogClockTheme.currentTheme}.png) no-repeat`,
+                backgroundSize: "contain",
                 filter: "invert(100%)",
             });
         } else {
             setDropStyle({
-                "box-shadow":
+                boxShadow:
                     "inset 20px 20px 20px rgba(0, 0, 0, 0.05),25px 35px 20px rgba(0, 0, 0, 0.05),25px 30px 30px rgba(0, 0, 0, 0.05),inset -20px -20px 25px rgba(255, 255, 255, 0.9)",
             });
             setClockStyle({
+                background: `url(/images/clock/${stateData.analogClockTheme.currentTheme}.png) no-repeat`,
+                backgroundSize: "contain",
                 filter: "none",
             });
         }

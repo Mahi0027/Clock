@@ -47,10 +47,6 @@ function BottomNavbar() {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        console.log(stateData);
-    }, [dispatch]); 
-
-    useEffect(() => {
         let text = temp.filter(({ id, value }, index) => navValue === id);
         setMessage(text[0].value);
     }, [navValue]);

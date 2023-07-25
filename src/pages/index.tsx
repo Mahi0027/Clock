@@ -16,10 +16,6 @@ export default function Home() {
     const stateData = useSelector((state: any) => state);
     const [myTheme, setMyTheme] = useState({});
 
-    useEffect(() => {
-        console.log("start: ", stateData.homePage);
-    }, []);
-
 
     useEffect(() => {
         if (stateData.theme.currentTheme === "light") {
@@ -32,10 +28,6 @@ export default function Home() {
             });
         }
     }, [stateData.theme.currentTheme]);
-
-    useEffect(() => {
-        console.log("updated: ", stateData);
-    }, [stateData.homePage.currentHomePage]);
 
     return (
         <>

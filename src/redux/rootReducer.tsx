@@ -8,10 +8,14 @@ import snoozeReducer from "./features/setting/alarm/snooze/snoozeReducer";
 import volumeReducer from "./features/setting/alarm/volume/volumeReducer";
 import weekOnReducer from "./features/setting/alarm/weekOn/weekOnReducer";
 import BottomNavbar from "./features/bottomNavbar/reducer";
+import AnalogClockThemeReducer from "./features/setting/clock/clockTheme/analog/reducer";
+import DigitalClockThemeReducer from "./features/setting/clock/clockTheme/digital/reducer";
 
 const rootReducer = combineReducers({
     theme: themeReducer,
     clockStyle: styleReducer,
+    analogClockTheme: AnalogClockThemeReducer,
+    digitalClockTheme: DigitalClockThemeReducer,
     second: secondReducer,
     timeZone: timeZoneReducer,
     silent: silentReducer,
@@ -19,6 +23,7 @@ const rootReducer = combineReducers({
     volume: volumeReducer,
     weekOn: weekOnReducer,
     homePage: BottomNavbar,
+
 });
 
 export default rootReducer;

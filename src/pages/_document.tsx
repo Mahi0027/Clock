@@ -28,13 +28,13 @@ export default function Document() {
                         rel="stylesheet"
                     ></link>
                     <link
-                        rel="preconnect"
-                        href="https://fonts.googleapis.com"
-                    />
-                    <link
                         href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@700&family=Lumanosimo&family=Nabla&family=Noto+Sans+Sundanese:wght@400;700&family=Tektur&display=swap"
                         rel="stylesheet"
                     ></link>
+                    <link
+                        href="https://fonts.googleapis.com/css2?family=Dai+Banna+SIL&family=Dancing+Script&family=Handjet&family=Kablammo&family=Kalam&family=Lumanosimo&family=Open+Sans&family=Playfair+Display&family=Raleway+Dots&family=Shojumaru&family=Tektur&display=swap"
+                        rel="stylesheet"
+                    />
                 </Head>
                 <body>
                     {/* <Layout> */}

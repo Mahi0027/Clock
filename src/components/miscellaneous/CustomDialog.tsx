@@ -13,6 +13,7 @@ import Radio from "@mui/material/Radio";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import ListItemButton from "@mui/material/ListItemButton";
 import Typography from "@mui/material/Typography";
+import CustomHorizontalScrollableDialog from "./CustomHorizontalScrollableDialog";
 
 export interface ConfirmationDialogRawProps {
     id: string;
@@ -22,9 +23,26 @@ export interface ConfirmationDialogRawProps {
     value: string;
     open: boolean;
     onClose: (value?: string) => void;
+    clockThemeFlag?: boolean;
 }
-function CustomDialog(props: ConfirmationDialogRawProps) {
-    const { open, onClose, title, data, value: valueProp, ...other } = props;
+function CustomDialog({
+    open,
+    onClose,
+    title,
+    data,
+    value: valueProp,
+    clockThemeFlag = false,
+    ...other
+}: ConfirmationDialogRawProps) {
+    // const {
+    //     open,
+    //     onClose,
+    //     title,
+    //     data,
+    //     value: valueProp,
+    //     clockTheme,
+    //     ...other
+    // } = props;
     const [value, setValue] = useState(valueProp);
     const radioGroupRef = useRef<HTMLElement>(null);
 
@@ -59,24 +77,28 @@ function CustomDialog(props: ConfirmationDialogRawProps) {
             open={open}
             {...other}
         >
-            <DialogTitle>{ title }</DialogTitle>
+            <DialogTitle>{title}</DialogTitle>
             <DialogContent dividers>
-                <RadioGroup
-                    ref={radioGroupRef}
-                    aria-label={title.split(" ").join(" ")}
-                    name={title.split(" ").join(" ")}
-                    value={value}
-                    onChange={handleChange}
-                >
-                    {data.map((option) => (
-                        <FormControlLabel
-                            value={option}
-                            key={option}
-                            control={<Radio />}
-                            label={option}
-                        />
-                    ))}
-                </RadioGroup>
+                {clockThemeFlag ? (
+                    <CustomHorizontalScrollableDialog />
+                ) : (
+                    <RadioGroup
+                        ref={radioGroupRef}
+                        aria-label={title.split(" ").join(" ")}
+                        name={title.split(" ").join(" ")}
+                        value={value}
+                        onChange={handleChange}
+                    >
+                        {data.map((option) => (
+                            <FormControlLabel
+                                value={option}
+                                key={option}
+                                control={<Radio />}
+                                label={option}
+                            />
+                        ))}
+                    </RadioGroup>
+                )}
             </DialogContent>
             <DialogActions>
                 <Button sx={{ fontWeight: "bold" }} onClick={handleCancel}>
