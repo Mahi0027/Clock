@@ -119,7 +119,6 @@ function AnalogClock() {
                 </div>
             </div>
             <div className={styles.timezone}>
-                <span style={{ opacity: 0.6 }}>Timezone:</span>{" "}
                 {stateData.timeZone.currentTimeZone}
             </div>
         </>

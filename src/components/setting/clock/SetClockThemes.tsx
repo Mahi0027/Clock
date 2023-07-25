@@ -5,22 +5,15 @@ import CustomDialog from "@/components/miscellaneous/CustomDialog";
 function AnalogClockThemes() {
     const [open, setOpen] = useState<boolean>(false);
     
-    const handleClose = (newValue?: string) => {
+    const handleClose = () => {
         setOpen(false);
-        if (newValue) {
-            // dispatch(setTimeZone(newValue));
-        }
     };
   return (
       <>
           <ListItemButton sx={{ pl: 9 }} onClick={() => setOpen(true)}>
               <ListItemText
-                  primary={
-                      <Typography variant="body1">
-                          Clock Theme
-                      </Typography>
-                  }
-                //   secondary="selected Analog Clock"
+                  primary={<Typography variant="body1">Clock Theme</Typography>}
+                  //   secondary="selected Analog Clock"
               />
           </ListItemButton>
           <CustomDialog

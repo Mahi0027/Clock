@@ -22,7 +22,7 @@ export interface ConfirmationDialogRawProps {
     keepMounted: boolean;
     value: string;
     open: boolean;
-    onClose: (value?: string) => void;
+    onClose: (value?: string | boolean) => void;
     clockThemeFlag?: boolean;
 }
 function CustomDialog({
@@ -34,15 +34,6 @@ function CustomDialog({
     clockThemeFlag = false,
     ...other
 }: ConfirmationDialogRawProps) {
-    // const {
-    //     open,
-    //     onClose,
-    //     title,
-    //     data,
-    //     value: valueProp,
-    //     clockTheme,
-    //     ...other
-    // } = props;
     const [value, setValue] = useState(valueProp);
     const radioGroupRef = useRef<HTMLElement>(null);
 
@@ -71,7 +62,7 @@ function CustomDialog({
     }, [value]);
     return (
         <Dialog
-            sx={{ "& .MuiDialog-paper": { width: "80%", maxHeight: 435 } }}
+            sx={{ "& .MuiDialog-paper": { width: "80%" } }}
             maxWidth="xs"
             TransitionProps={{ onEntering: handleEntering }}
             open={open}
@@ -80,7 +71,9 @@ function CustomDialog({
             <DialogTitle>{title}</DialogTitle>
             <DialogContent dividers>
                 {clockThemeFlag ? (
-                    <CustomHorizontalScrollableDialog />
+                    <CustomHorizontalScrollableDialog
+                        onComplete={handleCancel}
+                    />
                 ) : (
                     <RadioGroup
                         ref={radioGroupRef}

@@ -35,8 +35,8 @@ function SetTimeZone() {
                 />
             </ListItemButton>
             <CustomDialog
-                id="time-zone-menu"
-                title="Home time zone"
+                id="clock-theme"
+                title="Clock Theme"
                 data={stateData.allTimeZones}
                 keepMounted
                 value={stateData.currentTimeZone}
