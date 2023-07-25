@@ -4,7 +4,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { setAnalogClockTheme, setDigitalClockTheme } from "@/redux";
 import DigitalClock from "../home/clock/DigitalClock";
 
-function CustomHorizontalScrollableDialog() {
+export interface ConfirmationDialogRawProps {
+    onComplete: () => void;
+}
+function CustomHorizontalScrollableDialog({
+    onComplete,
+}: ConfirmationDialogRawProps) {
     const stateData = useSelector((state: any) => state);
     const dispatch = useDispatch();
     const [allThemes, setAllThemes] = useState([]);
@@ -19,7 +24,7 @@ function CustomHorizontalScrollableDialog() {
             setCurrentClockTheme(stateData.digitalClockTheme.currentTheme);
         }
     }, [dispatch]);
-    
+
     useEffect(() => {
         if (stateData.clockStyle.currentStyle === "Analog") {
             //set all themes from analog themes.
@@ -29,8 +34,6 @@ function CustomHorizontalScrollableDialog() {
             setAllThemes(stateData.digitalClockTheme.allThemes);
         }
     }, [stateData.clockStyle.currentStyle]);
-    
-
 
     const handleOptionChange = (event: any) => {
         if (stateData.clockStyle.currentStyle === "Analog") {
@@ -41,6 +44,7 @@ function CustomHorizontalScrollableDialog() {
             dispatch(setDigitalClockTheme(event.target.value));
         }
         setCurrentClockTheme(event.target.value);
+        onComplete();
     };
     return (
         <div className={styles.flexContainer}>
@@ -58,7 +62,7 @@ function CustomHorizontalScrollableDialog() {
                             <label
                                 style={{
                                     backgroundImage: `url(/images/clock/${clockTheme}.png)`,
-                                    backgroundRepeat: 'no-repeat',
+                                    backgroundRepeat: "no-repeat",
                                     backgroundSize: "contain",
                                     filter:
                                         stateData.theme.currentTheme === "dark"
@@ -81,11 +85,11 @@ function CustomHorizontalScrollableDialog() {
                                         position: "absolute",
                                         fontFamily: clockTheme,
                                         fontWeight: "bold",
-                                        top: "10%",
+                                        top: "30%",
                                         fontSize: "2em",
                                     }}
                                 >
-                                    <div style={{ fontSize: "1.3em" }}>
+                                    <div style={{ fontSize: "1em" }}>
                                         10:11:30
                                         <span
                                             style={{
@@ -97,16 +101,15 @@ function CustomHorizontalScrollableDialog() {
                                             AM
                                         </span>
                                     </div>
-                                    <div style={{ fontSize: "1.0em" }}>
+                                    <div style={{ fontSize: "0.7em" }}>
                                         01/Jan/1999
                                     </div>
                                     <div
                                         style={{
-                                            fontSize: "0.5em",
+                                            fontSize: "0.3em",
                                             opacity: "0.8",
                                         }}
                                     >
-                                        Timezone:
                                         {stateData.timeZone.currentTimeZone}
                                     </div>
                                 </span>
