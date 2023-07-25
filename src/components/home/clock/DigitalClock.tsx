@@ -45,10 +45,12 @@ function DigitalClock() {
         if (stateData.theme.currentTheme === "dark") {
             setClockStyle({
                 color: "#fff",
+                fontFamily: stateData.digitalClockTheme.currentTheme,
             });
         } else {
             setClockStyle({
                 color: "#000000",
+                fontFamily: stateData.digitalClockTheme.currentTheme,
             });
         }
         let interval = setInterval(() => {

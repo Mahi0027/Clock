@@ -9,6 +9,8 @@
 #drop {
     position: relative;
     margin-top: 15vh;
+    max-width: 90vw;
+    max-height: 90vw;
     width: 50vh;
     height: 50vh;
     box-shadow: inset 20px 20px 20px rgba(0, 0, 0, 0.05),
@@ -19,13 +21,15 @@
 }
 
 #clock {
+    max-width: 90vw;
+    max-height: 90vw;
     width: 50vh;
     height: 50vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: url('../../../public/images/clock/clock9.png') no-repeat;
-    background-size: cover;
+    // background: url('../../../public/images/clock/clock4.png') no-repeat;
+    // background-size: contain;
 }
 
 #clock::before {

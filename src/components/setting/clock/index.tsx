@@ -12,6 +12,7 @@ import SetStyle from "./SetStyle";
 import SetSeconds from "./SetSeconds";
 import SetTimeZone from "./SetTimeZone";
 import SetTime from "./SetTime";
+import SetClockThemes from "./SetClockThemes";
 
 function ClockSetting() {
     const [open, setOpen] = useState<boolean>(true);
@@ -34,6 +35,7 @@ function ClockSetting() {
             <Collapse in={open} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
                     <SetStyle />
+                    <SetClockThemes />
                     <SetSeconds />
                     <SetTimeZone />
                     <SetTime />

@@ -1,0 +1,34 @@
+.flexContainer {
+    display: flex;
+    overflow-x: auto;
+}
+
+.flexContainer>div {
+    position: relative;
+    font-size: 1em;
+    margin: 10px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
+        0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.flexContainer>div>label {
+    display: flex;
+    text-align: center;
+    max-width: 50vh;
+    max-height: 50vh;
+    width: 50vw;
+    height: 50vw;
+    justify-content: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.flexContainer>div>label>input[type="radio"] {
+    display: none;
+}
+
+.selected {
+    background-color: #01cc65;
+    color: white;
+}
