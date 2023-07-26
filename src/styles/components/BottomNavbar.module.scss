@@ -1,0 +1,15 @@
+/*  right now for light and dark theme we are using same background but
+    in future if we need to change background, we created two separate classes
+    and using both of them.
+*/
+.selectedTabForLightTheme {
+    background: radial-gradient(circle at center,
+            #9f9f9f 70%,
+            transparent 10%);
+}
+
+.selectedTabForDarkTheme {
+    background: radial-gradient(circle at center,
+            #9f9f9f 70%,
+            transparent 10%);
+}
