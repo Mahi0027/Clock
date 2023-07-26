@@ -11,51 +11,20 @@ import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import HourglassBottomIcon from "@mui/icons-material/HourglassBottom";
 import TimerOutlinedIcon from "@mui/icons-material/TimerOutlined";
-import { DataContext } from "@/contexts/DataComponent";
-import AnalogClock from "./miscellaneous/AnalogClock";
-import { initialStatesTypes } from "@/redux/features/bottomNavbar/reducer";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentHomePage } from "@/redux";
+import styles from "../styles/components/BottomNavbar.module.scss";
 interface Temp {
     id: number;
     value: string;
 }
-const temp: readonly Temp[] = [
-    {
-        id: 0,
-        value: "abcd0",
-    },
-    {
-        id: 1,
-        value: "abcd1",
-    },
-    {
-        id: 2,
-        value: "abcd2",
-    },
-    {
-        id: 3,
-        value: "abcd3",
-    },
-];
 function BottomNavbar() {
     const [navValue, setNavValue] = useState<Number>(0);
-    const [message, setMessage] = useState<null | string>(null);
-    const stateData: initialStatesTypes = useSelector(
-        (state: any) => state.homePage
-    );
+    const stateData = useSelector((state: any) => state);
     const dispatch = useDispatch();
-
-    useEffect(() => {
-        let text = temp.filter(({ id, value }, index) => navValue === id);
-        setMessage(text[0].value);
-    }, [navValue]);
 
     return (
         <>
-            {/* <Box> */}
-
-            {/* <Stack sx={{ textAlign: "center" }}> */}
             <Paper
                 sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}
                 elevation={5}
@@ -71,23 +40,49 @@ function BottomNavbar() {
                     <BottomNavigationAction
                         label="Clock"
                         icon={<AccessTimeIcon />}
+                        className={
+                            navValue === 0
+                                ? stateData.theme.currentTheme === "light"
+                                    ? styles.selectedTabForLightTheme
+                                    : styles.selectedTabForDarkTheme
+                                : ""
+                        }
                     />
                     <BottomNavigationAction
                         label="Alarm"
                         icon={<AccessAlarmIcon />}
+                        className={
+                            navValue === 1
+                                ? stateData.theme.currentTheme === "light"
+                                    ? styles.selectedTabForLightTheme
+                                    : styles.selectedTabForDarkTheme
+                                : ""
+                        }
                     />
                     <BottomNavigationAction
                         label="Timer"
                         icon={<HourglassBottomIcon />}
+                        className={
+                            navValue === 2
+                                ? stateData.theme.currentTheme === "light"
+                                    ? styles.selectedTabForLightTheme
+                                    : styles.selectedTabForDarkTheme
+                                : ""
+                        }
                     />
                     <BottomNavigationAction
                         label="Stopwatch"
                         icon={<TimerOutlinedIcon />}
+                        className={
+                            navValue === 3
+                                ? stateData.theme.currentTheme === "light"
+                                    ? styles.selectedTabForLightTheme
+                                    : styles.selectedTabForDarkTheme
+                                : ""
+                        }
                     />
                 </BottomNavigation>
             </Paper>
-            {/* </Stack> */}
-            {/* </Box> */}
         </>
     );
 }
