@@ -1,0 +1,21 @@
+.addAlarmButton {
+    position: fixed;
+    margin: auto;
+    left: 50%;
+    transform: translateX(-50%)
+}
+
+@media (orientation: portrait) {
+    .addAlarmButton {
+        width: 20vw;
+        height: 20vw;
+        bottom: 10vh;
+    }
+}
+@media (orientation: landscape) {
+    .addAlarmButton {
+        width: 20vh;
+        height: 20vh;
+        bottom: 10vw;
+    }
+}
