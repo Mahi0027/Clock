@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import styles from "@/styles/miscellaneous/analogClock.module.scss";
+import styles from "@/styles/components/home/clock/analogClock.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { initialStatesTypes } from "@/redux/features/setting/personalize/theme/themeReducer";
 function AnalogClock() {

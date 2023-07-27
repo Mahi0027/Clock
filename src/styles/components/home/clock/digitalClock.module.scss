@@ -1,0 +1,71 @@
+$portraitMaxClockSize: 90vw;
+$landscapeMaxClockSize: 60vh;
+$portraitClockSize: 90vw;
+$landscapeClockSize: 60vh;
+
+.container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+}
+
+.clock {
+    font-weight: bold;
+    color: #000000;
+}
+
+.session {
+    vertical-align: text-top;
+}
+
+.date {
+    font-weight: bold;
+    color: #000000;
+    font-size: 2.0em;
+}
+
+.timezone {
+    opacity: 0.8;
+}
+
+
+@media (orientation: portrait) {
+    .clock {
+        font-size: 15.5vw;
+    }
+
+    .session {
+        font-size: 5vw;
+        margin-left: 2vw;
+    }
+
+    .date {
+        font-size: 8vw;
+    }
+
+    .timezone {
+        font-size: 3vw !important;
+    }
+}
+
+@media (orientation: landscape) {
+    .clock {
+        font-size: 15.5vh;
+    }
+
+    .session {
+        font-size: 5vh;
+        margin-left: 2vh;
+    }
+
+    .date {
+        font-size: 8vh;
+    }
+
+    .timezone {
+        font-size: 3vh !important;
+    }
+}

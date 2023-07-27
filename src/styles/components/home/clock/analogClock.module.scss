@@ -1,3 +1,8 @@
+$portraitMaxClockSize: 90vw;
+$landscapeMaxClockSize: 60vh;
+$portraitClockSize: 90vw;
+$landscapeClockSize: 60vh;
+
 #clockContainer {
     position: relative;
     display: flex;
@@ -9,10 +14,6 @@
 #drop {
     position: relative;
     margin-top: 15vh;
-    max-width: 90vw;
-    max-height: 90vw;
-    width: 50vh;
-    height: 50vh;
     box-shadow: inset 20px 20px 20px rgba(0, 0, 0, 0.05),
         25px 35px 20px rgba(0, 0, 0, 0.05),
         25px 30px 30px rgba(0, 0, 0, 0.05),
@@ -20,16 +21,12 @@
     border-radius: 50%;
 }
 
+
+
 #clock {
-    max-width: 90vw;
-    max-height: 90vw;
-    width: 50vh;
-    height: 50vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    // background: url('../../../public/images/clock/clock4.png') no-repeat;
-    // background-size: contain;
 }
 
 #clock::before {
@@ -84,7 +81,33 @@
 .timezone {
     font-family: 'Tektur', Arial, Helvetica, sans-serif;
     font-weight: bold;
-    margin-top: 5vh;
-    font-size: 0.9em !important;
     opacity: 0.8;
+}
+
+@media (orientation: portrait) {
+    #drop #clock {
+        max-width: $portraitMaxClockSize;
+        max-height: $portraitMaxClockSize;
+        width: $portraitClockSize;
+        height: $portraitClockSize;
+    }
+
+    .timezone {
+        margin-top: 7vh;
+        font-size: 3vw !important;
+    }
+}
+
+@media (orientation: landscape) {
+    #drop #clock {
+        max-width: $landscapeMaxClockSize;
+        max-height: $landscapeMaxClockSize;
+        width: $landscapeClockSize;
+        height: $landscapeClockSize;
+    }
+
+    .timezone {
+        margin-top: 4vw;
+        font-size: 3vh !important;
+    }
 }
