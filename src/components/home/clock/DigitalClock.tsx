@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import styles from "@/styles/miscellaneous/digitalClock.module.scss";
+import styles from "@/styles/components/home/clock/digitalClock.module.scss";
 import { initialStatesTypes } from "@/redux/features/setting/personalize/theme/themeReducer";
 import { useDispatch, useSelector } from "react-redux";
 const months = [
