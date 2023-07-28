@@ -7,6 +7,13 @@
     transform: translateX(-50%)
 }
 
+.dialogBoxContent {
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
 @media (orientation: portrait) {
     .addAlarmButton {
         width: 20vw;
@@ -14,6 +21,7 @@
         bottom: 10vh;
     }
 }
+
 @media (orientation: landscape) {
     .addAlarmButton {
         width: 20vh;
