@@ -1,4 +1,4 @@
-import { GET_ALL_ALARMS, SET_ALARM, UPDATE_ALARM_SCHEDULE_FLAG } from "./types";
+import { GET_ALL_ALARMS, SET_ALARM, UPDATE_ALARM_LABEL, UPDATE_ALARM_SCHEDULE_FLAG } from "./types";
 
 type actionTypes = {
     type: string;
@@ -12,7 +12,7 @@ type initialStatesTypes = {
         currentScheduleFlag: boolean;
         repeatFlag: boolean;
         sound: string;
-        caption: string | null;
+        label: string | null;
     }[];
 };
 
@@ -35,20 +35,33 @@ const alarmReducer = (state = initialStates, action: actionTypes) => {
                         currentScheduleFlag: true,
                         repeatFlag: false,
                         sound: "default",
-                        caption: null,
+                        label: null,
                     },
                 ],
             };
         case UPDATE_ALARM_SCHEDULE_FLAG:
-            const { id, currentScheduleFlag } = action.payload;
-            const updatedAlarms = state.alarms.map((alarm) => {
-                return alarm.id === id
-                    ? { ...alarm, currentScheduleFlag }
+            const updatedAlarmsForScheduleFlag = state.alarms.map((alarm) => {
+                return alarm.id === action.payload.id
+                    ? {
+                          ...alarm,
+                          currentScheduleFlag:
+                              action.payload.currentScheduleFlag,
+                      }
                     : alarm;
             });
             return {
                 ...state,
-                alarms: updatedAlarms,
+                alarms: updatedAlarmsForScheduleFlag,
+            };
+        case UPDATE_ALARM_LABEL:
+            const updatedAlarmsForLabel = state.alarms.map((alarm) => {
+                return alarm.id === action.payload.id
+                    ? { ...alarm, label: action.payload.label }
+                    : alarm;
+            });
+            return {
+                ...state,
+                alarms: updatedAlarmsForLabel,
             };
         default:
             return state;

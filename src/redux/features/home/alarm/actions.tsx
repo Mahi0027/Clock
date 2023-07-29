@@ -1,4 +1,4 @@
-import { GET_ALL_ALARMS, SET_ALARM, UPDATE_ALARM_SCHEDULE_FLAG } from "./types";
+import { GET_ALL_ALARMS, SET_ALARM, UPDATE_ALARM_LABEL, UPDATE_ALARM_SCHEDULE_FLAG } from "./types";
 
 export const getAllAlarm = () => {
     return {
@@ -17,5 +17,12 @@ export const updateAlarmScheduleFlag = (id: number, currentScheduleFlag: boolean
     return {
         type: UPDATE_ALARM_SCHEDULE_FLAG,
         payload: { id, currentScheduleFlag },
+    };
+};
+
+export const updateAlarmLabel = (id: number, label: string) => {
+    return {
+        type: UPDATE_ALARM_LABEL,
+        payload: { id, label },
     };
 };
