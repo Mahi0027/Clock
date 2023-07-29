@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { StaticTimePicker } from "@mui/x-date-pickers/StaticTimePicker";
-import dayjs from "dayjs";
+
 export interface ResponsiveTimePickersProps {
     action: () => void;
-    handleChangeTime: (value: Date) => void;
+    handleChangeTime: (value: Date | null) => void;
 }
 export default function ResponsiveTimePickers({
     action,
@@ -18,7 +18,7 @@ export default function ResponsiveTimePickers({
     useEffect(() => {
         const mediaQuery = window.matchMedia("(orientation: portrait)");
 
-        const handleOrientationChange = (e) => {
+        const handleOrientationChange = (e:any) => {
             setIsPortrait(e.matches);
         };
 
@@ -35,7 +35,7 @@ export default function ResponsiveTimePickers({
             <StaticTimePicker
                 orientation={isPortrait ? "portrait" : "landscape"}
                 sx={{ overflowY: "auto" }}
-                onAccept={(value) => {
+                onAccept={(value: Date | null) => {
                     handleChangeTime(value);
                 }}
                 onClose={action}

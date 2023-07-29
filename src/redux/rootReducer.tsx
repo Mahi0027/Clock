@@ -10,6 +10,7 @@ import weekOnReducer from "./features/setting/alarm/weekOn/weekOnReducer";
 import BottomNavbar from "./features/bottomNavbar/reducer";
 import AnalogClockThemeReducer from "./features/setting/clock/clockTheme/analog/reducer";
 import DigitalClockThemeReducer from "./features/setting/clock/clockTheme/digital/reducer";
+import alarmReducer from "./features/home/alarm/reducer";
 
 const rootReducer = combineReducers({
     theme: themeReducer,
@@ -23,7 +24,7 @@ const rootReducer = combineReducers({
     volume: volumeReducer,
     weekOn: weekOnReducer,
     homePage: BottomNavbar,
-
+    alarm: alarmReducer,
 });
 
 export default rootReducer;

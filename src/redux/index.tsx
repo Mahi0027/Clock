@@ -34,3 +34,9 @@ export {
     setWeekOnValue,
 } from "./features/setting/alarm/weekOn/weekOnActions";
 export { setCurrentHomePage } from "./features/bottomNavbar/actions";
+
+export {
+    getAllAlarm,
+    setAlarm,
+    updateAlarmScheduleFlag,
+} from "./features/home/alarm/actions";

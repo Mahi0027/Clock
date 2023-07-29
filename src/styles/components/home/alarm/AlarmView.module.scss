@@ -1,0 +1,15 @@
+.container {
+    margin-top: 7vh;
+}
+
+@media (orientation: portrait) {
+    .container {
+        margin-top: 7vh;
+    }
+}
+
+@media (orientation: landscape) {
+    .container {
+        margin-top: 7vw;
+    }
+}
