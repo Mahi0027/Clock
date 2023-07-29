@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styles from "@/styles/components/home/alarm/AlarmView.module.scss";
-import { getAllAlarm, updateAlarmScheduleFlag } from "@/redux";
+import {
+    getAllAlarm,
+    updateAlarmLabel,
+    updateAlarmScheduleFlag,
+} from "@/redux";
 import { styled } from "@mui/material/styles";
 import {
     Box,
@@ -18,6 +22,8 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import IconButton, { IconButtonProps } from "@mui/material/IconButton";
+import LabelOutlinedIcon from "@mui/icons-material/LabelOutlined";
+import DialogBox from "./miscellaneous/DialogBox";
 
 interface ExpandMoreProps extends IconButtonProps {
     expand: boolean;
@@ -42,15 +48,14 @@ function AlarmView() {
         values: boolean[];
         dependency: number;
     }>({ values: [], dependency: -1 });
-
+    const [openLabelDialogFlag, setOpenLabelDialogFlag] = useState(false);
+    const [idForOpenLabelDialogFlag, setIdForOpenLabelDialogFlag] = useState(0);
     useEffect(() => {
-        console.log(stateData.alarm);
         setExpandState(stateData.alarm.alarms.length);
         dispatch(getAllAlarm());
     }, [dispatch]);
 
     useEffect(() => {
-        console.log("updated:", stateData.alarm);
         dispatch(getAllAlarm());
         setExpandState(stateData.alarm.alarms.length);
     }, [stateData.alarm]);
@@ -99,6 +104,11 @@ function AlarmView() {
         dispatch(updateAlarmScheduleFlag(alarmId, event.target.checked));
     };
 
+    const handleLabelText = (alarmId: number, label: string) => {
+        dispatch(updateAlarmLabel(alarmId, label));
+        setOpenLabelDialogFlag(false);
+    };
+
     return (
         <>
             <Box sx={{ marginBottom: "32vh" }}>
@@ -110,92 +120,87 @@ function AlarmView() {
                         <Box key={alarm.id} sx={{ margin: "2vw" }}>
                             <Card
                                 variant="outlined"
-                                sx={{ borderRadius: "10px",padding: "0 2%" }}
+                                sx={{ borderRadius: "10px", padding: "0 2vw" }}
                             >
                                 <Stack
                                     direction={"row"}
                                     sx={{
                                         display: "flex",
                                         justifyContent: "space-between",
-                                        border: "solid 1px red"
+                                        padding: "2vh 0 0 0",
                                     }}
                                 >
-                                    <Typography>
-                                        label
-                                    </Typography>
-                                    <CardActions disableSpacing>
-                                        <ExpandMore
-                                            expand={expand.values[index]}
-                                            onClick={() => handleExpand(index)}
-                                            aria-expanded={expand.values[index]}
-                                            aria-label="show more"
+                                    <IconButton
+                                        onClick={() => {
+                                            setOpenLabelDialogFlag(true);
+                                            setIdForOpenLabelDialogFlag(
+                                                alarm.id
+                                            );
+                                        }}
+                                    >
+                                        <LabelOutlinedIcon />
+                                        <Typography
+                                            variant="body1"
+                                            sx={{ paddingLeft: "2vw" }}
                                         >
-                                            <ExpandMoreIcon />
-                                        </ExpandMore>
-                                    </CardActions>
-                                </Stack>
-                                <Stack
-                                    direction={"row"}
-                                    sx={{
-                                        display: "flex"
-                                    }}
-                                >
-                                    <Typography
-                                        variant="h4"
-                                        sx={{
-                                            fontWeight: "bold",
-                                        }}
-                                    >
-                                        {alarmTime}
-                                    </Typography>
-                                    <Typography
-                                        variant="body2"
-                                        sx={{
-                                            marginBottom: "1.5em",
-                                        }}
-                                    >
-                                        {meridiem}
-                                    </Typography>
-                                </Stack>
-                                {/* <CardActions disableSpacing> */}
-                                    {/* <Typography
-                                        variant="h4"
-                                        sx={{
-                                            fontWeight: "bold",
-                                        }}
-                                    >
-                                        {alarmTime}
-                                    </Typography>
-                                    <Typography
-                                        variant="body2"
-                                        sx={{
-                                            marginBottom: "1.5em",
-                                        }}
-                                    >
-                                        {meridiem}
-                                    </Typography> */}
-                                    {/* <ExpandMore
+                                            {"  "}
+                                            {alarm.label}
+                                        </Typography>
+                                    </IconButton>
+                                    <DialogBox
+                                        id={idForOpenLabelDialogFlag}
+                                        open={openLabelDialogFlag}
+                                        close={setOpenLabelDialogFlag}
+                                        handleLabelText={handleLabelText}
+                                    />
+                                    <ExpandMore
                                         expand={expand.values[index]}
                                         onClick={() => handleExpand(index)}
                                         aria-expanded={expand.values[index]}
                                         aria-label="show more"
                                     >
                                         <ExpandMoreIcon />
-                                    </ExpandMore> */}
-                                {/* </CardActions> */}
+                                    </ExpandMore>
+                                </Stack>
+                                <Stack
+                                    direction={"row"}
+                                    sx={{
+                                        display: "flex",
+                                        paddingLeft: "2vw",
+                                    }}
+                                >
+                                    <Typography
+                                        variant="h4"
+                                        sx={{
+                                            fontWeight: "bold",
+                                        }}
+                                    >
+                                        {alarmTime}
+                                    </Typography>
+                                    <Typography
+                                        variant="body2"
+                                        sx={{
+                                            marginBottom: "1.5em",
+                                        }}
+                                    >
+                                        {meridiem}
+                                    </Typography>
+                                </Stack>
                                 <Stack
                                     direction={"row"}
                                     sx={{
                                         display: "flex",
                                         justifyContent: "space-between",
-                                        padding: "0 2%",
+                                        paddingLeft: "2vw",
                                     }}
                                 >
                                     {alarm.currentScheduleFlag ? (
-                                        <Typography>Scheduled</Typography>
+                                        <Typography variant="body2">
+                                            Scheduled
+                                        </Typography>
                                     ) : (
                                         <Typography
-                                            variant="caption"
+                                            variant="body2"
                                             sx={{ opacity: "0.5" }}
                                         >
                                             Not Scheduled

@@ -21,10 +21,6 @@ function AlarmHome() {
     // const [alarm, setAlarm] = useState<Date>(new Date());
     const [open, setOpen] = useState(false);
 
-    useEffect(() => {
-        console.log("alarm set: ", stateData);
-    }, [stateData.alarm]);
-
     const addNewAlarm = (alarmTime: Date) => {
         dispatch(setAlarm(alarmTime));
     };

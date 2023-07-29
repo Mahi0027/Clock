@@ -10,11 +10,6 @@ import ResponsiveTimePickers from "@/components/miscellaneous/ResponsiveTimePick
 function SetTime() {
     const [time, setTime] = useState<Date>(new Date());
     const [open, setOpen] = useState(false);
-
-    useEffect(() => {
-        console.log("set Time is: ", time);
-    }, [time]);
-
     return (
         <>
             <ListItemButton sx={{ pl: 9 }} onClick={() => setOpen(true)}>

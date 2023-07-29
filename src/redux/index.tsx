@@ -39,4 +39,5 @@ export {
     getAllAlarm,
     setAlarm,
     updateAlarmScheduleFlag,
+    updateAlarmLabel,
 } from "./features/home/alarm/actions";
