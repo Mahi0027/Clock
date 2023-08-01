@@ -22,8 +22,11 @@ export interface ConfirmationDialogRawProps {
     keepMounted: boolean;
     value: string;
     open: boolean;
-    onClose: (value?: string | boolean) => void;
+    onClose: (value?: string | boolean, id?: number) => void;
     clockThemeFlag?: boolean;
+    rowId?: number;
+    alarmSoundFlag?: boolean;
+    playAlarmSound?: (index: string) => void;
 }
 function CustomDialog({
     open,
@@ -32,6 +35,9 @@ function CustomDialog({
     data,
     value: valueProp,
     clockThemeFlag = false,
+    rowId=-1,
+    alarmSoundFlag = false,
+    playAlarmSound,
     ...other
 }: ConfirmationDialogRawProps) {
     const [value, setValue] = useState(valueProp);
@@ -58,8 +64,17 @@ function CustomDialog({
     };
 
     useEffect(() => {
-        onClose(value);
+        if (!alarmSoundFlag) {
+            closeAndSetValue(value);
+        }
+        else{
+            playAlarmSound(value);
+        }
     }, [value]);
+
+    const closeAndSetValue = (value: any,id=-1) => {
+        id === -1 ? onClose(value) : onClose(value, id);
+    };
     return (
         <Dialog
             sx={{ "& .MuiDialog-paper": { width: "80%" } }}
@@ -97,6 +112,14 @@ function CustomDialog({
                 <Button sx={{ fontWeight: "bold" }} onClick={handleCancel}>
                     Cancel
                 </Button>
+                {alarmSoundFlag && (
+                    <Button
+                        sx={{ fontWeight: "bold" }}
+                        onClick={() => closeAndSetValue(value, rowId)}
+                    >
+                        Set
+                    </Button>
+                )}
             </DialogActions>
         </Dialog>
     );

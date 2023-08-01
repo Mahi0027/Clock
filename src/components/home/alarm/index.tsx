@@ -26,7 +26,7 @@ function AlarmHome() {
     };
     return (
         <>
-            <Box className={styles.container}>
+            <Box>
                 <AlarmView />
                 <Fab
                     className={styles.addAlarmButton}

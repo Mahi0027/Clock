@@ -1,10 +1,35 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
-import React, { useEffect, useState } from 'react'
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    TextField,
+} from "@mui/material";
+import React, { useEffect, useState } from "react";
+interface DialogBoxPropTypes {
+    id: number;
+    open: boolean;
+    labelText: string;
+    close: (value: boolean) => void;
+    handleLabelText: (id: number, label: string) => void;
+}
+function DialogBox({
+    id,
+    open,
+    labelText,
+    close,
+    handleLabelText,
+}: DialogBoxPropTypes) {
+    const [label, setLabel] = useState<string>("");
+    useEffect(() => {
+        labelText !== null ? setLabel(labelText) : setLabel("");
+        return () => setLabel("");
+    }, [labelText]);
 
-function DialogBox({ id, open,close, handleLabelText }) {
-    const [label, setLabel] = useState("");
     return (
-        <Dialog open={open} /* onClose={} */>
+        <Dialog open={open} onClose={() => close(false)}>
             <DialogTitle>Alarm Label</DialogTitle>
             <DialogContent>
                 <TextField
@@ -15,6 +40,7 @@ function DialogBox({ id, open,close, handleLabelText }) {
                     type="text"
                     fullWidth
                     variant="outlined"
+                    value={label}
                     onChange={(e) => setLabel(e.target.value)}
                 />
             </DialogContent>
@@ -26,4 +52,4 @@ function DialogBox({ id, open,close, handleLabelText }) {
     );
 }
 
-export default DialogBox
+export default DialogBox;

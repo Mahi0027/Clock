@@ -1,5 +1,24 @@
-import { GET_ALL_ALARMS, SET_ALARM, UPDATE_ALARM_LABEL, UPDATE_ALARM_SCHEDULE_FLAG } from "./types";
+import {
+    DELETE_ALARM,
+    GET_ALL_ALARMS,
+    SET_ALARM,
+    SET_ALARM_SOUND,
+    UPDATE_ALARM_LABEL,
+    UPDATE_ALARM_SCHEDULE_FLAG,
+} from "./types";
 
+const alarmSounds = [
+    "bedside",
+    "bell",
+    "digital",
+    "joy",
+    "naturesounds",
+    "oldmechanic",
+    "oldphone",
+    "oversimplified",
+    "ringtone",
+    "short",
+];
 type actionTypes = {
     type: string;
     id?: number;
@@ -14,10 +33,12 @@ type initialStatesTypes = {
         sound: string;
         label: string | null;
     }[];
+    alarmSounds: string[];
 };
 
 const initialStates: initialStatesTypes = {
     alarms: [],
+    alarmSounds: alarmSounds,
 };
 
 const alarmReducer = (state = initialStates, action: actionTypes) => {
@@ -25,16 +46,22 @@ const alarmReducer = (state = initialStates, action: actionTypes) => {
         case GET_ALL_ALARMS:
             return state;
         case SET_ALARM:
+            const lastAlarmId =
+                state.alarms.length === 0
+                    ? 0
+                    : state.alarms[state.alarms.length - 1].id;
+            console.log("last alarm ID:", lastAlarmId, state.alarms);
+
             return {
                 ...state,
                 alarms: [
                     ...state.alarms,
                     {
-                        id: state.alarms.length + 1,
+                        id: lastAlarmId + 1,
                         alarmTime: action.payload,
                         currentScheduleFlag: true,
                         repeatFlag: false,
-                        sound: "default",
+                        sound: state.alarmSounds[1],
                         label: null,
                     },
                 ],
@@ -62,6 +89,25 @@ const alarmReducer = (state = initialStates, action: actionTypes) => {
             return {
                 ...state,
                 alarms: updatedAlarmsForLabel,
+            };
+        case SET_ALARM_SOUND:
+            const updatedAlarmForSound = state.alarms.map((alarm) => {
+                return alarm.id === action.payload.id
+                    ? { ...alarm, sound: action.payload.alarmSound }
+                    : alarm;
+            });
+            return {
+                ...state,
+                alarms: updatedAlarmForSound,
+            };
+        case DELETE_ALARM:
+            const indexOfDeleteAlarm = state.alarms.findIndex(
+                (alarm) => alarm.id === action.payload.id
+            );
+            if (indexOfDeleteAlarm !== -1)
+                state.alarms.splice(indexOfDeleteAlarm, 1);
+            return {
+                ...state,
             };
         default:
             return state;
