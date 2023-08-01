@@ -54,21 +54,15 @@ function AlarmView() {
     const [openSoundDialogFlag, setOpenSoundDialogFlag] = useState(false);
     const [idForOpenLabelDialogFlag, setIdForOpenLabelDialogFlag] = useState(0);
     const [labelText, setLabelText] = useState("");
-    const alarmAudio = useRef<HTMLAudioElement[]>([]);
+    const alarmAudio = Array.from(
+        { length: stateData.alarm.alarmSounds.length },
+        useRef
+    );
 
     useEffect(() => {
         setExpandState(stateData.alarm.alarms.length);
         dispatch(getAllAlarm());
-        console.log("data", stateData.alarm.alarmSounds.length);
-
-        alarmAudio.current = alarmAudio.current.slice(
-            0,
-            10
-        );
     }, [dispatch]);
-    useEffect(() => {
-        console.log(alarmAudio.current);
-    }, [alarmAudio]);
 
     useEffect(() => {
         dispatch(getAllAlarm());
@@ -140,33 +134,42 @@ function AlarmView() {
         dispatch(deleteAlarm(alarmId));
     };
 
-    /* on click on change sound button. */
-    const handleSoundAlarmEvent = () => {
-        console.log("Hello Mahi");
-    };
-
     const handleCloseAlarmSoundDialog = (newValue?: string, rowId?: number) => {
-        console.log(rowId, newValue);
-
+        for (let i = 0; i < stateData.alarm.alarmSounds.length; i++) {
+            alarmAudio[i].current.pause();
+        }
         setOpenSoundDialogFlag(false);
         if (rowId !== -1 && newValue) {
-            console.log("done");
-
             dispatch(setAlarmSound(rowId, newValue));
         }
     };
 
     const playAlarmSound = (value: string) => {
-        const index = stateData.alarm.alarmSounds.indexOf(value);
-        console.log(alarmAudio);
-
-        // for (let i = 0; i < stateData.alarm.alarmSounds.length; i++) {
-        //     alarmAudio.current[i].pause();
-        // }
-        // alarmAudio.current[index].play();
+        for (let i = 0; i < stateData.alarm.alarmSounds.length; i++) {
+            alarmAudio[i].current.pause();
+        }
+        alarmAudio[stateData.alarm.alarmSounds.indexOf(value)].current.play();
     };
     return (
         <>
+            {stateData.alarm.alarmSounds.map((value: string, index: number) => {
+                return (
+                    <>
+                        <span key={index}>
+                            <audio
+                                ref={(e: any) =>
+                                    (alarmAudio[index].current = e)
+                                }
+                            >
+                                <source
+                                    src={`/sounds/alarm/${value}.mp3`}
+                                    type="audio/mpeg"
+                                />
+                            </audio>
+                        </span>
+                    </>
+                );
+            })}
             <Box sx={{ marginBottom: "32vh" }}>
                 {stateData.alarm.alarms.map((alarm: any, index: number) => {
                     const [alarmTime, meridiem] = convertTimeInMeridiemForm(
@@ -324,12 +327,6 @@ function AlarmView() {
                     );
                 })}
             </Box>
-            {stateData.alarm.alarmSounds.map((value: string, index: number) => {
-                <audio
-                    ref={(e: any) => (alarmAudio.current[index] = e)}
-                    src={`/public/sounds/alarm/${value}.mp3`}
-                />;
-            })}
         </>
     );
 }
