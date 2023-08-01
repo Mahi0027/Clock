@@ -6,10 +6,18 @@
     .container {
         margin-top: 7vh;
     }
+
+    .icon {
+        margin-right: 2vw;
+    }
 }
 
 @media (orientation: landscape) {
     .container {
         margin-top: 7vw;
+    }
+
+    .icon {
+        margin-right: 2vh;
     }
 }

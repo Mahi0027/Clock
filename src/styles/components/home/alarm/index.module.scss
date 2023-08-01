@@ -15,10 +15,6 @@
 }
 
 @media (orientation: portrait) {
-    .container {
-        margin-top: 1vh;
-    }
-
     .addAlarmButton {
         width: 20vw;
         height: 20vw;
@@ -27,13 +23,9 @@
 }
 
 @media (orientation: landscape) {
-    .container {
-        margin-top: 5vw;
-    }
-
     .addAlarmButton {
         width: 20vh;
         height: 20vh;
-        bottom: 10vw;
+        bottom: 10vh;
     }
 }

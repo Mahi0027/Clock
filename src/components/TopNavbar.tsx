@@ -74,7 +74,7 @@ const TopNavbar = ({ heading, menuItemsProps, homepage }) => {
     }, []);
     return (
         <>
-            <Paper sx={{ height: "7vh", boxShadow: 0 }}>
+            <Paper sx={{ height: "4em", boxShadow: 0 }}>
                 <CssBaseline />
                 <AppBar position="fixed" elevation={0} sx={stateData.style}>
                     <Toolbar>

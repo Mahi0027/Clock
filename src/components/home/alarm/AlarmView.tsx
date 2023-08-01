@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styles from "@/styles/components/home/alarm/AlarmView.module.scss";
 import {
+    deleteAlarm,
     getAllAlarm,
     updateAlarmLabel,
     updateAlarmScheduleFlag,
@@ -9,13 +10,10 @@ import {
 import { styled } from "@mui/material/styles";
 import {
     Box,
+    Button,
     Card,
-    CardActions,
     CardContent,
     Collapse,
-    ListItemButton,
-    ListItemText,
-    Paper,
     Stack,
     Switch,
     Typography,
@@ -24,6 +22,10 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import IconButton, { IconButtonProps } from "@mui/material/IconButton";
 import LabelOutlinedIcon from "@mui/icons-material/LabelOutlined";
 import DialogBox from "./miscellaneous/DialogBox";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import MusicNoteOutlinedIcon from "@mui/icons-material/MusicNoteOutlined";
+import CustomDialog from "@/components/miscellaneous/CustomDialog";
+import { setAlarmSound } from "@/redux/features/home/alarm/actions";
 
 interface ExpandMoreProps extends IconButtonProps {
     expand: boolean;
@@ -49,11 +51,24 @@ function AlarmView() {
         dependency: number;
     }>({ values: [], dependency: -1 });
     const [openLabelDialogFlag, setOpenLabelDialogFlag] = useState(false);
+    const [openSoundDialogFlag, setOpenSoundDialogFlag] = useState(false);
     const [idForOpenLabelDialogFlag, setIdForOpenLabelDialogFlag] = useState(0);
+    const [labelText, setLabelText] = useState("");
+    const alarmAudio = useRef<HTMLAudioElement[]>([]);
+
     useEffect(() => {
         setExpandState(stateData.alarm.alarms.length);
         dispatch(getAllAlarm());
+        console.log("data", stateData.alarm.alarmSounds.length);
+
+        alarmAudio.current = alarmAudio.current.slice(
+            0,
+            10
+        );
     }, [dispatch]);
+    useEffect(() => {
+        console.log(alarmAudio.current);
+    }, [alarmAudio]);
 
     useEffect(() => {
         dispatch(getAllAlarm());
@@ -109,6 +124,47 @@ function AlarmView() {
         setOpenLabelDialogFlag(false);
     };
 
+    /* on click in label button icon event. */
+    const handleLabelButtonEvent = (
+        openDialogBoxFlag: boolean,
+        alarmId: number,
+        alarmLabel: string
+    ) => {
+        setOpenLabelDialogFlag(openDialogBoxFlag);
+        setIdForOpenLabelDialogFlag(alarmId);
+        setLabelText(alarmLabel);
+    };
+
+    /* on click on delete button. */
+    const handleDeleteAlarmEvent = (alarmId: number) => {
+        dispatch(deleteAlarm(alarmId));
+    };
+
+    /* on click on change sound button. */
+    const handleSoundAlarmEvent = () => {
+        console.log("Hello Mahi");
+    };
+
+    const handleCloseAlarmSoundDialog = (newValue?: string, rowId?: number) => {
+        console.log(rowId, newValue);
+
+        setOpenSoundDialogFlag(false);
+        if (rowId !== -1 && newValue) {
+            console.log("done");
+
+            dispatch(setAlarmSound(rowId, newValue));
+        }
+    };
+
+    const playAlarmSound = (value: string) => {
+        const index = stateData.alarm.alarmSounds.indexOf(value);
+        console.log(alarmAudio);
+
+        // for (let i = 0; i < stateData.alarm.alarmSounds.length; i++) {
+        //     alarmAudio.current[i].pause();
+        // }
+        // alarmAudio.current[index].play();
+    };
     return (
         <>
             <Box sx={{ marginBottom: "32vh" }}>
@@ -117,7 +173,7 @@ function AlarmView() {
                         alarm.alarmTime
                     );
                     return (
-                        <Box key={alarm.id} sx={{ margin: "2vw" }}>
+                        <Box key={alarm.id} sx={{ margin: "2vh" }}>
                             <Card
                                 variant="outlined"
                                 sx={{ borderRadius: "10px", padding: "0 2vw" }}
@@ -131,12 +187,13 @@ function AlarmView() {
                                     }}
                                 >
                                     <IconButton
-                                        onClick={() => {
-                                            setOpenLabelDialogFlag(true);
-                                            setIdForOpenLabelDialogFlag(
-                                                alarm.id
-                                            );
-                                        }}
+                                        onClick={() =>
+                                            handleLabelButtonEvent(
+                                                true,
+                                                alarm.id,
+                                                alarm.label
+                                            )
+                                        }
                                     >
                                         <LabelOutlinedIcon />
                                         <Typography
@@ -151,6 +208,7 @@ function AlarmView() {
                                         id={idForOpenLabelDialogFlag}
                                         open={openLabelDialogFlag}
                                         close={setOpenLabelDialogFlag}
+                                        labelText={labelText}
                                         handleLabelText={handleLabelText}
                                     />
                                     <ExpandMore
@@ -221,15 +279,57 @@ function AlarmView() {
                                     timeout="auto"
                                     unmountOnExit
                                 >
-                                    <CardContent>
-                                        <Typography>{index} </Typography>
-                                    </CardContent>
+                                    <Stack direction={"row"}>
+                                        <Button
+                                            onClick={() => {
+                                                handleSoundAlarmEvent();
+                                                setOpenSoundDialogFlag(true);
+                                            }}
+                                        >
+                                            <MusicNoteOutlinedIcon
+                                                className={styles.icon}
+                                            />
+                                            Sound
+                                        </Button>
+                                        <CustomDialog
+                                            id="alarm-ringtone"
+                                            title="Alarm Ringtone"
+                                            data={stateData.alarm.alarmSounds}
+                                            keepMounted
+                                            value={alarm.sound}
+                                            open={openSoundDialogFlag}
+                                            onClose={
+                                                handleCloseAlarmSoundDialog
+                                            }
+                                            rowId={alarm.id}
+                                            alarmSoundFlag={true}
+                                            playAlarmSound={playAlarmSound}
+                                        />
+                                    </Stack>
+                                    <Stack direction={"row"}>
+                                        <Button
+                                            onClick={() =>
+                                                handleDeleteAlarmEvent(alarm.id)
+                                            }
+                                        >
+                                            <DeleteOutlineOutlinedIcon
+                                                className={styles.icon}
+                                            />
+                                            Delete
+                                        </Button>
+                                    </Stack>
                                 </Collapse>
                             </Card>
                         </Box>
                     );
                 })}
             </Box>
+            {stateData.alarm.alarmSounds.map((value: string, index: number) => {
+                <audio
+                    ref={(e: any) => (alarmAudio.current[index] = e)}
+                    src={`/public/sounds/alarm/${value}.mp3`}
+                />;
+            })}
         </>
     );
 }
