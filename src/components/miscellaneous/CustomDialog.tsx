@@ -26,7 +26,7 @@ export interface ConfirmationDialogRawProps {
     clockThemeFlag?: boolean;
     rowId?: number;
     alarmSoundFlag?: boolean;
-    playAlarmSound?: (index: string) => void;
+    playAlarmSound?: (value: string) => void;
 }
 function CustomDialog({
     open,
@@ -35,7 +35,7 @@ function CustomDialog({
     data,
     value: valueProp,
     clockThemeFlag = false,
-    rowId=-1,
+    rowId = -1,
     alarmSoundFlag = false,
     playAlarmSound,
     ...other
@@ -60,6 +60,9 @@ function CustomDialog({
     };
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (alarmSoundFlag) {
+            playAlarmSound((event.target as HTMLInputElement).value);
+        }
         setValue((event.target as HTMLInputElement).value);
     };
 
@@ -67,12 +70,9 @@ function CustomDialog({
         if (!alarmSoundFlag) {
             closeAndSetValue(value);
         }
-        else{
-            playAlarmSound(value);
-        }
     }, [value]);
 
-    const closeAndSetValue = (value: any,id=-1) => {
+    const closeAndSetValue = (value: any, id = -1) => {
         id === -1 ? onClose(value) : onClose(value, id);
     };
     return (
