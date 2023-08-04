@@ -50,7 +50,6 @@ const alarmReducer = (state = initialStates, action: actionTypes) => {
                 state.alarms.length === 0
                     ? 0
                     : state.alarms[state.alarms.length - 1].id;
-            console.log("last alarm ID:", lastAlarmId, state.alarms);
 
             return {
                 ...state,

@@ -54,6 +54,7 @@ function AlarmView() {
     const [openSoundDialogFlag, setOpenSoundDialogFlag] = useState(false);
     const [idForOpenLabelDialogFlag, setIdForOpenLabelDialogFlag] = useState(0);
     const [labelText, setLabelText] = useState("");
+    const [alarmTimeOut, setAlarmTimeOut] = useState([]);
     const alarmAudio = Array.from(
         { length: stateData.alarm.alarmSounds.length },
         useRef
@@ -65,9 +66,44 @@ function AlarmView() {
     }, [dispatch]);
 
     useEffect(() => {
+        console.log(stateData.alarm);
         dispatch(getAllAlarm());
         setExpandState(stateData.alarm.alarms.length);
+        setAlarmTimeOut(Array.from({ length: stateData.alarm.alarms.length }));
+        setAlarms();
     }, [stateData.alarm]);
+
+    useEffect(() => {
+        console.log(alarmTimeOut);
+    }, [alarmTimeOut]);
+
+    /* set all alarms. */
+    const setAlarms = () => {
+        for (let i = 0; i < alarmTimeOut.length; i++) {
+            if (alarmTimeOut[i] !== undefined) {
+                clearTimeout(alarmTimeOut[i]);
+            }
+            /* dal */
+        }
+        stateData.alarm.alarms.map((value, index) => {
+            if (value.currentScheduleFlag) {
+                const givenTime = new Date(value.alarmTime);
+                const currentTime = new Date();
+                if (givenTime < currentTime) {
+                    dispatch(updateAlarmScheduleFlag(value.id, false));
+                } else {
+                    const timeDiff = givenTime - currentTime;
+                    let alarmDOM = new Audio(
+                        `/sounds/alarm/${value.sound}.mp3`
+                    );
+                    alarmTimeOut[index] = setTimeout(() => {
+                        alarmDOM.play();
+                    }, timeDiff);
+                    console.log(alarmTimeOut);
+                }
+            }
+        });
+    };
 
     /* it use to manage expand state variable */
     const setExpandState = (length: number) => {
@@ -154,20 +190,16 @@ function AlarmView() {
         <>
             {stateData.alarm.alarmSounds.map((value: string, index: number) => {
                 return (
-                    <>
-                        <span key={index}>
-                            <audio
-                                ref={(e: any) =>
-                                    (alarmAudio[index].current = e)
-                                }
-                            >
-                                <source
-                                    src={`/sounds/alarm/${value}.mp3`}
-                                    type="audio/mpeg"
-                                />
-                            </audio>
-                        </span>
-                    </>
+                    <span key={index}>
+                        <audio
+                            ref={(e: any) => (alarmAudio[index].current = e)}
+                        >
+                            <source
+                                src={`/sounds/alarm/${value}.mp3`}
+                                type="audio/mpeg"
+                            />
+                        </audio>
+                    </span>
                 );
             })}
             <Box sx={{ marginBottom: "32vh" }}>
@@ -285,7 +317,7 @@ function AlarmView() {
                                     <Stack direction={"row"}>
                                         <Button
                                             onClick={() => {
-                                                handleSoundAlarmEvent();
+                                                // handleSoundAlarmEvent();
                                                 setOpenSoundDialogFlag(true);
                                             }}
                                         >
