@@ -41,7 +41,12 @@ function DialogBox({
                     fullWidth
                     variant="outlined"
                     value={label}
-                    onChange={(e) => setLabel(e.target.value)}
+                    onChange={(e) => {
+                        const newValue = e.target.value;
+                        if (newValue.length < 30) {
+                            setLabel(newValue);
+                        }
+                    }}
                 />
             </DialogContent>
             <DialogActions>

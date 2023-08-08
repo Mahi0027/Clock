@@ -26,6 +26,7 @@ import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined
 import MusicNoteOutlinedIcon from "@mui/icons-material/MusicNoteOutlined";
 import CustomDialog from "@/components/miscellaneous/CustomDialog";
 import { setAlarmSound } from "@/redux/features/home/alarm/actions";
+import AlarmRunning from "./AlarmRunning";
 
 interface ExpandMoreProps extends IconButtonProps {
     expand: boolean;
@@ -44,6 +45,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 }));
 
 function AlarmView() {
+    let prevTimeOut = 0;
     const stateData = useSelector((state: any) => state);
     const dispatch = useDispatch();
     const [expand, setExpand] = useState<{
@@ -54,7 +56,11 @@ function AlarmView() {
     const [openSoundDialogFlag, setOpenSoundDialogFlag] = useState(false);
     const [idForOpenLabelDialogFlag, setIdForOpenLabelDialogFlag] = useState(0);
     const [labelText, setLabelText] = useState("");
-    const [alarmTimeOut, setAlarmTimeOut] = useState([]);
+    const [alarmTimeOut, setAlarmTimeOut] = useState<any>([]);
+    const [alarmRunningPage, setAlarmRunningPage] = useState(false);
+    const [alarmRunningLabel, setAlarmRunningLabel] = useState("");
+    const [currentAlarmAudio, setCurrentAlarmAudio] = useState<any>(null);
+
     const alarmAudio = Array.from(
         { length: stateData.alarm.alarmSounds.length },
         useRef
@@ -66,43 +72,59 @@ function AlarmView() {
     }, [dispatch]);
 
     useEffect(() => {
-        console.log(stateData.alarm);
         dispatch(getAllAlarm());
         setExpandState(stateData.alarm.alarms.length);
-        setAlarmTimeOut(Array.from({ length: stateData.alarm.alarms.length }));
+        // setAlarmTimeOut(Array.from({ length: stateData.alarm.alarms.length }));
         setAlarms();
     }, [stateData.alarm]);
 
-    useEffect(() => {
-        console.log(alarmTimeOut);
-    }, [alarmTimeOut]);
-
     /* set all alarms. */
     const setAlarms = () => {
+        /* for clearing timeouts. */
         for (let i = 0; i < alarmTimeOut.length; i++) {
             if (alarmTimeOut[i] !== undefined) {
-                clearTimeout(alarmTimeOut[i]);
+                clearExtraTimeout(prevTimeOut, alarmTimeOut[i]);
+                prevTimeOut = alarmTimeOut[i];
             }
-            /* dal */
         }
+        let tempAlarmTimeout = Array.from({
+            length: stateData.alarm.alarms.length,
+        });
         stateData.alarm.alarms.map((value, index) => {
             if (value.currentScheduleFlag) {
                 const givenTime = new Date(value.alarmTime);
                 const currentTime = new Date();
+
                 if (givenTime < currentTime) {
+                    /* set time is past then automatically off alarm. 
+                        This functionality need to revise after adding date in alarm time.
+                    */
                     dispatch(updateAlarmScheduleFlag(value.id, false));
                 } else {
+                    /* set alarm. */
                     const timeDiff = givenTime - currentTime;
                     let alarmDOM = new Audio(
                         `/sounds/alarm/${value.sound}.mp3`
                     );
-                    alarmTimeOut[index] = setTimeout(() => {
+                    tempAlarmTimeout[index] = setTimeout(() => {
+                        setCurrentAlarmAudio(alarmDOM);
+                        alarmDOM.currentTime = 0;
+                        alarmDOM.loop = true;
                         alarmDOM.play();
+                        setAlarmRunningPage(true);
+                        setAlarmRunningLabel(value.label);
+                        dispatch(updateAlarmScheduleFlag(value.id, false));
                     }, timeDiff);
-                    console.log(alarmTimeOut);
                 }
             }
         });
+        setAlarmTimeOut(tempAlarmTimeout);
+    };
+
+    const clearExtraTimeout = (prevTimeOut: number, CurrentTimeOut: number) => {
+        for (let i = prevTimeOut; i < CurrentTimeOut; i++) {
+            clearTimeout(i);
+        }
     };
 
     /* it use to manage expand state variable */
@@ -115,6 +137,7 @@ function AlarmView() {
             }));
         }
     };
+    0;
 
     const handleExpand = (index: number) => {
         const updatedTempExpand = expand.values;
@@ -188,11 +211,19 @@ function AlarmView() {
     };
     return (
         <>
+            {alarmRunningPage && (
+                <AlarmRunning
+                    currentAlarmAudio={currentAlarmAudio}
+                    setAlarmRunningPage={setAlarmRunningPage}
+                    alarmRunningLabel={alarmRunningLabel}
+                />
+            )}
             {stateData.alarm.alarmSounds.map((value: string, index: number) => {
                 return (
                     <span key={index}>
                         <audio
                             ref={(e: any) => (alarmAudio[index].current = e)}
+                            loop
                         >
                             <source
                                 src={`/sounds/alarm/${value}.mp3`}
@@ -202,163 +233,174 @@ function AlarmView() {
                     </span>
                 );
             })}
-            <Box sx={{ marginBottom: "32vh" }}>
-                {stateData.alarm.alarms.map((alarm: any, index: number) => {
-                    const [alarmTime, meridiem] = convertTimeInMeridiemForm(
-                        alarm.alarmTime
-                    );
-                    return (
-                        <Box key={alarm.id} sx={{ margin: "2vh" }}>
-                            <Card
-                                variant="outlined"
-                                sx={{ borderRadius: "10px", padding: "0 2vw" }}
-                            >
-                                <Stack
-                                    direction={"row"}
+            {!alarmRunningPage && (
+                <Box sx={{ marginBottom: "32vh" }}>
+                    {stateData.alarm.alarms.map((alarm: any, index: number) => {
+                        const [alarmTime, meridiem] = convertTimeInMeridiemForm(
+                            alarm.alarmTime
+                        );
+                        return (
+                            <Box key={alarm.id} sx={{ margin: "2vh" }}>
+                                <Card
+                                    variant="outlined"
                                     sx={{
-                                        display: "flex",
-                                        justifyContent: "space-between",
-                                        padding: "2vh 0 0 0",
+                                        borderRadius: "10px",
+                                        padding: "0 2vw",
                                     }}
                                 >
-                                    <IconButton
-                                        onClick={() =>
-                                            handleLabelButtonEvent(
-                                                true,
-                                                alarm.id,
-                                                alarm.label
-                                            )
-                                        }
-                                    >
-                                        <LabelOutlinedIcon />
-                                        <Typography
-                                            variant="body1"
-                                            sx={{ paddingLeft: "2vw" }}
-                                        >
-                                            {"  "}
-                                            {alarm.label}
-                                        </Typography>
-                                    </IconButton>
-                                    <DialogBox
-                                        id={idForOpenLabelDialogFlag}
-                                        open={openLabelDialogFlag}
-                                        close={setOpenLabelDialogFlag}
-                                        labelText={labelText}
-                                        handleLabelText={handleLabelText}
-                                    />
-                                    <ExpandMore
-                                        expand={expand.values[index]}
-                                        onClick={() => handleExpand(index)}
-                                        aria-expanded={expand.values[index]}
-                                        aria-label="show more"
-                                    >
-                                        <ExpandMoreIcon />
-                                    </ExpandMore>
-                                </Stack>
-                                <Stack
-                                    direction={"row"}
-                                    sx={{
-                                        display: "flex",
-                                        paddingLeft: "2vw",
-                                    }}
-                                >
-                                    <Typography
-                                        variant="h4"
+                                    <Stack
+                                        direction={"row"}
                                         sx={{
-                                            fontWeight: "bold",
+                                            display: "flex",
+                                            justifyContent: "space-between",
+                                            padding: "2vh 0 0 0",
                                         }}
                                     >
-                                        {alarmTime}
-                                    </Typography>
-                                    <Typography
-                                        variant="body2"
-                                        sx={{
-                                            marginBottom: "1.5em",
-                                        }}
-                                    >
-                                        {meridiem}
-                                    </Typography>
-                                </Stack>
-                                <Stack
-                                    direction={"row"}
-                                    sx={{
-                                        display: "flex",
-                                        justifyContent: "space-between",
-                                        paddingLeft: "2vw",
-                                    }}
-                                >
-                                    {alarm.currentScheduleFlag ? (
-                                        <Typography variant="body2">
-                                            Scheduled
-                                        </Typography>
-                                    ) : (
-                                        <Typography
-                                            variant="body2"
-                                            sx={{ opacity: "0.5" }}
+                                        <IconButton
+                                            onClick={() =>
+                                                handleLabelButtonEvent(
+                                                    true,
+                                                    alarm.id,
+                                                    alarm.label
+                                                )
+                                            }
                                         >
-                                            Not Scheduled
-                                        </Typography>
-                                    )}
-                                    <Switch
-                                        checked={alarm.currentScheduleFlag}
-                                        onChange={(e) =>
-                                            handleChangeSwitch(alarm.id, e)
-                                        }
-                                        inputProps={{
-                                            "aria-label": "controlled",
+                                            <LabelOutlinedIcon />
+                                            <Typography
+                                                variant="body1"
+                                                sx={{ paddingLeft: "2vw" }}
+                                            >
+                                                {"  "}
+                                                {alarm.label}
+                                            </Typography>
+                                        </IconButton>
+                                        <DialogBox
+                                            id={idForOpenLabelDialogFlag}
+                                            open={openLabelDialogFlag}
+                                            close={setOpenLabelDialogFlag}
+                                            labelText={labelText}
+                                            handleLabelText={handleLabelText}
+                                        />
+                                        <ExpandMore
+                                            expand={expand.values[index]}
+                                            onClick={() => handleExpand(index)}
+                                            aria-expanded={expand.values[index]}
+                                            aria-label="show more"
+                                        >
+                                            <ExpandMoreIcon />
+                                        </ExpandMore>
+                                    </Stack>
+                                    <Stack
+                                        direction={"row"}
+                                        sx={{
+                                            display: "flex",
+                                            paddingLeft: "2vw",
                                         }}
-                                    />
-                                </Stack>
-                                <Collapse
-                                    in={expand.values[index]}
-                                    timeout="auto"
-                                    unmountOnExit
-                                >
-                                    <Stack direction={"row"}>
-                                        <Button
-                                            onClick={() => {
-                                                // handleSoundAlarmEvent();
-                                                setOpenSoundDialogFlag(true);
+                                    >
+                                        <Typography
+                                            variant="h4"
+                                            sx={{
+                                                fontWeight: "bold",
                                             }}
                                         >
-                                            <MusicNoteOutlinedIcon
-                                                className={styles.icon}
-                                            />
-                                            Sound
-                                        </Button>
-                                        <CustomDialog
-                                            id="alarm-ringtone"
-                                            title="Alarm Ringtone"
-                                            data={stateData.alarm.alarmSounds}
-                                            keepMounted
-                                            value={alarm.sound}
-                                            open={openSoundDialogFlag}
-                                            onClose={
-                                                handleCloseAlarmSoundDialog
+                                            {alarmTime}
+                                        </Typography>
+                                        <Typography
+                                            variant="body2"
+                                            sx={{
+                                                marginBottom: "1.5em",
+                                            }}
+                                        >
+                                            {meridiem}
+                                        </Typography>
+                                    </Stack>
+                                    <Stack
+                                        direction={"row"}
+                                        sx={{
+                                            display: "flex",
+                                            justifyContent: "space-between",
+                                            paddingLeft: "2vw",
+                                        }}
+                                    >
+                                        {alarm.currentScheduleFlag ? (
+                                            <Typography variant="body2">
+                                                Scheduled
+                                            </Typography>
+                                        ) : (
+                                            <Typography
+                                                variant="body2"
+                                                sx={{ opacity: "0.5" }}
+                                            >
+                                                Not Scheduled
+                                            </Typography>
+                                        )}
+                                        <Switch
+                                            checked={alarm.currentScheduleFlag}
+                                            onChange={(e) =>
+                                                handleChangeSwitch(alarm.id, e)
                                             }
-                                            rowId={alarm.id}
-                                            alarmSoundFlag={true}
-                                            playAlarmSound={playAlarmSound}
+                                            inputProps={{
+                                                "aria-label": "controlled",
+                                            }}
                                         />
                                     </Stack>
-                                    <Stack direction={"row"}>
-                                        <Button
-                                            onClick={() =>
-                                                handleDeleteAlarmEvent(alarm.id)
-                                            }
-                                        >
-                                            <DeleteOutlineOutlinedIcon
-                                                className={styles.icon}
+                                    <Collapse
+                                        in={expand.values[index]}
+                                        timeout="auto"
+                                        unmountOnExit
+                                    >
+                                        <Stack direction={"row"}>
+                                            <Button
+                                                onClick={() => {
+                                                    // handleSoundAlarmEvent();
+                                                    setOpenSoundDialogFlag(
+                                                        true
+                                                    );
+                                                }}
+                                            >
+                                                <MusicNoteOutlinedIcon
+                                                    className={styles.icon}
+                                                />
+                                                Sound
+                                            </Button>
+                                            <CustomDialog
+                                                id="alarm-ringtone"
+                                                title="Alarm Ringtone"
+                                                data={
+                                                    stateData.alarm.alarmSounds
+                                                }
+                                                keepMounted
+                                                value={alarm.sound}
+                                                open={openSoundDialogFlag}
+                                                onClose={
+                                                    handleCloseAlarmSoundDialog
+                                                }
+                                                rowId={alarm.id}
+                                                alarmSoundFlag={true}
+                                                playAlarmSound={playAlarmSound}
                                             />
-                                            Delete
-                                        </Button>
-                                    </Stack>
-                                </Collapse>
-                            </Card>
-                        </Box>
-                    );
-                })}
-            </Box>
+                                        </Stack>
+                                        <Stack direction={"row"}>
+                                            <Button
+                                                onClick={() =>
+                                                    handleDeleteAlarmEvent(
+                                                        alarm.id
+                                                    )
+                                                }
+                                            >
+                                                <DeleteOutlineOutlinedIcon
+                                                    className={styles.icon}
+                                                />
+                                                Delete
+                                            </Button>
+                                        </Stack>
+                                    </Collapse>
+                                </Card>
+                            </Box>
+                        );
+                    })}
+                </Box>
+            )}
         </>
     );
 }
