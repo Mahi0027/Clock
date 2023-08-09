@@ -6,19 +6,22 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import TimerOutlinedIcon from "@mui/icons-material/TimerOutlined";
 import PauseIcon from "@mui/icons-material/Pause";
 function StopwatchHome() {
-    let timer:any = null;
     const [hour, setHour] = useState(0);
     const [minute, setMinute] = useState(0);
     const [second, setSecond] = useState(0);
-    const [milliSecond, setMilliSecond] = useState(0);
+    const [showHour, setShowHour] = useState("00");
+    const [showMinute, setShowMinute] = useState("00");
+    const [showSecond, setShowSecond] = useState("00");
+    const [timer, setTimer] = useState<any>(null);
+    const [snapshots, setSnapshots] = useState<string[]>([]);
     const [currentPlayFlag, setCurrentPlayFlag] = useState(false);
-    // useEffect(() => {
-    //     if (milliSecond === 60) {
-    //         setSecond(second + 1);
-    //         setMilliSecond(0);
-    //     }
-    // }, [milliSecond]);
     useEffect(() => {
+        console.log(snapshots);
+        
+    }, [snapshots]);
+    
+    useEffect(() => {
+        setShowSecond(second < 10 ? "0" + second : second.toString());
         if (second === 60) {
             setMinute((prevMinute) => prevMinute + 1);
             setSecond(0);
@@ -30,26 +33,40 @@ function StopwatchHome() {
             setHour((prevHour) => prevHour + 1);
             setMinute(0);
         }
+        setShowMinute(minute < 10 ? "0" + minute : minute.toString());
     }, [minute]);
 
+    useEffect(() => {
+        setShowHour(hour < 10 ? "0" + hour : hour.toString());
+    }, [hour]);
+
     const playStopwatch = () => {
-        timer = setInterval(() => {
-            // setMilliSecond(milliSecond + 1);
-            setSecond((prevSecond) => prevSecond+1);
-        }, 1000);
+        if (timer !== null) {
+            clearInterval(timer);
+        }
+        setTimer(() =>
+            setInterval(() => {
+                setSecond((prevSecond) => prevSecond + 1);
+            }, 1000)
+        );
         setCurrentPlayFlag(true);
     };
     const pauseStopwatch = () => {
-      clearInterval(timer);
-      setCurrentPlayFlag(false);
+        clearInterval(timer);
+        setCurrentPlayFlag(false);
     };
     const resetStopwatch = () => {
-      clearInterval(timer);
-      setHour(0);
-      setMinute(0);
-      setSecond(0);
-      setMilliSecond(0);
+        clearInterval(timer);
+        setHour(0);
+        setMinute(0);
+        setSecond(0);
+        setSnapshots([]);
+        setCurrentPlayFlag(false);
     };
+    const getSnapshot = () => {
+      const newSnapshot = `${showHour}:${showMinute}:${showSecond}`;
+      setSnapshots([...snapshots, newSnapshot]);
+    }
     return (
         <>
             <Box>
@@ -61,11 +78,16 @@ function StopwatchHome() {
                 >
                     <Grid item xl={12}>
                         <Typography className={styles.stopwatchTime}>
-                            {hour}:{minute}:{second}:{milliSecond}
+                            {showHour}:{showMinute}:{showSecond}
                         </Typography>
+                        {snapshots.map((snapshot, index) => (
+                            <Typography variant="body2" key={index}>
+                                #{index+1}  {snapshot}
+                            </Typography>
+                        ))}
                     </Grid>
                     <Grid item xl={12} className={styles.buttons}>
-                        <Button variant="outlined">
+                        <Button variant="outlined" onClick={resetStopwatch}>
                             <ReplayIcon />
                         </Button>
                         {!currentPlayFlag && (
@@ -81,7 +103,7 @@ function StopwatchHome() {
                                 <PauseIcon />
                             </Button>
                         )}
-                        <Button variant="contained">
+                        <Button variant="contained" onClick={getSnapshot}>
                             <TimerOutlinedIcon />
                         </Button>
                     </Grid>
