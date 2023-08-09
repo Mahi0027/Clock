@@ -1,0 +1,57 @@
+.buttons>Button {
+    width: 20vw;
+    height: 20vw;
+    border-radius: 10vw;
+    margin: 2vw;
+}
+
+.buttons>Button:nth-child(2) {
+    width: 30vw;
+    height: 30vw;
+    border-radius: 10vw;
+    margin: 2vw;
+}
+
+.stopwatchTime {
+    font-size: 18vw;
+}
+
+@media (orientation: portrait) {
+    .stopwatchTime {
+        font-size: 18vw;
+    }
+
+    .buttons>Button {
+        width: 20vw;
+        height: 20vw;
+        border-radius: 10vw;
+        margin: 2vw;
+    }
+
+    .buttons>Button:nth-child(2) {
+        width: 30vw;
+        height: 30vw;
+        border-radius: 10vw;
+        margin: 2vw;
+    }
+}
+
+@media (orientation: landscape) {
+    .stopwatchTime {
+        font-size: 18vh;
+    }
+
+    .buttons>Button {
+        width: 20vh;
+        height: 20vh;
+        border-radius: 10vh;
+        margin: 2vh;
+    }
+
+    .buttons>Button:nth-child(2) {
+        width: 30vh;
+        height: 30vh;
+        border-radius: 10vh;
+        margin: 2vh;
+    }
+}
