@@ -1,25 +1,32 @@
-import { Box, Button, Grid, Typography } from "@mui/material";
+import { Box, Button, Chip, Grid, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import styles from "@/styles/components/home/stopwatch/index.module.scss";
 import ReplayIcon from "@mui/icons-material/Replay";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import TimerOutlinedIcon from "@mui/icons-material/TimerOutlined";
 import PauseIcon from "@mui/icons-material/Pause";
+let tempArr = [];
 function StopwatchHome() {
     const [hour, setHour] = useState(0);
     const [minute, setMinute] = useState(0);
     const [second, setSecond] = useState(0);
+    const [milliSecond, setMilliSecond] = useState(0);
     const [showHour, setShowHour] = useState("00");
     const [showMinute, setShowMinute] = useState("00");
     const [showSecond, setShowSecond] = useState("00");
+    const [showMilliSecond, setShowMilliSecond] = useState("00");
     const [timer, setTimer] = useState<any>(null);
     const [snapshots, setSnapshots] = useState<string[]>([]);
     const [currentPlayFlag, setCurrentPlayFlag] = useState(false);
-    useEffect(() => {
-        console.log(snapshots);
-        
-    }, [snapshots]);
     
+    useEffect(() => {
+        setShowMilliSecond(milliSecond<10? "0"+ milliSecond: milliSecond.toString().slice(0, 2));
+        if (milliSecond >= 1000) {
+          setSecond(prevSecond => prevSecond + 1);
+            setMilliSecond(0);
+        }
+    }, [milliSecond]);
+
     useEffect(() => {
         setShowSecond(second < 10 ? "0" + second : second.toString());
         if (second === 60) {
@@ -46,8 +53,8 @@ function StopwatchHome() {
         }
         setTimer(() =>
             setInterval(() => {
-                setSecond((prevSecond) => prevSecond + 1);
-            }, 1000)
+                setMilliSecond((prevMilliSecond) => prevMilliSecond + 50);
+            }, 50)
         );
         setCurrentPlayFlag(true);
     };
@@ -60,55 +67,78 @@ function StopwatchHome() {
         setHour(0);
         setMinute(0);
         setSecond(0);
+        setMilliSecond(0);
         setSnapshots([]);
         setCurrentPlayFlag(false);
     };
     const getSnapshot = () => {
-      const newSnapshot = `${showHour}:${showMinute}:${showSecond}`;
-      setSnapshots([...snapshots, newSnapshot]);
-    }
+        const newSnapshot = `${showHour}:${showMinute}:${showSecond}:${showMilliSecond}`;
+        setSnapshots([newSnapshot, ...snapshots]);
+    };
     return (
         <>
-            <Box>
-                <Grid
-                    container
-                    justifyContent="center"
-                    alignItems="center"
-                    spacing={2}
-                >
-                    <Grid item xl={12}>
-                        <Typography className={styles.stopwatchTime}>
-                            {showHour}:{showMinute}:{showSecond}
-                        </Typography>
-                        {snapshots.map((snapshot, index) => (
-                            <Typography variant="body2" key={index}>
-                                #{index+1}  {snapshot}
-                            </Typography>
-                        ))}
-                    </Grid>
-                    <Grid item xl={12} className={styles.buttons}>
-                        <Button variant="outlined" onClick={resetStopwatch}>
-                            <ReplayIcon />
-                        </Button>
-                        {!currentPlayFlag && (
-                            <Button variant="contained" onClick={playStopwatch}>
-                                <PlayArrowIcon />
-                            </Button>
-                        )}
-                        {currentPlayFlag && (
-                            <Button
-                                variant="contained"
-                                onClick={pauseStopwatch}
-                            >
-                                <PauseIcon />
-                            </Button>
-                        )}
-                        <Button variant="contained" onClick={getSnapshot}>
-                            <TimerOutlinedIcon />
-                        </Button>
-                    </Grid>
+            <Grid
+                container
+                justifyContent="center"
+                alignItems="center"
+                spacing={2}
+            >
+                <Grid item sm={4}>
+                    <Typography className={styles.stopwatchTime}>
+                        <Grid container>
+                            <Grid item sm={12}>
+                                {showHour}:{showMinute}:
+                            </Grid>
+                            <Grid item sm={12}>
+                                {showSecond}:{showMilliSecond}
+                            </Grid>
+                        </Grid>
+                    </Typography>
                 </Grid>
-            </Box>
+                <Grid item sm={4} className={styles.snapshots}>
+                    {snapshots.map((snapshot, index) => (
+                        <Typography
+                            variant="body1"
+                            key={index}
+                            className={styles.snapshotText}
+                        >
+                            #{snapshots.length - index} {snapshot}
+                        </Typography>
+                    ))}
+                </Grid>
+                <Grid item sm={3} className={styles.buttons}>
+                    <Button variant="contained" onClick={resetStopwatch}>
+                        <ReplayIcon />
+                    </Button>
+                    {!currentPlayFlag && (
+                        <Button
+                            variant="contained"
+                            onClick={playStopwatch}
+                            className={styles.playStopwatchButton}
+                        >
+                            <PlayArrowIcon />
+                        </Button>
+                    )}
+                    {currentPlayFlag && (
+                        <Button
+                            variant="contained"
+                            onClick={pauseStopwatch}
+                            className={styles.pauseStopwatchButton}
+                        >
+                            <PauseIcon />
+                        </Button>
+                    )}
+                    <Button
+                        variant="contained"
+                        onClick={getSnapshot}
+                        sx={{
+                            visibility: currentPlayFlag ? "visible" : "hidden",
+                        }}
+                    >
+                        <TimerOutlinedIcon />
+                    </Button>
+                </Grid>
+            </Grid>
         </>
     );
 }
