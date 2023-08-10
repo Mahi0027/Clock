@@ -116,7 +116,7 @@ function StopwatchHome() {
                             onClick={playStopwatch}
                             className={styles.playStopwatchButton}
                         >
-                            <PlayArrowIcon />
+                            <PlayArrowIcon sx={{ fontSize: "5em" }} />
                         </Button>
                     )}
                     {currentPlayFlag && (
@@ -125,7 +125,7 @@ function StopwatchHome() {
                             onClick={pauseStopwatch}
                             className={styles.pauseStopwatchButton}
                         >
-                            <PauseIcon />
+                            <PauseIcon sx={{ fontSize: "5em" }} />
                         </Button>
                     )}
                     <Button
