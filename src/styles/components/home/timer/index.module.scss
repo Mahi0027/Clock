@@ -3,16 +3,13 @@
     justify-content: center;
 }
 
-.dialerBox {
-    margin-top: 10vh;
-}
-
 .timerTypography {
     font-size: 18vw;
 }
 
 .timerTypographyType {
-    font-size: 8vw;
+    font-size: 6vw;
+    margin-right: 2vw;
 }
 
 .button {
@@ -29,11 +26,12 @@
     }
 
     .timerTypographyType {
-        font-size: 8vw;
+        font-size: 6vw;
+        margin-right: 2vw;
     }
 
     .dialerBox {
-        margin-top: 10vh;
+        margin-top: 5vh;
     }
 
     .button {
@@ -46,20 +44,17 @@
 @media (orientation: landscape) {
     .timerTypography {
         font-size: 16vh;
-        margin-top: 15vh;
+        margin-top: 12vh;
     }
 
     .timerTypographyType {
-        font-size: 8vh;
-    }
-
-    .dialerBox {
-        margin-top: 0;
+        font-size: 6vh;
+        margin-right: 2vh;
     }
 
     .button {
         width: 2.5rem;
-        height: 2.5rem;
+        height: 2rem;
         border-radius: 1.25rem;
     }
 }
