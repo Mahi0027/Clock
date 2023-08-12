@@ -1,0 +1,65 @@
+.container {
+    text-align: center;
+    justify-content: center;
+}
+
+.dialerBox {
+    margin-top: 10vh;
+}
+
+.timerTypography {
+    font-size: 18vw;
+}
+
+.timerTypographyType {
+    font-size: 8vw;
+}
+
+.button {
+    width: 4rem;
+    height: 4rem;
+    font-size: 1.5rem;
+    font-weight: lighter;
+    border-radius: 2rem;
+}
+
+@media (orientation: portrait) {
+    .timerTypography {
+        font-size: 18vw;
+    }
+
+    .timerTypographyType {
+        font-size: 8vw;
+    }
+
+    .dialerBox {
+        margin-top: 10vh;
+    }
+
+    .button {
+        width: 4rem;
+        height: 4rem;
+        border-radius: 2rem;
+    }
+}
+
+@media (orientation: landscape) {
+    .timerTypography {
+        font-size: 16vh;
+        margin-top: 15vh;
+    }
+
+    .timerTypographyType {
+        font-size: 8vh;
+    }
+
+    .dialerBox {
+        margin-top: 0;
+    }
+
+    .button {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 1.25rem;
+    }
+}
