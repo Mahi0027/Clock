@@ -4,13 +4,23 @@ import styles from "@/styles/components/home/timer/index.module.scss";
 import BackspaceIcon from "@mui/icons-material/Backspace";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import RunningTimer from "./RunningTimer";
+import { useDispatch, useSelector } from "react-redux";
+import { setTimer } from "@/redux";
 
 function TimerHome() {
+    // const stateData = useSelector((state:any) => state);
+    const dispatch = useDispatch();
     const [hour, setHour] = useState("00");
     const [minute, setMinute] = useState("00");
     const [second, setSecond] = useState("00");
     const [userValue, setUserValue] = useState("");
+    const [startTimerDisplayFlag, setStartTimerDisplayFlag] = useState(false);
 
+    // useEffect(() => {
+    //     console.log(stateData.timer);
+    // }, [stateData.timer]);
+    
     useEffect(() => {
         setTime();
     }, [userValue]);
@@ -26,6 +36,14 @@ function TimerHome() {
     };
     const handleBackspaceClick = () => {
         setUserValue(userValue.slice(1));
+    };
+
+    const handleStartTimer = () => {
+        let milliSeconds =
+            (Number(hour) * 60 * 60 + Number(second) + Number(minute) * 60) *
+            1000;
+        dispatch(setTimer(milliSeconds));
+        setStartTimerDisplayFlag(true);
     };
     /* base on input value set values which show on display. */
     const setTime = () => {
@@ -75,117 +93,128 @@ function TimerHome() {
     };
     return (
         <>
-            <Grid container spacing={2} className={styles.container}>
-                <Grid item sm={6}>
-                    <Typography className={styles.timerTypography}>
-                        <span
-                            style={{ opacity: userValue.length > 4 ? 1 : 0.5 }}
-                        >
-                            {hour}
-                            <span className={styles.timerTypographyType}>
-                                h
+            {!startTimerDisplayFlag && (
+                <Grid container spacing={2} className={styles.container}>
+                    <Grid item sm={6}>
+                        <Typography className={styles.timerTypography}>
+                            <span
+                                style={{
+                                    opacity: userValue.length > 4 ? 1 : 0.5,
+                                }}
+                            >
+                                {hour}
+                                <span className={styles.timerTypographyType}>
+                                    h
+                                </span>
                             </span>
-                        </span>
-                        <span
-                            style={{ opacity: userValue.length > 2 ? 1 : 0.5 }}
-                        >
-                            {minute}
-                            <span className={styles.timerTypographyType}>
-                                m
+                            <span
+                                style={{
+                                    opacity: userValue.length > 2 ? 1 : 0.5,
+                                }}
+                            >
+                                {minute}
+                                <span className={styles.timerTypographyType}>
+                                    m
+                                </span>
                             </span>
-                        </span>
-                        <span
-                            style={{ opacity: userValue.length > 0 ? 1 : 0.5 }}
-                        >
-                            {second}
-                            <span className={styles.timerTypographyType}>
-                                s
+                            <span
+                                style={{
+                                    opacity: userValue.length > 0 ? 1 : 0.5,
+                                }}
+                            >
+                                {second}
+                                <span className={styles.timerTypographyType}>
+                                    s
+                                </span>
                             </span>
-                        </span>
-                    </Typography>
-                </Grid>
-                <Grid item sm={6} className={styles.dialerBox}>
-                    <Grid container spacing={1}>
-                        {[
-                            1,
-                            2,
-                            3,
-                            4,
-                            5,
-                            6,
-                            7,
-                            8,
-                            9,
-                            0,
-                            "backspace",
-                            "delete",
-                            "save",
-                        ].map((number) => {
-                            if (number === "backspace") {
-                                return (
-                                    <Grid item xs={4} key={number}>
-                                        <Button
-                                            variant="outlined"
-                                            fullWidth
-                                            onClick={() =>
-                                                handleBackspaceClick()
-                                            }
-                                            className={styles.button}
-                                        >
-                                            <BackspaceIcon />
-                                        </Button>
-                                    </Grid>
-                                );
-                            } else if (number === "delete") {
-                                return (
-                                    <Grid item xs={4} key={number}>
-                                        <Button
-                                            variant="outlined"
-                                            fullWidth
-                                            onClick={() => handleDeleteClick()}
-                                            className={styles.button}
-                                        >
-                                            <DeleteOutlineIcon />
-                                        </Button>
-                                    </Grid>
-                                );
-                            } else if (number === "save") {
-                                if (userValue.length) {
+                        </Typography>
+                    </Grid>
+                    <Grid item sm={6} className={styles.dialerBox}>
+                        <Grid container spacing={1}>
+                            {[
+                                1,
+                                2,
+                                3,
+                                4,
+                                5,
+                                6,
+                                7,
+                                8,
+                                9,
+                                0,
+                                "backspace",
+                                "delete",
+                                "save",
+                            ].map((number) => {
+                                if (number === "backspace") {
                                     return (
-                                        <Grid item xs={12} key={number}>
+                                        <Grid item xs={4} key={number}>
                                             <Button
-                                                variant="contained"
+                                                variant="outlined"
+                                                fullWidth
+                                                onClick={() =>
+                                                    handleBackspaceClick()
+                                                }
+                                                className={styles.button}
+                                            >
+                                                <BackspaceIcon />
+                                            </Button>
+                                        </Grid>
+                                    );
+                                } else if (number === "delete") {
+                                    return (
+                                        <Grid item xs={4} key={number}>
+                                            <Button
+                                                variant="outlined"
                                                 fullWidth
                                                 onClick={() =>
                                                     handleDeleteClick()
                                                 }
                                                 className={styles.button}
                                             >
-                                                <PlayArrowIcon />
+                                                <DeleteOutlineIcon />
+                                            </Button>
+                                        </Grid>
+                                    );
+                                } else if (number === "save") {
+                                    if (userValue.length) {
+                                        return (
+                                            <Grid item xs={12} key={number}>
+                                                <Button
+                                                    variant="contained"
+                                                    fullWidth
+                                                    onClick={() =>
+                                                        handleStartTimer()
+                                                    }
+                                                    className={styles.button}
+                                                >
+                                                    <PlayArrowIcon />
+                                                </Button>
+                                            </Grid>
+                                        );
+                                    }
+                                } else {
+                                    return (
+                                        <Grid item xs={4} key={number}>
+                                            <Button
+                                                variant="outlined"
+                                                fullWidth
+                                                onClick={() =>
+                                                    handleNumberClick(number)
+                                                }
+                                                className={styles.button}
+                                            >
+                                                {number}
                                             </Button>
                                         </Grid>
                                     );
                                 }
-                            } else {
-                                return (
-                                    <Grid item xs={4} key={number}>
-                                        <Button
-                                            variant="outlined"
-                                            fullWidth
-                                            onClick={() =>
-                                                handleNumberClick(number)
-                                            }
-                                            className={styles.button}
-                                        >
-                                            {number}
-                                        </Button>
-                                    </Grid>
-                                );
-                            }
-                        })}
+                            })}
+                        </Grid>
                     </Grid>
                 </Grid>
-            </Grid>
+            )}
+            {startTimerDisplayFlag && <RunningTimer />}
         </>
     );
 }

@@ -42,3 +42,12 @@ export {
     updateAlarmLabel,
     deleteAlarm,
 } from "./features/home/alarm/actions";
+
+export {
+    getAllTimers,
+    setTimer,
+    updateTimerScheduleFlag,
+    updateTimerLabel,
+    setTimerSound,
+    deleteTimer,
+} from "./features/home/timer/actions";
