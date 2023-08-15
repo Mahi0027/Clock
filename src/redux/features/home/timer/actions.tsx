@@ -5,6 +5,7 @@ import {
     SET_TIMER_SOUND,
     UPDATE_TIMER_LABEL,
     UPDATE_TIMER_SCHEDULE_FLAG,
+    UPDATE_TIMER_TIME,
 } from "./types";
 
 export const getAllTimers = () => {
@@ -17,6 +18,12 @@ export const setTimer = (newPeriod: number) => {
     return {
         type: SET_TIMER,
         payload: newPeriod,
+    };
+};
+export const updateTimerTime = (id: number, newPeriod: number) => {
+    return {
+        type: UPDATE_TIMER_TIME,
+        payload: { id, newPeriod },
     };
 };
 

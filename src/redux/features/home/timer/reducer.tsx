@@ -5,6 +5,7 @@ import {
     SET_TIMER_SOUND,
     UPDATE_TIMER_LABEL,
     UPDATE_TIMER_SCHEDULE_FLAG,
+    UPDATE_TIMER_TIME,
 } from "./types";
 
 const timerSounds = [
@@ -27,7 +28,7 @@ type actionTypes = {
 type initialStatesTypes = {
     timers: {
         id: number;
-        timerTime: Date;
+        timerTime: number;
         currentScheduleFlag: boolean;
         repeatFlag: boolean;
         sound: string;
@@ -63,6 +64,19 @@ const timerReducer = (state = initialStates, action: actionTypes) => {
                         label: null,
                     },
                 ],
+            };
+        case UPDATE_TIMER_TIME:
+            const updatedTimerForTime = state.timers.map((timer) => {
+                return timer.id === action.payload.id
+                    ? {
+                          ...timer,
+                          timerTime: action.payload.newPeriod,
+                      }
+                    : timer;
+            });
+            return {
+                ...state,
+                timers: updatedTimerForTime,
             };
         case UPDATE_TIMER_SCHEDULE_FLAG:
             const updatedTimerForScheduledFlag = state.timers.map((timer) => {

@@ -46,6 +46,7 @@ export {
 export {
     getAllTimers,
     setTimer,
+    updateTimerTime,
     updateTimerScheduleFlag,
     updateTimerLabel,
     setTimerSound,

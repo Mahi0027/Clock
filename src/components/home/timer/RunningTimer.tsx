@@ -103,6 +103,7 @@ function RunningTimer() {
                                     </Typography>
                                 )} */}
                                 <CircularWithValueLabel
+                                    id={timer.id}
                                     time={timer.timerTime}
                                 />
                                 {/* <Switch

@@ -6,10 +6,10 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setTimer } from "@/redux";
+import { setTimer, updateTimerTime } from "@/redux";
 
 function CircularProgressWithLabel(
-    props: CircularProgressProps & { value: number }
+    props: CircularProgressProps & { value: number; humanReadableTime: string }
 ) {
     return (
         <Box
@@ -37,33 +37,56 @@ function CircularProgressWithLabel(
                     justifyContent: "center",
                 }}
             >
-                <Typography
-                    variant="caption"
-                    component="div"
-                    color="text.primary"
-                >{`${Math.round(props.value)}%`}</Typography>
+                <Typography variant="h4">{props.humanReadableTime}</Typography>
             </Box>
         </Box>
     );
 }
 
-export default function CircularWithValueLabel({ time }) {
-    const stateData = useSelector((state:any) => state);
+export default function CircularWithValueLabel({ id, time }) {
+    const stateData = useSelector((state: any) => state);
     const dispatch = useDispatch();
-    const [progress, setProgress] = useState(time);
+    const [remainingTime, setRemainingTime] = useState(time);
+    const [humanReadableTime, setHumanReadableTime] = useState("");
+    const [progress, setProgress] = useState(100);
 
+    useEffect(() => {
+        if (progress > 0) {
+            setProgress(Math.trunc((remainingTime * 100) / time));
+            getHumanReadableRemainingTime();
+        }
+    }, [remainingTime]);
 
     useEffect(() => {
         const timer = setInterval(() => {
-            setProgress((prevProgress) =>
-                prevProgress >= 100 ? 0 : prevProgress - 1000
-            );
+            if (remainingTime > 0) {
+                setRemainingTime(
+                    (prevRemainingTime: number) => prevRemainingTime - 1000
+                );
+            }
         }, 1000);
         return () => {
-            dispatch(setTimer(stateData.timer.timers.timerTime - 1000));
             clearInterval(timer);
         };
     }, []);
 
-    return <CircularProgressWithLabel value={progress} />;
+    const getHumanReadableRemainingTime = () => {
+        let tempTime = remainingTime;
+        const hours = Math.floor(tempTime / 3600000);
+        tempTime %= 3600000;
+        const minutes = Math.floor(tempTime / 60000);
+        tempTime %= 60000;
+        const seconds = Math.floor(tempTime / 1000);
+        setHumanReadableTime(
+            `${hours < 10 ? "0" + hours : hours}:
+            ${minutes < 10 ? "0" + minutes : minutes}:
+            ${seconds < 10 ? "0" + seconds : seconds}`
+        );
+    };
+    return (
+        <CircularProgressWithLabel
+            value={progress}
+            humanReadableTime={humanReadableTime}
+        />
+    );
 }
