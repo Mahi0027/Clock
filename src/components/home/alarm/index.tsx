@@ -16,9 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setAlarm } from "@/redux";
 
 function AlarmHome() {
-    const stateData = useSelector((state: any) => state);
     const dispatch = useDispatch();
-    // const [alarm, setAlarm] = useState<Date>(new Date());
     const [open, setOpen] = useState(false);
 
     const addNewAlarm = (alarmTime: Date) => {
