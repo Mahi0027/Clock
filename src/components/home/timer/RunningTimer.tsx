@@ -103,8 +103,7 @@ function RunningTimer() {
                                     </Typography>
                                 )} */}
                                 <CircularWithValueLabel
-                                    id={timer.id}
-                                    time={timer.timerTime}
+                                    timerdetails={timer}
                                 />
                                 {/* <Switch
                                     checked={timer.currentScheduleFlag}

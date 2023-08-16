@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setTimer, updateTimerTime } from "@/redux";
 
 function CircularProgressWithLabel(
-    props: CircularProgressProps & { value: number; humanReadableTime: string }
+    props: CircularProgressProps & { value: number; humanreadabletime: string }
 ) {
     return (
         <Box
@@ -37,36 +37,54 @@ function CircularProgressWithLabel(
                     justifyContent: "center",
                 }}
             >
-                <Typography variant="h4">{props.humanReadableTime}</Typography>
+                <Typography variant="h4">{props.humanreadabletime}</Typography>
             </Box>
         </Box>
     );
 }
 
-export default function CircularWithValueLabel({ id, time }) {
+export default function CircularWithValueLabel({ timerdetails }) {
     const stateData = useSelector((state: any) => state);
     const dispatch = useDispatch();
-    const [remainingTime, setRemainingTime] = useState(time);
+    const [remainingTime, setRemainingTime] = useState(timerdetails.timerTime);
     const [humanReadableTime, setHumanReadableTime] = useState("");
     const [progress, setProgress] = useState(100);
+    const [timerInterval, setTimerInterval] = useState<any>(0);
 
     useEffect(() => {
-        if (progress > 0) {
-            setProgress(Math.trunc((remainingTime * 100) / time));
-            getHumanReadableRemainingTime();
-        }
+        // if (remainingTime <= 0) {
+        //     let timerDOM = new Audio(`/sound/alarm/${timerdetails.sound}.mp3`);
+        //     timerDOM.currentTime = 0;
+        //     timerDOM.loop = true;
+        //     timerDOM.play();
+        // }
+        // if (progress > 0) {
+        //     setProgress(
+        //         Math.trunc((remainingTime * 100) / timerdetails.timerTime)
+        //     );
+        //     getHumanReadableRemainingTime();
+        // }
+        console.log(remainingTime);
+        
     }, [remainingTime]);
 
     useEffect(() => {
-        const timer = setInterval(() => {
-            if (remainingTime > 0) {
-                setRemainingTime(
-                    (prevRemainingTime: number) => prevRemainingTime - 1000
-                );
-            }
-        }, 1000);
+        if (remainingTime > 0) {
+            setTimerInterval(
+                setInterval(() => {
+                    if (remainingTime > 0) {
+                        setRemainingTime(
+                            (prevRemainingTime: number) =>
+                                prevRemainingTime - 1000
+                        );
+                    }
+                }, 1000)
+            );
+        } else {
+            clearInterval(timerInterval);
+        }
         return () => {
-            clearInterval(timer);
+            clearInterval(timerInterval);
         };
     }, []);
 
@@ -86,7 +104,7 @@ export default function CircularWithValueLabel({ id, time }) {
     return (
         <CircularProgressWithLabel
             value={progress}
-            humanReadableTime={humanReadableTime}
+            humanreadabletime={humanReadableTime}
         />
     );
 }
