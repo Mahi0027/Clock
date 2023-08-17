@@ -4,9 +4,11 @@ import CircularProgress, {
 } from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setTimer, updateTimerTime } from "@/redux";
+import ReplayIcon from "@mui/icons-material/Replay";
+import { Button } from "@mui/material";
 
 function CircularProgressWithLabel(
     props: CircularProgressProps & { value: number; humanreadabletime: string }
@@ -27,17 +29,27 @@ function CircularProgressWithLabel(
             />
             <Box
                 sx={{
-                    top: 0,
+                    top: "20%",
                     left: 0,
                     bottom: 0,
                     right: 0,
                     position: "absolute",
                     display: "flex",
+                    flexDirection: "column",
                     alignItems: "center",
                     justifyContent: "center",
                 }}
             >
                 <Typography variant="h4">{props.humanreadabletime}</Typography>
+                
+                <Button
+                sx={{ top: '10%'}}
+                    onClick={() => {
+                        alert("HelloMahi");
+                    }}
+                >
+                    <ReplayIcon />
+                </Button>
             </Box>
         </Box>
     );
@@ -49,42 +61,32 @@ export default function CircularWithValueLabel({ timerdetails }) {
     const [remainingTime, setRemainingTime] = useState(timerdetails.timerTime);
     const [humanReadableTime, setHumanReadableTime] = useState("");
     const [progress, setProgress] = useState(100);
-    const [timerInterval, setTimerInterval] = useState<any>(0);
+    const timerInterval = useRef<any>(null);
 
     useEffect(() => {
-        // if (remainingTime <= 0) {
-        //     let timerDOM = new Audio(`/sound/alarm/${timerdetails.sound}.mp3`);
-        //     timerDOM.currentTime = 0;
-        //     timerDOM.loop = true;
-        //     timerDOM.play();
-        // }
-        // if (progress > 0) {
-        //     setProgress(
-        //         Math.trunc((remainingTime * 100) / timerdetails.timerTime)
-        //     );
-        //     getHumanReadableRemainingTime();
-        // }
-        console.log(remainingTime);
-        
+        if (remainingTime <= 0) {
+            clearTimeout(timerInterval.current);
+            let timerDOM = new Audio(`sounds/alarm/${timerdetails.sound}.mp3`);
+            timerDOM.currentTime = 0;
+            timerDOM.loop = true;
+            timerDOM.play();
+        }
+        if (progress > 0) {
+            setProgress(
+                Math.trunc((remainingTime * 100) / timerdetails.timerTime)
+            );
+            getHumanReadableRemainingTime();
+        }
     }, [remainingTime]);
 
     useEffect(() => {
-        if (remainingTime > 0) {
-            setTimerInterval(
-                setInterval(() => {
-                    if (remainingTime > 0) {
-                        setRemainingTime(
-                            (prevRemainingTime: number) =>
-                                prevRemainingTime - 1000
-                        );
-                    }
-                }, 1000)
+        timerInterval.current = setInterval(() => {
+            setRemainingTime(
+                (prevRemainingTime: number) => prevRemainingTime - 1000
             );
-        } else {
-            clearInterval(timerInterval);
-        }
+        }, 1000);
         return () => {
-            clearInterval(timerInterval);
+            clearInterval(timerInterval.current);
         };
     }, []);
 
