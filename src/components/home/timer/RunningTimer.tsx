@@ -1,35 +1,20 @@
 import {
     Box,
+    Button,
     Card,
-    Collapse,
     IconButton,
     Stack,
-    Switch,
     Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import styles from "@/styles/components/home/timer/RunningTimer.module.scss";
 import LabelOutlinedIcon from "@mui/icons-material/LabelOutlined";
 import CircularWithValueLabel from "./miscellanceous/CircularWithValueLabel";
 import DialogBox from "./miscellanceous/DialogBox";
-import { updateTimerLabel } from "@/redux";
-import { styled } from "@mui/material/styles";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-interface ExpandMoreProps extends IconButtonProps {
-    expand: boolean;
-}
-
-/* expand more icon effect */
-const ExpandMore = styled((props: ExpandMoreProps) => {
-    const { expand, ...other } = props;
-    return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-    transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
-    marginLeft: "auto",
-    transition: theme.transitions.create("transform", {
-        duration: theme.transitions.duration.shortest,
-    }),
-}));
+import { deleteTimer, updateTimerLabel, updateTimerTime } from "@/redux";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import CancelTwoToneIcon from "@mui/icons-material/CancelTwoTone";
 
 function RunningTimer() {
     const stateData = useSelector((state: any) => state);
@@ -42,9 +27,9 @@ function RunningTimer() {
         dependency: number;
     }>({ values: [], dependency: -1 });
 
-    useEffect(() => {
-        console.log(stateData.timer);
-    }, [stateData.timer]);
+    // useEffect(() => {
+    //     console.log(stateData.timer);
+    // }, [stateData.timer]);
 
     const handleLabelButtonEvent = (
         openDialogBoxFlag: boolean,
@@ -60,11 +45,16 @@ function RunningTimer() {
         setOpenLabelDialogFlag(false);
     };
 
-    const handleExpand = (index: number) => {
-        const updatedTempExpand = expand.values;
-        updatedTempExpand[index] = !updatedTempExpand[index];
-        setExpand({ values: updatedTempExpand, dependency: index });
+    /* add 60 seconds(one minute) in timer. */
+    const addTimeInTimer = (timer: any) => {
+        const addTime = 60000; /* 60 seconds */
+        if (timer.persistTime > timer.timerTime + addTime) {
+            dispatch(updateTimerTime(timer.id, timer.timerTime + addTime));
+        } else {
+            dispatch(updateTimerTime(timer.id, timer.persistTime));
+        }
     };
+
     return (
         <Box sx={{ marginBottom: "32vh" }}>
             {stateData.timer.timers.map((timer: any, index: number) => {
@@ -110,14 +100,13 @@ function RunningTimer() {
                                     labelText={labelText}
                                     handleLabelText={handleLabelText}
                                 />
-                                <ExpandMore
-                                    expand={expand.values[index]}
-                                    onClick={() => handleExpand(index)}
-                                    aria-expanded={expand.values[index]}
-                                    aria-label="show more"
+                                <Button
+                                    variant="text"
+                                    sx={{ opacity: 0.5 }}
+                                    onClick={() => dispatch(deleteTimer(timer.id))}
                                 >
-                                    <ExpandMoreIcon />
-                                </ExpandMore>
+                                    <CancelTwoToneIcon />
+                                </Button>
                             </Stack>
                             <Stack
                                 direction={"row"}
@@ -129,13 +118,32 @@ function RunningTimer() {
                             >
                                 <CircularWithValueLabel timerdetails={timer} />
                             </Stack>
-                            <Collapse
-                                in={expand.values[index]}
-                                timeout="auto"
-                                unmountOnExit
+                            <Stack
+                                direction="row"
+                                justifyContent="center"
+                                spacing={4}
+                                className={styles.actionButtons}
                             >
-                                <Typography>sldfskjfldjfldsj</Typography>
-                            </Collapse>
+                                <Button
+                                    variant="text"
+                                    onClick={() => addTimeInTimer(timer)}
+                                >
+                                    +1:00
+                                </Button>
+                                <Button
+                                    variant="text"
+                                    onClick={() =>
+                                        dispatch(
+                                            updateTimerTime(
+                                                timer.id,
+                                                timer.persistTime
+                                            )
+                                        )
+                                    }
+                                >
+                                    <RestartAltIcon />
+                                </Button>
+                            </Stack>
                         </Card>
                     </Box>
                 );

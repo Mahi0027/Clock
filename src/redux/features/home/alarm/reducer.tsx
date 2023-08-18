@@ -49,12 +49,11 @@ const alarmReducer = (state = initialStates, action: actionTypes) => {
             const lastAlarmId =
                 state.alarms.length === 0
                     ? 0
-                    : state.alarms[state.alarms.length - 1].id;
+                    : state.alarms[0].id;
 
             return {
                 ...state,
                 alarms: [
-                    ...state.alarms,
                     {
                         id: lastAlarmId + 1,
                         alarmTime: action.payload,
@@ -63,6 +62,7 @@ const alarmReducer = (state = initialStates, action: actionTypes) => {
                         sound: state.alarmSounds[1],
                         label: null,
                     },
+                    ...state.alarms,
                 ],
             };
         case UPDATE_ALARM_SCHEDULE_FLAG:

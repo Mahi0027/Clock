@@ -29,6 +29,7 @@ type initialStatesTypes = {
     timers: {
         id: number;
         timerTime: number;
+        persistTime: number;
         currentScheduleFlag: boolean;
         repeatFlag: boolean;
         sound: string;
@@ -50,19 +51,20 @@ const timerReducer = (state = initialStates, action: actionTypes) => {
             const lastTimerId =
                 state.timers.length === 0
                     ? 0
-                    : state.timers[state.timers.length - 1].id;
+                    : state.timers[0].id;
             return {
                 ...state,
                 timers: [
-                    ...state.timers,
                     {
                         id: lastTimerId + 1,
                         timerTime: action.payload,
+                        persistTime: action.payload,
                         currentScheduleFlag: true,
                         repeatFlag: false,
                         sound: state.timerSounds[1],
                         label: null,
                     },
+                    ...state.timers,
                 ],
             };
         case UPDATE_TIMER_TIME:

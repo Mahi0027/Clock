@@ -1,0 +1,19 @@
+.actionButtons {
+    margin: 2vh 0;
+}
+
+.actionButtons> Button {
+    width: 100vw;
+}
+
+@media (orientation: portrait) {
+    .actionButtons {
+            margin: 2vh 0;
+        }
+}
+
+@media (orientation: landscape) {
+    .actionButtons {
+            margin: 2vw 0;
+        }
+}
