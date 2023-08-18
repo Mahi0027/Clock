@@ -16,20 +16,22 @@ import { deleteTimer, updateTimerLabel, updateTimerTime } from "@/redux";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import CancelTwoToneIcon from "@mui/icons-material/CancelTwoTone";
 
-function RunningTimer() {
+type RunningTimerProps = {
+    closeRunningTimer: () => void;
+}
+function RunningTimer(props: RunningTimerProps) {
     const stateData = useSelector((state: any) => state);
     const dispatch = useDispatch();
     const [openLabelDialogFlag, setOpenLabelDialogFlag] = useState(false);
     const [idForOpenLabelDialogFlag, setIdForOpenLabelDialogFlag] = useState(0);
     const [labelText, setLabelText] = useState("");
-    const [expand, setExpand] = useState<{
-        values: boolean[];
-        dependency: number;
-    }>({ values: [], dependency: -1 });
 
-    // useEffect(() => {
-    //     console.log(stateData.timer);
-    // }, [stateData.timer]);
+    useEffect(() => {
+        // console.log(stateData.timer.timer.length);
+        if (stateData.timer.timers.length === 0) {
+            props.closeRunningTimer();
+        }
+    }, [stateData.timer]);
 
     const handleLabelButtonEvent = (
         openDialogBoxFlag: boolean,
@@ -103,7 +105,9 @@ function RunningTimer() {
                                 <Button
                                     variant="text"
                                     sx={{ opacity: 0.5 }}
-                                    onClick={() => dispatch(deleteTimer(timer.id))}
+                                    onClick={() =>
+                                        dispatch(deleteTimer(timer.id))
+                                    }
                                 >
                                     <CancelTwoToneIcon />
                                 </Button>
@@ -116,7 +120,10 @@ function RunningTimer() {
                                     paddingLeft: "2vw",
                                 }}
                             >
-                                <CircularWithValueLabel timerdetails={timer} />
+                                <CircularWithValueLabel
+                                    timerdetails={timer}
+                                    closeRunningTimer={props.closeRunningTimer}
+                                />
                             </Stack>
                             <Stack
                                 direction="row"
