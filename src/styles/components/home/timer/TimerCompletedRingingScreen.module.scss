@@ -1,0 +1,47 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+}
+
+.animation {
+    width: 80vw;
+    height: auto;
+    margin-top: 10vh;
+    text-align: center;
+    justify-content: center;
+}
+
+.button {
+    width: 70vw;
+    height: 10vh;
+    margin: 8vh 5vw;
+    font-size: xx-large;
+}
+
+@media (orientation: portrait) {
+    .animation {
+        width: 80vw;
+        margin-top: 10vh;
+    }
+
+    .button {
+        width: 70vw;
+        height: 10vh;
+        margin: 8vh 5vw;
+    }
+}
+
+@media (orientation: landscape) {
+    .animation {
+        width: 80vh;
+        margin-top: 10vw;
+    }
+
+    .button {
+        width: 70vh;
+        height: 10vw;
+        margin: 6vw 5vh;
+    }
+}

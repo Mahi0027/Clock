@@ -11,16 +11,17 @@ import { setTimer } from "@/redux";
 function TimerHome() {
     // const stateData = useSelector((state:any) => state);
     const dispatch = useDispatch();
-    const [hour, setHour] = useState("00");
-    const [minute, setMinute] = useState("00");
-    const [second, setSecond] = useState("00");
-    const [userValue, setUserValue] = useState("");
-    const [startTimerDisplayFlag, setStartTimerDisplayFlag] = useState(false);
+    const [hour, setHour] = useState<string>("00");
+    const [minute, setMinute] = useState<string>("00");
+    const [second, setSecond] = useState<string>("00");
+    const [userValue, setUserValue] = useState<string>("");
+    const [startTimerDisplayFlag, setStartTimerDisplayFlag] =
+        useState<boolean>(false);
 
     // useEffect(() => {
     //     console.log(stateData.timer);
     // }, [stateData.timer]);
-    
+
     useEffect(() => {
         setTime();
     }, [userValue]);
@@ -44,6 +45,11 @@ function TimerHome() {
             1000;
         dispatch(setTimer(milliSeconds));
         setStartTimerDisplayFlag(true);
+    };
+
+    const closeRunningTimer = () => {
+        handleDeleteClick();
+        setStartTimerDisplayFlag(false);
     };
     /* base on input value set values which show on display. */
     const setTime = () => {
@@ -214,7 +220,9 @@ function TimerHome() {
                     </Grid>
                 </Grid>
             )}
-            {startTimerDisplayFlag && <RunningTimer />}
+            {startTimerDisplayFlag && (
+                <RunningTimer closeRunningTimer={closeRunningTimer} />
+            )}
         </>
     );
 }
