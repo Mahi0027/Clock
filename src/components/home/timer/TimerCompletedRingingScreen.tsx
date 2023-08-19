@@ -33,26 +33,25 @@ function TimerCompletedRingingScreen({
     return (
         <>
             <Dialog fullScreen open={true} TransitionComponent={Transition}>
-                <Box className={styles.container}>
-                    <Grid container>
-                        <Grid item sm={6} className={styles.animation}>
-                            <Typography variant="h6" gutterBottom>
-                                {timerRunningLabel}
-                            </Typography>
-                            <Lottie loop={true} animationData={timer} />
-                        </Grid>
-                        <Grid item sm={6}>
-                            <Button
-                                className={styles.button}
-                                variant="outlined"
-                                onClick={() => {
-                                    deleteTimerDOM();
-                                    closeTimerCompetedRingingScreen();
-                                }}
-                            >
-                                Stop
-                            </Button>
-                            {/* <Button
+                <Grid container className={styles.container}>
+                    <Grid item sm={6} className={styles.animation}>
+                        <Lottie loop={true} animationData={timer} />
+                    </Grid>
+                    <Grid item sm={6}>
+                        <Typography variant="h6" gutterBottom className={styles.label}>
+                            {timerRunningLabel}
+                        </Typography>
+                        <Button
+                            className={styles.button}
+                            variant="outlined"
+                            onClick={() => {
+                                deleteTimerDOM();
+                                closeTimerCompetedRingingScreen();
+                            }}
+                        >
+                            Stop
+                        </Button>
+                        {/* <Button
                                 className={styles.button}
                                 variant="contained"
                                 color="warning"
@@ -67,9 +66,8 @@ function TimerCompletedRingingScreen({
                             >
                                 Snooze
                             </Button> */}
-                        </Grid>
                     </Grid>
-                </Box>
+                </Grid>
             </Dialog>
         </>
     );

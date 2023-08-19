@@ -1,6 +1,6 @@
 .container {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     text-align: center;
     justify-content: center;
 }
@@ -9,14 +9,17 @@
     width: 80vw;
     height: auto;
     margin-top: 10vh;
-    text-align: center;
-    justify-content: center;
+}
+
+.label {
+    font-size: x-large;
+    padding: 20vw;
 }
 
 .button {
     width: 70vw;
     height: 10vh;
-    margin: 8vh 5vw;
+    margin: 5vh 5vw;
     font-size: xx-large;
 }
 
@@ -26,22 +29,32 @@
         margin-top: 10vh;
     }
 
+    .label {
+        font-size: x-large;
+        padding: 20vw;
+    }
+
     .button {
         width: 70vw;
         height: 10vh;
-        margin: 8vh 5vw;
+        margin: 5vh 5vw;
     }
 }
 
 @media (orientation: landscape) {
     .animation {
-        width: 80vh;
-        margin-top: 10vw;
+        width: 20vh !important;
+        margin-top: 0;
+    }
+
+    .label {
+        font-size: x-large;
+        padding: 10vh;
     }
 
     .button {
         width: 70vh;
         height: 10vw;
-        margin: 6vw 5vh;
+        margin: 10vw 5vh;
     }
 }
