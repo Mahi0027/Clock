@@ -42,8 +42,9 @@ function CircularProgressWithLabel(props: CircularProgressWithLabelProps) {
                 variant="determinate"
                 color="primary"
                 {...props}
-                size="50vw"
+                size="15em"
                 thickness={1}
+                // className=
             />
             <Box
                 sx={{
@@ -61,8 +62,8 @@ function CircularProgressWithLabel(props: CircularProgressWithLabelProps) {
                 <Typography variant="h4">{props.humanreadabletime}</Typography>
 
                 <Button sx={{ top: "10%" }} onClick={handlePlayPause}>
-                    {playFlag && <PauseIcon />}
-                    {!playFlag && <PlayArrowIcon />}
+                    {playFlag && <PauseIcon sx={{ scale: "1.5" }} />}
+                    {!playFlag && <PlayArrowIcon sx={{ scale: "1.5" }} />}
                 </Button>
             </Box>
         </Box>
@@ -97,16 +98,16 @@ export default function CircularWithValueLabel(
     }, []);
 
     useEffect(() => {
-        console.log("timerCompletedRingingPage: ", timerCompletedRingingPage);
-    }, [timerCompletedRingingPage]);
-
-    useEffect(() => {
         setRemainingTime(props.timerdetails.timerTime);
         if (!pauseFlag) playTimer();
     }, [stateData.timer]);
 
     useEffect(() => {
-        if (remainingTime <= 0) {
+        if (timerRingDOM !== null) setTimerCompletedRingingPage(true);
+    }, [timerRingDOM]);
+
+    useEffect(() => {
+        if (remainingTime <= 0 && !timerCompletedRingingPage) {
             dispatch(updateTimerTime(props.timerdetails.id, 0));
             clearTimeout(timerIntervalRef.current);
             let timerDOM = new Audio(
@@ -116,7 +117,6 @@ export default function CircularWithValueLabel(
             timerDOM.currentTime = 0;
             timerDOM.loop = true;
             timerDOM.play();
-            setTimerCompletedRingingPage(true);
         } else {
             dispatch(updateTimerTime(props.timerdetails.id, remainingTime));
         }
@@ -142,7 +142,6 @@ export default function CircularWithValueLabel(
     const pauseTimer = () => {
         clearTimeout(timerIntervalRef.current);
         setPauseFlag(true);
-        // dispatch(updateTimerTime(props.timerdetails.id, remainingTime));
     };
 
     /* delete timer */

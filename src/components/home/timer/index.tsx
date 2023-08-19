@@ -9,7 +9,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { setTimer } from "@/redux";
 
 function TimerHome() {
-    // const stateData = useSelector((state:any) => state);
     const dispatch = useDispatch();
     const [hour, setHour] = useState<string>("00");
     const [minute, setMinute] = useState<string>("00");
@@ -17,10 +16,6 @@ function TimerHome() {
     const [userValue, setUserValue] = useState<string>("");
     const [startTimerDisplayFlag, setStartTimerDisplayFlag] =
         useState<boolean>(false);
-
-    // useEffect(() => {
-    //     console.log(stateData.timer);
-    // }, [stateData.timer]);
 
     useEffect(() => {
         setTime();

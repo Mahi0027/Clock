@@ -27,7 +27,6 @@ function RunningTimer(props: RunningTimerProps) {
     const [labelText, setLabelText] = useState("");
 
     useEffect(() => {
-        // console.log(stateData.timer.timer.length);
         if (stateData.timer.timers.length === 0) {
             props.closeRunningTimer();
         }
@@ -67,6 +66,9 @@ function RunningTimer(props: RunningTimerProps) {
                             sx={{
                                 borderRadius: "10px",
                                 padding: "0 2vw",
+                                "@media (orientation: landscape)": {
+                                    width: "70vw",
+                                },
                             }}
                         >
                             <Stack
