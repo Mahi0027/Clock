@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { RefObject, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styles from "@/styles/components/home/alarm/AlarmView.module.scss";
 import {
@@ -44,7 +44,11 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
     }),
 }));
 
-function AlarmView() {
+type AlarmViewProps = {
+    scrollToTop: boolean;
+    closeScrollToTop: () => void;
+};
+function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
     let prevTimeOut = 0;
     const stateData = useSelector((state: any) => state);
     const dispatch = useDispatch();
@@ -76,6 +80,15 @@ function AlarmView() {
         setExpandState(stateData.alarm.alarms.length);
         // setAlarmTimeOut(Array.from({ length: stateData.alarm.alarms.length }));
         setAlarms();
+
+        if (scrollToTop) {
+            // Scroll to the top
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth",
+            });
+            closeScrollToTop();
+        }
     }, [stateData.alarm]);
 
     /* set all alarms. */
@@ -90,7 +103,7 @@ function AlarmView() {
         let tempAlarmTimeout = Array.from({
             length: stateData.alarm.alarms.length,
         });
-        stateData.alarm.alarms.map((value, index) => {
+        stateData.alarm.alarms.map((value:any, index:number) => {
             if (value.currentScheduleFlag) {
                 const givenTime = new Date(value.alarmTime);
                 const currentTime = new Date();
@@ -102,7 +115,7 @@ function AlarmView() {
                     dispatch(updateAlarmScheduleFlag(value.id, false));
                 } else {
                     /* set alarm. */
-                    const timeDiff = givenTime - currentTime;
+                    const timeDiff:number = givenTime.getTime() - currentTime.getTime();
                     let alarmDOM = new Audio(
                         `/sounds/alarm/${value.sound}.mp3`
                     );
@@ -246,6 +259,9 @@ function AlarmView() {
                                     sx={{
                                         borderRadius: "10px",
                                         padding: "0 2vw",
+                                        "@media (orientation: landscape)": {
+                                            width: "70vw",
+                                        },
                                     }}
                                 >
                                     <Stack
