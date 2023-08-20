@@ -20,6 +20,16 @@
     border-radius: 2rem;
 }
 
+
+.addAlarmButton {
+    position: fixed;
+    margin: auto;
+    left: 50%;
+    max-width: 100px;
+    max-height: 100px;
+    transform: translateX(-50%)
+}
+
 @media (orientation: portrait) {
     .timerTypography {
         font-size: 18vw;
@@ -39,6 +49,12 @@
         height: 4rem;
         border-radius: 2rem;
     }
+
+    .addAlarmButton {
+        width: 20vw;
+        height: 20vw;
+        bottom: 10vh;
+    }
 }
 
 @media (orientation: landscape) {
@@ -56,5 +72,11 @@
         width: 2.5rem;
         height: 2rem;
         border-radius: 1.25rem;
+    }
+
+    .addAlarmButton {
+        width: 20vh;
+        height: 20vh;
+        bottom: 10vh;
     }
 }

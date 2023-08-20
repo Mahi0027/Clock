@@ -1,19 +1,42 @@
+.addAlarmButton {
+    position: fixed;
+    margin: auto;
+    left: 50%;
+    max-width: 100px;
+    max-height: 100px;
+    transform: translateX(-50%)
+}
+
 .actionButtons {
     margin: 2vh 0;
 }
 
-.actionButtons> Button {
+.actionButtons>Button {
     width: 100vw;
 }
 
 @media (orientation: portrait) {
+    .addAlarmButton {
+        width: 20vw;
+        height: 20vw;
+        bottom: 10vh;
+    }
+
     .actionButtons {
-            margin: 2vh 0;
-        }
+        margin: 2vh 0;
+    }
 }
 
 @media (orientation: landscape) {
+    .addAlarmButton {
+        width: 20vh;
+        height: 20vh;
+        left: 85%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
+
     .actionButtons {
-            margin: 2vw 0;
-        }
+        margin: 2vw 0;
+    }
 }

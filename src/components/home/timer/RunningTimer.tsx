@@ -2,6 +2,7 @@ import {
     Box,
     Button,
     Card,
+    Fab,
     IconButton,
     Stack,
     Typography,
@@ -9,16 +10,18 @@ import {
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styles from "@/styles/components/home/timer/RunningTimer.module.scss";
+import AddIcon from "@mui/icons-material/Add";
 import LabelOutlinedIcon from "@mui/icons-material/LabelOutlined";
 import CircularWithValueLabel from "./miscellanceous/CircularWithValueLabel";
 import DialogBox from "./miscellanceous/DialogBox";
 import { deleteTimer, updateTimerLabel, updateTimerTime } from "@/redux";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import CancelTwoToneIcon from "@mui/icons-material/CancelTwoTone";
+import MusicNoteIcon from "@mui/icons-material/MusicNote";
 
 type RunningTimerProps = {
     closeRunningTimer: () => void;
-}
+};
 function RunningTimer(props: RunningTimerProps) {
     const stateData = useSelector((state: any) => state);
     const dispatch = useDispatch();
@@ -56,108 +59,142 @@ function RunningTimer(props: RunningTimerProps) {
         }
     };
 
+    /* reduce 60 seconds(one minute) in timer. */
+    const reduceTimeInTimer = (timer: any) => {
+        const reduceTime = 60000; /* 60 seconds */
+        if (timer.timerTime - reduceTime < 0) {
+            dispatch(updateTimerTime(timer.id, 0));
+        } else {
+            dispatch(updateTimerTime(timer.id, timer.timerTime - reduceTime));
+        }
+    };
+
     return (
-        <Box sx={{ marginBottom: "32vh" }}>
-            {stateData.timer.timers.map((timer: any, index: number) => {
-                return (
-                    <Box key={timer.id} sx={{ margin: "2vh" }}>
-                        <Card
-                            variant="outlined"
-                            sx={{
-                                borderRadius: "10px",
-                                padding: "0 2vw",
-                                "@media (orientation: landscape)": {
-                                    width: "70vw",
-                                },
-                            }}
-                        >
-                            <Stack
-                                direction={"row"}
+        <>
+            <Fab
+                className={styles.addAlarmButton}
+                color="secondary"
+                aria-label="add"
+                onClick={() => props.closeRunningTimer()}
+            >
+                <AddIcon />
+            </Fab>
+            <Box sx={{ marginBottom: "32vh" }}>
+                {stateData.timer.timers.map((timer: any, index: number) => {
+                    return (
+                        <Box key={timer.id} sx={{ margin: "2vh" }}>
+                            <Card
+                                variant="outlined"
                                 sx={{
-                                    display: "flex",
-                                    justifyContent: "space-between",
-                                    padding: "2vh 0",
+                                    borderRadius: "10px",
+                                    padding: "0 2vw",
+                                    "@media (orientation: landscape)": {
+                                        width: "70vw",
+                                    },
                                 }}
                             >
-                                <IconButton
-                                    onClick={() =>
-                                        handleLabelButtonEvent(
-                                            true,
-                                            timer.id,
-                                            timer.label
-                                        )
-                                    }
+                                <Stack
+                                    direction={"row"}
+                                    sx={{
+                                        display: "flex",
+                                        justifyContent: "space-between",
+                                        padding: "2vh 0",
+                                    }}
                                 >
-                                    <LabelOutlinedIcon />
-                                    <Typography
-                                        variant="body1"
-                                        sx={{ paddingLeft: "2vw" }}
-                                    >
-                                        {"  "}
-                                        {timer.label}
-                                    </Typography>
-                                </IconButton>
-                                <DialogBox
-                                    id={idForOpenLabelDialogFlag}
-                                    open={openLabelDialogFlag}
-                                    close={setOpenLabelDialogFlag}
-                                    labelText={labelText}
-                                    handleLabelText={handleLabelText}
-                                />
-                                <Button
-                                    variant="text"
-                                    sx={{ opacity: 0.5 }}
-                                    onClick={() =>
-                                        dispatch(deleteTimer(timer.id))
-                                    }
-                                >
-                                    <CancelTwoToneIcon />
-                                </Button>
-                            </Stack>
-                            <Stack
-                                direction={"row"}
-                                sx={{
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    paddingLeft: "2vw",
-                                }}
-                            >
-                                <CircularWithValueLabel
-                                    timerdetails={timer}
-                                    closeRunningTimer={props.closeRunningTimer}
-                                />
-                            </Stack>
-                            <Stack
-                                direction="row"
-                                justifyContent="center"
-                                spacing={4}
-                                className={styles.actionButtons}
-                            >
-                                <Button
-                                    variant="text"
-                                    onClick={() => addTimeInTimer(timer)}
-                                >
-                                    +1:00
-                                </Button>
-                                <Button
-                                    variant="text"
-                                    onClick={() =>
-                                        dispatch(
-                                            updateTimerTime(
+                                    <IconButton
+                                        onClick={() =>
+                                            handleLabelButtonEvent(
+                                                true,
                                                 timer.id,
-                                                timer.persistTime
+                                                timer.label
                                             )
-                                        )
-                                    }
+                                        }
+                                    >
+                                        <LabelOutlinedIcon />
+                                        <Typography
+                                            variant="body1"
+                                            sx={{ paddingLeft: "2vw" }}
+                                        >
+                                            {"  "}
+                                            {timer.label}
+                                        </Typography>
+                                    </IconButton>
+                                    <DialogBox
+                                        id={idForOpenLabelDialogFlag}
+                                        open={openLabelDialogFlag}
+                                        close={setOpenLabelDialogFlag}
+                                        labelText={labelText}
+                                        handleLabelText={handleLabelText}
+                                    />
+                                    <Button
+                                        variant="text"
+                                        sx={{ opacity: 0.5 }}
+                                        onClick={() =>
+                                            dispatch(deleteTimer(timer.id))
+                                        }
+                                    >
+                                        <CancelTwoToneIcon />
+                                    </Button>
+                                </Stack>
+                                <Stack
+                                    direction={"row"}
+                                    sx={{
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        paddingLeft: "2vw",
+                                    }}
                                 >
-                                    <RestartAltIcon />
-                                </Button>
-                            </Stack>
-                        </Card>
-                    </Box>
-                );
-            })}
-        </Box>
+                                    <CircularWithValueLabel
+                                        timerdetails={timer}
+                                        closeRunningTimer={
+                                            props.closeRunningTimer
+                                        }
+                                    />
+                                </Stack>
+                                <Stack
+                                    direction="row"
+                                    justifyContent="center"
+                                    spacing={4}
+                                    className={styles.actionButtons}
+                                >
+                                    <Button
+                                        variant="text"
+                                        onClick={() => addTimeInTimer(timer)}
+                                    >
+                                        <MusicNoteIcon />
+                                    </Button>
+                                    <Button
+                                        variant="text"
+                                        onClick={() => addTimeInTimer(timer)}
+                                    >
+                                        +1:00
+                                    </Button>
+                                    <Button
+                                        variant="text"
+                                        onClick={() => reduceTimeInTimer(timer)}
+                                    >
+                                        -1:00
+                                    </Button>
+                                    <Button
+                                        variant="text"
+                                        onClick={() =>
+                                            dispatch(
+                                                updateTimerTime(
+                                                    timer.id,
+                                                    timer.persistTime
+                                                )
+                                            )
+                                        }
+                                    >
+                                        <RestartAltIcon />
+                                    </Button>
+                                </Stack>
+                            </Card>
+                        </Box>
+                    );
+                })}
+            </Box>
+        </>
     );
 }
 

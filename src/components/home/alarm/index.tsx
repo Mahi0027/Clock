@@ -18,14 +18,23 @@ import { setAlarm } from "@/redux";
 function AlarmHome() {
     const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
+    const [scrollToTop, setScrollToTop] = useState(false);
 
     const addNewAlarm = (alarmTime: Date) => {
         dispatch(setAlarm(alarmTime));
+        setScrollToTop(true);
+    };
+
+    const closeScrollToTop = () => {
+        setScrollToTop(false);
     };
     return (
         <>
             <Box>
-                <AlarmView />
+                <AlarmView
+                    scrollToTop={scrollToTop}
+                    closeScrollToTop={closeScrollToTop}
+                />
                 <Fab
                     className={styles.addAlarmButton}
                     color="secondary"

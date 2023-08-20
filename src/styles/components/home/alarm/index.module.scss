@@ -26,6 +26,8 @@
     .addAlarmButton {
         width: 20vh;
         height: 20vh;
-        bottom: 10vh;
+        left: 85%;
+        top: 50%;
+        transform: translate(-50%, -50%);
     }
 }

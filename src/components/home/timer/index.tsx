@@ -7,8 +7,10 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import RunningTimer from "./RunningTimer";
 import { useDispatch, useSelector } from "react-redux";
 import { setTimer } from "@/redux";
+import ListIcon from "@mui/icons-material/List";
 
 function TimerHome() {
+    const stateData = useSelector((state: any) => state);
     const dispatch = useDispatch();
     const [hour, setHour] = useState<string>("00");
     const [minute, setMinute] = useState<string>("00");
@@ -217,6 +219,16 @@ function TimerHome() {
             )}
             {startTimerDisplayFlag && (
                 <RunningTimer closeRunningTimer={closeRunningTimer} />
+            )}
+            {!startTimerDisplayFlag && stateData.timer.timers.length > 0 && (
+                <Fab
+                    className={styles.addAlarmButton}
+                    color="secondary"
+                    aria-label="add"
+                    onClick={() => setStartTimerDisplayFlag(true)}
+                >
+                    <ListIcon />
+                </Fab>
             )}
         </>
     );
