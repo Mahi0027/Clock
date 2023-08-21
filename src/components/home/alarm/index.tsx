@@ -21,6 +21,11 @@ function AlarmHome() {
     const [scrollToTop, setScrollToTop] = useState(false);
 
     const addNewAlarm = (alarmTime: Date) => {
+        const currentTime = new Date();
+        /* set alarm for next day if chosen time is gone today. */
+        if (currentTime.getTime() > alarmTime.getTime()) {
+            alarmTime.setDate(alarmTime.getDate() + 1);
+        }
         dispatch(setAlarm(alarmTime));
         setScrollToTop(true);
     };

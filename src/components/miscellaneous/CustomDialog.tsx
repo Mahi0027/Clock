@@ -25,8 +25,8 @@ export interface ConfirmationDialogRawProps {
     onClose: (value?: string | boolean, id?: number) => void;
     clockThemeFlag?: boolean;
     rowId?: number;
-    alarmSoundFlag?: boolean;
-    playAlarmSound?: (value: string) => void;
+    soundFlag?: boolean;
+    playSound?: (value: string) => void;
 }
 function CustomDialog({
     open,
@@ -36,8 +36,9 @@ function CustomDialog({
     value: valueProp,
     clockThemeFlag = false,
     rowId = -1,
-    alarmSoundFlag = false,
-    playAlarmSound,
+    soundFlag = false,
+    playSound,
+    timerSoundFlag = false,
     ...other
 }: ConfirmationDialogRawProps) {
     const [value, setValue] = useState(valueProp);
@@ -60,19 +61,20 @@ function CustomDialog({
     };
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (alarmSoundFlag) {
-            playAlarmSound((event.target as HTMLInputElement).value);
+        if (soundFlag) {
+            playSound((event.target as HTMLInputElement).value);
         }
         setValue((event.target as HTMLInputElement).value);
     };
 
     useEffect(() => {
-        if (!alarmSoundFlag) {
+        if (!soundFlag) {
             closeAndSetValue(value);
         }
     }, [value]);
 
     const closeAndSetValue = (value: any, id = -1) => {
+        console.log(value, id);
         id === -1 ? onClose(value) : onClose(value, id);
     };
     return (
@@ -112,7 +114,7 @@ function CustomDialog({
                 <Button sx={{ fontWeight: "bold" }} onClick={handleCancel}>
                     Cancel
                 </Button>
-                {alarmSoundFlag && (
+                {soundFlag && (
                     <Button
                         sx={{ fontWeight: "bold" }}
                         onClick={() => closeAndSetValue(value, rowId)}

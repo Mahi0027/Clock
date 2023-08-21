@@ -28,6 +28,16 @@ type initialStatesTypes = {
     alarms: {
         id: number;
         alarmTime: Date;
+        repeat: {
+            sunday: false;
+            monday: false;
+            tuesday: false;
+            wednesday: false;
+            thursday: false;
+            friday: false;
+            saturday: false;
+            custom: false;
+        };
         currentScheduleFlag: boolean;
         repeatFlag: boolean;
         sound: string;
@@ -47,9 +57,7 @@ const alarmReducer = (state = initialStates, action: actionTypes) => {
             return state;
         case SET_ALARM:
             const lastAlarmId =
-                state.alarms.length === 0
-                    ? 0
-                    : state.alarms[0].id;
+                state.alarms.length === 0 ? 0 : state.alarms[0].id;
 
             return {
                 ...state,
@@ -57,6 +65,16 @@ const alarmReducer = (state = initialStates, action: actionTypes) => {
                     {
                         id: lastAlarmId + 1,
                         alarmTime: action.payload,
+                        repeat: {
+                            sunday: false,
+                            monday: false,
+                            tuesday: false,
+                            wednesday: false,
+                            thursday: false,
+                            friday: false,
+                            saturday: false,
+                            custom: false,
+                        },
                         currentScheduleFlag: true,
                         repeatFlag: false,
                         sound: state.alarmSounds[1],
