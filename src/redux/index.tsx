@@ -41,6 +41,7 @@ export {
     updateAlarmScheduleFlag,
     updateAlarmLabel,
     deleteAlarm,
+    setRepeatAlarm,
 } from "./features/home/alarm/actions";
 
 export {

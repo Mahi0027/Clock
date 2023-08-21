@@ -3,6 +3,7 @@ import {
     GET_ALL_ALARMS,
     SET_ALARM,
     SET_ALARM_SOUND,
+    SET_REPEAT_ALARM,
     UPDATE_ALARM_LABEL,
     UPDATE_ALARM_SCHEDULE_FLAG,
 } from "./types";
@@ -18,6 +19,15 @@ const alarmSounds = [
     "oversimplified",
     "ringtone",
     "short",
+];
+const dayHashTable = [
+    "sunday",
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+    "saturday",
 ];
 type actionTypes = {
     type: string;
@@ -125,6 +135,22 @@ const alarmReducer = (state = initialStates, action: actionTypes) => {
                 state.alarms.splice(indexOfDeleteAlarm, 1);
             return {
                 ...state,
+            };
+        case SET_REPEAT_ALARM:
+            const updatedAlarmForRepeat = state.alarms.map((alarm) => {
+                return alarm.id === action.payload.id
+                    ? {
+                          ...alarm,
+                          repeat: {
+                              ...alarm.repeat,
+                              [dayHashTable[action.payload.index]]: !alarm.repeat[dayHashTable[action.payload.index]]
+                          },
+                      }
+                    : alarm;
+            });
+            return {
+                ...state,
+                alarms: updatedAlarmForRepeat,
             };
         default:
             return state;

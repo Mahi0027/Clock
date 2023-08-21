@@ -3,6 +3,7 @@ import {
     GET_ALL_ALARMS,
     SET_ALARM,
     SET_ALARM_SOUND,
+    SET_REPEAT_ALARM,
     UPDATE_ALARM_LABEL,
     UPDATE_ALARM_SCHEDULE_FLAG,
 } from "./types";
@@ -48,5 +49,12 @@ export const deleteAlarm = (id: number) => {
     return {
         type: DELETE_ALARM,
         payload: { id },
+    };
+};
+
+export const setRepeatAlarm = (id: number, index: number) => {
+    return {
+        type: SET_REPEAT_ALARM,
+        payload: { id, index},
     };
 };
