@@ -38,7 +38,6 @@ function RunningTimer(props: RunningTimerProps) {
     );
 
     useEffect(() => {
-        console.log(stateData.timer);
         if (stateData.timer.timers.length === 0) {
             props.closeRunningTimer();
         }
@@ -85,7 +84,6 @@ function RunningTimer(props: RunningTimerProps) {
             timerAudio[i].current.pause();
         }
         setOpenSoundDialogFlag(false);
-        console.log("rowId",rowId);
         if (rowId !== -1 && newValue) {   
             dispatch(setTimerSound(rowId, newValue));
         }
@@ -93,7 +91,6 @@ function RunningTimer(props: RunningTimerProps) {
 
     /* play timer ringtone. */
     const playTimerSound = (value: string) => {
-        console.log(timerAudio,timerRingtonesLength, value);
         for (let i = 0; i < timerRingtonesLength; i++) {
             timerAudio[i].current.pause();
         }

@@ -74,7 +74,6 @@ function CustomDialog({
     }, [value]);
 
     const closeAndSetValue = (value: any, id = -1) => {
-        console.log(value, id);
         id === -1 ? onClose(value) : onClose(value, id);
     };
     return (

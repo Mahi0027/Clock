@@ -6,6 +6,7 @@ import {
     getAllAlarm,
     updateAlarmLabel,
     updateAlarmScheduleFlag,
+    setRepeatAlarm,
 } from "@/redux";
 import { styled } from "@mui/material/styles";
 import {
@@ -49,6 +50,16 @@ type AlarmViewProps = {
     scrollToTop: boolean;
     closeScrollToTop: () => void;
 };
+
+const dayHashTable = [
+    "sunday",
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+    "saturday",
+];
 function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
     let prevTimeOut = 0;
     const stateData = useSelector((state: any) => state);
@@ -65,21 +76,22 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
     const [alarmRunningPage, setAlarmRunningPage] = useState(false);
     const [alarmRunningLabel, setAlarmRunningLabel] = useState("");
     const [currentAlarmAudio, setCurrentAlarmAudio] = useState<any>(null);
+    const [expandBox, setExpandBox] = useState(-1);
     const alarmAudio = Array.from(
         { length: stateData.alarm.alarmSounds.length },
         useRef
     );
 
     useEffect(() => {
-        setExpandState(stateData.alarm.alarms.length);
+        setExpandState(stateData.alarm.alarms.length, expandBox);
+        setExpandBox(-1);
         dispatch(getAllAlarm());
     }, [dispatch]);
 
     useEffect(() => {
-        console.log(stateData.alarm);
-
         dispatch(getAllAlarm());
-        setExpandState(stateData.alarm.alarms.length);
+        setExpandState(stateData.alarm.alarms.length, expandBox);
+        setExpandBox(-1);
         // setAlarmTimeOut(Array.from({ length: stateData.alarm.alarms.length }));
         setAlarms();
 
@@ -144,16 +156,20 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
     };
 
     /* it use to manage expand state variable */
-    const setExpandState = (length: number) => {
+    const setExpandState = (length: number, index = -1) => {
         setExpand({ values: [], dependency: -1 }); //set to default
         for (let i = 0; i < length; i++) {
-            setExpand((prevState) => ({
-                ...prevState,
-                values: [...prevState.values, false],
-            }));
+            i === index
+                ? setExpand((prevState) => ({
+                      ...prevState,
+                      values: [...prevState.values, true],
+                  }))
+                : setExpand((prevState) => ({
+                      ...prevState,
+                      values: [...prevState.values, false],
+                  }));
         }
     };
-    0;
 
     const handleExpand = (index: number) => {
         const updatedTempExpand = expand.values;
@@ -247,6 +263,16 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
             alarmAudio[i].current.pause();
         }
         alarmAudio[stateData.alarm.alarmSounds.indexOf(value)].current.play();
+    };
+
+    /* set repeat alarm.  */
+    const handleRepeatAlarm = (
+        alarmId: number,
+        index: number,
+        expandIndex: number
+    ) => {
+        setExpandBox(expandIndex);
+        dispatch(setRepeatAlarm(alarmId, index));
     };
     return (
         <>
@@ -408,25 +434,32 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
                                                 justifyContent: "space-between",
                                             }}
                                         >
-                                            {[
-                                                "S",
-                                                "M",
-                                                "T",
-                                                "W",
-                                                "T",
-                                                "F",
-                                                "S",
-                                            ].map((day, index) => (
-                                                <Button
-                                                    variant="outlined"
-                                                    key={index}
-                                                    className={
-                                                        styles.scheduleByDay
-                                                    }
-                                                >
-                                                    {day}
-                                                </Button>
-                                            ))}
+                                            {dayHashTable.map(
+                                                (day, dayHashTableIndex) => (
+                                                    <Button
+                                                        variant={
+                                                            alarm.repeat[day]
+                                                                ? "contained"
+                                                                : "outlined"
+                                                        }
+                                                        key={dayHashTableIndex}
+                                                        className={
+                                                            styles.scheduleByDay
+                                                        }
+                                                        onClick={() =>
+                                                            handleRepeatAlarm(
+                                                                alarm.id,
+                                                                dayHashTableIndex,
+                                                                index
+                                                            )
+                                                        }
+                                                    >
+                                                        {day
+                                                            .charAt(0)
+                                                            .toUpperCase()}
+                                                    </Button>
+                                                )
+                                            )}
                                         </Stack>
                                         <Divider />
                                         <Stack direction={"row"}>
