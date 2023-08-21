@@ -14,6 +14,7 @@ import {
     Card,
     CardContent,
     Collapse,
+    Divider,
     Stack,
     Switch,
     Typography,
@@ -64,7 +65,6 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
     const [alarmRunningPage, setAlarmRunningPage] = useState(false);
     const [alarmRunningLabel, setAlarmRunningLabel] = useState("");
     const [currentAlarmAudio, setCurrentAlarmAudio] = useState<any>(null);
-
     const alarmAudio = Array.from(
         { length: stateData.alarm.alarmSounds.length },
         useRef
@@ -76,6 +76,8 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
     }, [dispatch]);
 
     useEffect(() => {
+        console.log(stateData.alarm);
+
         dispatch(getAllAlarm());
         setExpandState(stateData.alarm.alarms.length);
         // setAlarmTimeOut(Array.from({ length: stateData.alarm.alarms.length }));
@@ -103,7 +105,7 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
         let tempAlarmTimeout = Array.from({
             length: stateData.alarm.alarms.length,
         });
-        stateData.alarm.alarms.map((value:any, index:number) => {
+        stateData.alarm.alarms.map((value: any, index: number) => {
             if (value.currentScheduleFlag) {
                 const givenTime = new Date(value.alarmTime);
                 const currentTime = new Date();
@@ -115,7 +117,8 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
                     dispatch(updateAlarmScheduleFlag(value.id, false));
                 } else {
                     /* set alarm. */
-                    const timeDiff:number = givenTime.getTime() - currentTime.getTime();
+                    const timeDiff: number =
+                        givenTime.getTime() - currentTime.getTime();
                     let alarmDOM = new Audio(
                         `/sounds/alarm/${value.sound}.mp3`
                     );
@@ -159,10 +162,30 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
     };
 
     const convertTimeInMeridiemForm = (time: Date) => {
+        const months = [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December",
+        ];
         let date = new Date(time);
         let hour = Number(date.getHours());
         let minute = Number(date.getMinutes());
         let meridiem = "";
+
+        /* set alarm date. */
+        const alarmDate = `${date.getDate()}/${
+            months[date.getMonth()]
+        }/${date.getFullYear()}`;
+
         if (hour <= 12) {
             meridiem = "AM";
         } else {
@@ -170,11 +193,12 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
             meridiem = "PM";
         }
 
+        /* set alarm time. */
         const finalAlarmTime =
             (hour < 10 ? "0" + hour.toString() : hour.toString()) +
             ":" +
             (minute < 10 ? "0" + minute.toString() : minute.toString());
-        return [finalAlarmTime, meridiem];
+        return [alarmDate, finalAlarmTime, meridiem];
     };
 
     /* check/uncheck alarm schedule flag. */
@@ -206,6 +230,7 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
         dispatch(deleteAlarm(alarmId));
     };
 
+    /* set alarm ringtone. */
     const handleCloseAlarmSoundDialog = (newValue?: string, rowId?: number) => {
         for (let i = 0; i < stateData.alarm.alarmSounds.length; i++) {
             alarmAudio[i].current.pause();
@@ -216,6 +241,7 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
         }
     };
 
+    /* play alarm ringtone. */
     const playAlarmSound = (value: string) => {
         for (let i = 0; i < stateData.alarm.alarmSounds.length; i++) {
             alarmAudio[i].current.pause();
@@ -249,9 +275,8 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
             {!alarmRunningPage && (
                 <Box sx={{ marginBottom: "32vh" }}>
                     {stateData.alarm.alarms.map((alarm: any, index: number) => {
-                        const [alarmTime, meridiem] = convertTimeInMeridiemForm(
-                            alarm.alarmTime
-                        );
+                        const [alarmDate, alarmTime, meridiem] =
+                            convertTimeInMeridiemForm(alarm.alarmTime);
                         return (
                             <Box key={alarm.id} sx={{ margin: "2vh" }}>
                                 <Card
@@ -314,7 +339,7 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
                                         }}
                                     >
                                         <Typography
-                                            variant="h4"
+                                            variant="h3"
                                             sx={{
                                                 fontWeight: "bold",
                                             }}
@@ -329,6 +354,17 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
                                         >
                                             {meridiem}
                                         </Typography>
+                                        {/* <Typography
+                                            variant="subtitle2"
+                                            sx={{
+                                                fontSize: "0.7em",
+                                                fontFamily: "monospace",
+                                                margin: "2.6em 0 0 -1.9em",
+                                                opacity: "0.8",
+                                            }}
+                                        >
+                                            ({alarmDate})
+                                        </Typography> */}
                                     </Stack>
                                     <Stack
                                         direction={"row"}
@@ -340,7 +376,7 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
                                     >
                                         {alarm.currentScheduleFlag ? (
                                             <Typography variant="body2">
-                                                Scheduled
+                                                Scheduled for {alarmDate}
                                             </Typography>
                                         ) : (
                                             <Typography
@@ -365,6 +401,34 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
                                         timeout="auto"
                                         unmountOnExit
                                     >
+                                        <Stack
+                                            direction={"row"}
+                                            sx={{
+                                                display: "flex",
+                                                justifyContent: "space-between",
+                                            }}
+                                        >
+                                            {[
+                                                "S",
+                                                "M",
+                                                "T",
+                                                "W",
+                                                "T",
+                                                "F",
+                                                "S",
+                                            ].map((day, index) => (
+                                                <Button
+                                                    variant="outlined"
+                                                    key={index}
+                                                    className={
+                                                        styles.scheduleByDay
+                                                    }
+                                                >
+                                                    {day}
+                                                </Button>
+                                            ))}
+                                        </Stack>
+                                        <Divider />
                                         <Stack direction={"row"}>
                                             <Button
                                                 onClick={() => {
@@ -392,10 +456,11 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
                                                     handleCloseAlarmSoundDialog
                                                 }
                                                 rowId={alarm.id}
-                                                alarmSoundFlag={true}
-                                                playAlarmSound={playAlarmSound}
+                                                soundFlag={true}
+                                                playSound={playAlarmSound}
                                             />
                                         </Stack>
+                                        <Divider />
                                         <Stack direction={"row"}>
                                             <Button
                                                 onClick={() =>
