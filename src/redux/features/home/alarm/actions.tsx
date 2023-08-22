@@ -52,9 +52,13 @@ export const deleteAlarm = (id: number) => {
     };
 };
 
-export const setRepeatAlarm = (id: number, index: number) => {
+export const setRepeatAlarm = (
+    id: number,
+    newAlarmTime: Date,
+    dayOfWeek: number
+) => {
     return {
         type: SET_REPEAT_ALARM,
-        payload: { id, index},
+        payload: { id, newAlarmTime, dayOfWeek },
     };
 };

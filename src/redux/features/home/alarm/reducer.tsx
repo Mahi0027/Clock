@@ -39,14 +39,38 @@ type initialStatesTypes = {
         id: number;
         alarmTime: Date;
         repeat: {
-            sunday: false;
-            monday: false;
-            tuesday: false;
-            wednesday: false;
-            thursday: false;
-            friday: false;
-            saturday: false;
-            custom: false;
+            sunday: {
+                flag: boolean;
+                time: Date | null;
+            };
+            monday: {
+                flag: boolean;
+                time: Date | null;
+            };
+            tuesday: {
+                flag: boolean;
+                time: Date | null;
+            };
+            wednesday: {
+                flag: boolean;
+                time: Date | null;
+            };
+            thursday: {
+                flag: boolean;
+                time: Date | null;
+            };
+            friday: {
+                flag: boolean;
+                time: Date | null;
+            };
+            saturday: {
+                flag: boolean;
+                time: Date | null;
+            };
+            custom: {
+                flag: boolean;
+                time: Date | null;
+            };
         };
         currentScheduleFlag: boolean;
         repeatFlag: boolean;
@@ -76,14 +100,38 @@ const alarmReducer = (state = initialStates, action: actionTypes) => {
                         id: lastAlarmId + 1,
                         alarmTime: action.payload,
                         repeat: {
-                            sunday: false,
-                            monday: false,
-                            tuesday: false,
-                            wednesday: false,
-                            thursday: false,
-                            friday: false,
-                            saturday: false,
-                            custom: false,
+                            sunday: {
+                                flag: false,
+                                time: null,
+                            },
+                            monday: {
+                                flag: false,
+                                time: null,
+                            },
+                            tuesday: {
+                                flag: false,
+                                time: null,
+                            },
+                            wednesday: {
+                                flag: false,
+                                time: null,
+                            },
+                            thursday: {
+                                flag: false,
+                                time: null,
+                            },
+                            friday: {
+                                flag: false,
+                                time: null,
+                            },
+                            saturday: {
+                                flag: false,
+                                time: null,
+                            },
+                            custom: {
+                                flag: false,
+                                time: null,
+                            },
                         },
                         currentScheduleFlag: true,
                         repeatFlag: false,
@@ -138,12 +186,21 @@ const alarmReducer = (state = initialStates, action: actionTypes) => {
             };
         case SET_REPEAT_ALARM:
             const updatedAlarmForRepeat = state.alarms.map((alarm) => {
+                const flagStatus: boolean =
+                    alarm.repeat[dayHashTable[action.payload.dayOfWeek]].flag;
                 return alarm.id === action.payload.id
                     ? {
                           ...alarm,
                           repeat: {
                               ...alarm.repeat,
-                              [dayHashTable[action.payload.index]]: !alarm.repeat[dayHashTable[action.payload.index]]
+                              [dayHashTable[action.payload.dayOfWeek]]: {
+                                  flag: !alarm.repeat[
+                                      dayHashTable[action.payload.dayOfWeek]
+                                  ].flag,
+                                  time: !flagStatus
+                                      ? action.payload.newAlarmTime
+                                      : null,
+                              },
                           },
                       }
                     : alarm;
