@@ -60,6 +60,20 @@ const dayHashTable = [
     "friday",
     "saturday",
 ];
+const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+];
 function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
     let prevTimeOut = 0;
     const stateData = useSelector((state: any) => state);
@@ -177,46 +191,66 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
         setExpand({ values: updatedTempExpand, dependency: index });
     };
 
-    const convertTimeInMeridiemForm = (time: Date) => {
-        const months = [
-            "January",
-            "February",
-            "March",
-            "April",
-            "May",
-            "June",
-            "July",
-            "August",
-            "September",
-            "October",
-            "November",
-            "December",
-        ];
+    /* convert time into day/date, time, meridian */
+    const convertTimeInMeridiemForm = (time: Date, repeat: any) => {
+        let repeatFlag = false;
+        let minTime = 0;
         let date = new Date(time);
         let hour = Number(date.getHours());
         let minute = Number(date.getMinutes());
         let meridiem = "";
+        let alarmDay = "";
+        let repeatDaysCounter = 0
+        for (const day in repeat) {
+            if (repeat[day].flag) {
+                let repeatAlarmDate = new Date(repeat[day].time);
+                repeatFlag = true;
+                if (alarmDay === "") {
+                    alarmDay = capitalizeFirstLetter(
+                        dayHashTable[repeatAlarmDate.getDay()].substring(0, 3)
+                    );
+                } else {
+                    alarmDay =
+                        alarmDay +
+                        ", " +
+                        capitalizeFirstLetter(
+                            dayHashTable[repeatAlarmDate.getDay()].substring(
+                                0,
+                                3
+                            )
+                        );
+                }
+                repeatDaysCounter++;
+            }
+        }
+        if (repeatDaysCounter === 7) {
+            alarmDay = "Every Day";
+        }
+            if (!repeatFlag) {
+                /* set alarm date. */
+                alarmDay = `${date.getDate()}/${
+                    months[date.getMonth()]
+                }/${date.getFullYear()}`;
+            }
 
-        /* set alarm date. */
-        const alarmDate = `${date.getDate()}/${
-            months[date.getMonth()]
-        }/${date.getFullYear()}`;
-
+        /* set alarm time. */
         if (hour <= 12) {
             meridiem = "AM";
         } else {
             hour = hour - 12;
             meridiem = "PM";
         }
-
-        /* set alarm time. */
         const finalAlarmTime =
             (hour < 10 ? "0" + hour.toString() : hour.toString()) +
             ":" +
             (minute < 10 ? "0" + minute.toString() : minute.toString());
-        return [alarmDate, finalAlarmTime, meridiem];
+        return [alarmDay, finalAlarmTime, meridiem];
     };
 
+    /* make first character capital in string. */
+    function capitalizeFirstLetter(inputString) {
+        return inputString.charAt(0).toUpperCase() + inputString.slice(1);
+    }
     /* check/uncheck alarm schedule flag. */
     const handleChangeSwitch = (
         alarmId: number,
@@ -268,11 +302,24 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
     /* set repeat alarm.  */
     const handleRepeatAlarm = (
         alarmId: number,
-        index: number,
+        alarmTime: Date,
+        dayOfWeek: number,
         expandIndex: number
     ) => {
+        let date = new Date(alarmTime);
+        const currentAlarmDayOfWeek = date.getDay();
+        let newAlarmTime = date;
+        if (currentAlarmDayOfWeek <= dayOfWeek) {
+            newAlarmTime.setDate(
+                date.getDate() + (dayOfWeek - currentAlarmDayOfWeek)
+            );
+        } else {
+            newAlarmTime.setDate(
+                date.getDate() + (7 - (currentAlarmDayOfWeek - dayOfWeek))
+            );
+        }
         setExpandBox(expandIndex);
-        dispatch(setRepeatAlarm(alarmId, index));
+        dispatch(setRepeatAlarm(alarmId, newAlarmTime, dayOfWeek));
     };
     return (
         <>
@@ -301,8 +348,11 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
             {!alarmRunningPage && (
                 <Box sx={{ marginBottom: "32vh" }}>
                     {stateData.alarm.alarms.map((alarm: any, index: number) => {
-                        const [alarmDate, alarmTime, meridiem] =
-                            convertTimeInMeridiemForm(alarm.alarmTime);
+                        const [alarmDay, alarmTime, meridiem] =
+                            convertTimeInMeridiemForm(
+                                alarm.alarmTime,
+                                alarm.repeat
+                            );
                         return (
                             <Box key={alarm.id} sx={{ margin: "2vh" }}>
                                 <Card
@@ -402,7 +452,7 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
                                     >
                                         {alarm.currentScheduleFlag ? (
                                             <Typography variant="body2">
-                                                Scheduled for {alarmDate}
+                                                {alarmDay}
                                             </Typography>
                                         ) : (
                                             <Typography
@@ -439,6 +489,7 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
                                                     <Button
                                                         variant={
                                                             alarm.repeat[day]
+                                                                .flag
                                                                 ? "contained"
                                                                 : "outlined"
                                                         }
@@ -449,9 +500,13 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
                                                         onClick={() =>
                                                             handleRepeatAlarm(
                                                                 alarm.id,
+                                                                alarm.alarmTime,
                                                                 dayHashTableIndex,
                                                                 index
                                                             )
+                                                        }
+                                                        disabled={
+                                                            !alarm.currentScheduleFlag
                                                         }
                                                     >
                                                         {day
