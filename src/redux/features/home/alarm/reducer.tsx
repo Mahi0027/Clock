@@ -6,6 +6,7 @@ import {
     SET_REPEAT_ALARM,
     UPDATE_ALARM_LABEL,
     UPDATE_ALARM_SCHEDULE_FLAG,
+    UPDATE_ALARM_TIME,
 } from "./types";
 
 const alarmSounds = [
@@ -67,10 +68,6 @@ type initialStatesTypes = {
                 flag: boolean;
                 time: Date | null;
             };
-            custom: {
-                flag: boolean;
-                time: Date | null;
-            };
         };
         currentScheduleFlag: boolean;
         repeatFlag: boolean;
@@ -128,10 +125,6 @@ const alarmReducer = (state = initialStates, action: actionTypes) => {
                                 flag: false,
                                 time: null,
                             },
-                            custom: {
-                                flag: false,
-                                time: null,
-                            },
                         },
                         currentScheduleFlag: true,
                         repeatFlag: false,
@@ -140,6 +133,16 @@ const alarmReducer = (state = initialStates, action: actionTypes) => {
                     },
                     ...state.alarms,
                 ],
+            };
+        case UPDATE_ALARM_TIME:
+            const updatedAlarmForUpdatedTime = state.alarms.map((alarm) => {
+                return alarm.id === action.payload.id
+                    ? { ...alarm, alarmTime: action.payload.updatedAlarmTime }
+                    : alarm;
+            });
+            return {
+                ...state,
+                alarms: updatedAlarmForUpdatedTime,
             };
         case UPDATE_ALARM_SCHEDULE_FLAG:
             const updatedAlarmsForScheduleFlag = state.alarms.map((alarm) => {

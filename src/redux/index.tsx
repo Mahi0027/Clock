@@ -38,6 +38,7 @@ export { setCurrentHomePage } from "./features/bottomNavbar/actions";
 export {
     getAllAlarm,
     setAlarm,
+    updateAlarmTime,
     updateAlarmScheduleFlag,
     updateAlarmLabel,
     deleteAlarm,
