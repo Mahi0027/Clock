@@ -15,6 +15,9 @@ import {
     Card,
     CardContent,
     Collapse,
+    Dialog,
+    DialogContent,
+    DialogTitle,
     Divider,
     Stack,
     Switch,
@@ -29,6 +32,9 @@ import MusicNoteOutlinedIcon from "@mui/icons-material/MusicNoteOutlined";
 import CustomDialog from "@/components/miscellaneous/CustomDialog";
 import { setAlarmSound } from "@/redux/features/home/alarm/actions";
 import AlarmRunning from "./AlarmRunning";
+import { updateAlarmTime } from "@/redux";
+import EditCalendarIcon from "@mui/icons-material/EditCalendar";
+import ResponsiveDatePickers from "@/components/miscellaneous/ResponsiveDatePickers";
 
 interface ExpandMoreProps extends IconButtonProps {
     expand: boolean;
@@ -85,6 +91,7 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
     const [openLabelDialogFlag, setOpenLabelDialogFlag] = useState(false);
     const [openSoundDialogFlag, setOpenSoundDialogFlag] = useState(false);
     const [idForOpenLabelDialogFlag, setIdForOpenLabelDialogFlag] = useState(0);
+    const [openDatePicker, setOpenDatePicker] = useState(false);
     const [labelText, setLabelText] = useState("");
     const [alarmTimeOut, setAlarmTimeOut] = useState<any>([]);
     const [alarmRunningPage, setAlarmRunningPage] = useState(false);
@@ -135,9 +142,37 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
             if (value.currentScheduleFlag) {
                 const givenTime = new Date(value.alarmTime);
                 const currentTime = new Date();
+                let repeatFlag = false;
+                let closestAlarmTime:number = 0;
+                for (const day in value.repeat) {
+                    if (value.repeat[day].flag) {
+                        repeatFlag = true;
+                        let repeatAlarmDate = new Date(value.repeat[day].time);
+                        let tempTimeDiff = repeatAlarmDate.getTime() - currentTime.getTime();
+                        if (tempTimeDiff> 0 && tempTimeDiff<closestAlarmTime) {
 
+                        } 
+                        if (alarmDay === "") {
+                            alarmDay = capitalizeFirstLetter(
+                                dayHashTable[
+                                    repeatAlarmDate.getDay()
+                                ].substring(0, 3)
+                            );
+                        } else {
+                            alarmDay =
+                                alarmDay +
+                                ", " +
+                                capitalizeFirstLetter(
+                                    dayHashTable[
+                                        repeatAlarmDate.getDay()
+                                    ].substring(0, 3)
+                                );
+                        }
+                        repeatDaysCounter++;
+                    }
+                }
                 if (givenTime < currentTime) {
-                    /* set time is past then automatically off alarm. 
+                    /* set time is past then automatically off alarm.
                         This functionality need to revise after adding date in alarm time.
                     */
                     dispatch(updateAlarmScheduleFlag(value.id, false));
@@ -200,7 +235,7 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
         let minute = Number(date.getMinutes());
         let meridiem = "";
         let alarmDay = "";
-        let repeatDaysCounter = 0
+        let repeatDaysCounter = 0;
         for (const day in repeat) {
             if (repeat[day].flag) {
                 let repeatAlarmDate = new Date(repeat[day].time);
@@ -226,12 +261,12 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
         if (repeatDaysCounter === 7) {
             alarmDay = "Every Day";
         }
-            if (!repeatFlag) {
-                /* set alarm date. */
-                alarmDay = `${date.getDate()}/${
-                    months[date.getMonth()]
-                }/${date.getFullYear()}`;
-            }
+        if (!repeatFlag) {
+            /* set alarm date. */
+            alarmDay = `${date.getDate()}/${
+                months[date.getMonth()]
+            }/${date.getFullYear()}`;
+        }
 
         /* set alarm time. */
         if (hour <= 12) {
@@ -320,6 +355,16 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
         }
         setExpandBox(expandIndex);
         dispatch(setRepeatAlarm(alarmId, newAlarmTime, dayOfWeek));
+    };
+
+    const updateAlarmDate = (
+        alarmId: number,
+        currentAlarmTime: Date,
+        customDate: Date
+    ) => {
+        customDate.setHours(currentAlarmTime.getHours());
+        customDate.setMinutes(currentAlarmTime.getMinutes());
+        dispatch(updateAlarmTime(alarmId, customDate));
     };
     return (
         <>
@@ -515,6 +560,50 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
                                                     </Button>
                                                 )
                                             )}
+                                        </Stack>
+                                        <Divider />
+                                        <Stack direction={"row"}>
+                                            <Button
+                                                onClick={() =>
+                                                    setOpenDatePicker(true)
+                                                }
+                                            >
+                                                <EditCalendarIcon
+                                                    className={styles.icon}
+                                                />
+                                                Schedule Alarm
+                                            </Button>
+                                            <Dialog open={openDatePicker}>
+                                                <DialogTitle>
+                                                    Custom Schedule Alarm
+                                                </DialogTitle>
+                                                <DialogContent
+                                                    className={
+                                                        styles.dialogBoxContent
+                                                    }
+                                                    dividers
+                                                >
+                                                    <ResponsiveDatePickers
+                                                        action={() =>
+                                                            setOpenDatePicker(
+                                                                false
+                                                            )
+                                                        }
+                                                        handleChangeDate={(
+                                                            value: Date | null
+                                                        ) => {
+                                                            value !== null &&
+                                                                updateAlarmDate(
+                                                                    alarm.id,
+                                                                    alarm.alarmTime,
+                                                                    new Date(
+                                                                        value
+                                                                    )
+                                                                );
+                                                        }}
+                                                    />
+                                                </DialogContent>
+                                            </Dialog>
                                         </Stack>
                                         <Divider />
                                         <Stack direction={"row"}>

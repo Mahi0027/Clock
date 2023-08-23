@@ -6,6 +6,7 @@ import {
     SET_REPEAT_ALARM,
     UPDATE_ALARM_LABEL,
     UPDATE_ALARM_SCHEDULE_FLAG,
+    UPDATE_ALARM_TIME,
 } from "./types";
 
 export const getAllAlarm = () => {
@@ -18,6 +19,13 @@ export const setAlarm = (newAlarmTime: Date) => {
     return {
         type: SET_ALARM,
         payload: newAlarmTime,
+    };
+};
+
+export const updateAlarmTime = (id: number, updatedAlarmTime: Date) => {
+    return {
+        type: UPDATE_ALARM_TIME,
+        payload: { id, updatedAlarmTime },
     };
 };
 
