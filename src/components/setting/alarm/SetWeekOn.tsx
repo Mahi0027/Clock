@@ -12,7 +12,7 @@ const options = ["Sunday", "Friday", "Saturday", "Monday"];
 function SetWeekOn() {
     const [open, setOpen] = useState(false);
     const stateData: initialStatesTypes = useSelector(
-        (state: any) => state.weekOn
+        (state: any) => state.alarmWeekOn
     );
     const dispatch = useDispatch();
 

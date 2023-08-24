@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import Typography from "@mui/material/Typography";
@@ -18,11 +18,27 @@ const Transition = React.forwardRef(function Transition(
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
+type alarmRunningProps = {
+    currentAlarmAudio: any;
+    setAlarmRunningPage: any;
+    alarmRunningLabel: string;
+    snoozeTimeInterval: number;
+};
 function AlarmRunning({
     currentAlarmAudio,
     setAlarmRunningPage,
     alarmRunningLabel,
-}) {
+    snoozeTimeInterval,
+}: alarmRunningProps) {
+    useEffect(() => {
+        console.log(
+            currentAlarmAudio,
+            setAlarmRunningPage,
+            alarmRunningLabel,
+            snoozeTimeInterval
+        );
+    }, []);
+
     return (
         <>
             <Dialog fullScreen open={true} TransitionComponent={Transition}>
@@ -55,7 +71,7 @@ function AlarmRunning({
                                     setTimeout(() => {
                                         currentAlarmAudio.play();
                                         setAlarmRunningPage(true);
-                                    }, 10000);
+                                    }, snoozeTimeInterval * 60 * 1000); /* 60=seconds,1000=milliseconds */
                                 }}
                             >
                                 Snooze

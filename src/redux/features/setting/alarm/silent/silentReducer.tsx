@@ -1,7 +1,6 @@
 import { GET_ALL_SILENT_INTERVALS, SET_SILENT_INTERVAL } from "./silentTypes";
 
-const allSilentIntervalStaticValues = [
-    "Never",
+const allSilentIntervalStaticValues:string[] = [
     "1 minute",
     "5 minutes",
     "10 minutes",
