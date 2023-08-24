@@ -1,6 +1,6 @@
 import { GET_ALL_SNOOZE_INTERVALS, SET_SNOOZE_INTERVAL } from "./snoozeTypes";
 
-const allSnoozeIntervalStaticValues = ["Never"];
+const allSnoozeIntervalStaticValues:string[] = [];
 for (let i = 1; i <= 30; i++) {
     allSnoozeIntervalStaticValues.push(i + (i == 1 ? " minute" : " minutes"));
 }

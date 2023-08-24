@@ -9,7 +9,7 @@ import { getAllSilentIntervals, setSilentInterval } from "@/redux";
 
 function SetSilent() {
     const stateData: initialStatesTypes = useSelector(
-        (state: any) => state.silent
+        (state: any) => state.alarmSilent
     );
     const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
@@ -18,6 +18,10 @@ function SetSilent() {
         dispatch(getAllSilentIntervals());
     }, [dispatch]);
 
+    useEffect(() => {
+        console.log(stateData);
+    }, [stateData]);
+    
     const handleClose = (newValue?: string) => {
         setOpen(false);
         if (newValue) {

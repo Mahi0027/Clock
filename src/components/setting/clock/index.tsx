@@ -38,7 +38,7 @@ function ClockSetting() {
                     <SetClockThemes />
                     <SetSeconds />
                     <SetTimeZone />
-                    <SetTime />
+                    {/* <SetTime /> */}
                 </List>
             </Collapse>
         </>

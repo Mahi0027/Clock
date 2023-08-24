@@ -23,7 +23,6 @@ const volumeReducer = (state = initialStates, action: actionTypes) => {
                 ...state,
                 currentValue: action.payload,
             };
-
         default:
             return state;
     }

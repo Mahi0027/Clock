@@ -10,7 +10,7 @@ import { getAllSnoozeIntervals, setSnoozeInterval } from "@/redux";
 function SetSnooze() {
     const [open, setOpen] = useState(false);
     const stateData: initialStatesTypes = useSelector(
-        (state: any) => state.snooze
+        (state: any) => state.alarmSnooze
     );
     const dispatch = useDispatch();
 
@@ -18,6 +18,10 @@ function SetSnooze() {
         dispatch(getAllSnoozeIntervals());
     }, [dispatch]);
 
+    // useEffect(() => {
+    //     console.log(Number(stateData.currentSnoozeInterval.substring(0, 2)));
+    // }, [stateData]);
+    
     const handleClose = (newValue?: string) => {
         setOpen(false);
         if (newValue) {

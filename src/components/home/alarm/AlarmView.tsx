@@ -81,23 +81,26 @@ const months = [
     "December",
 ];
 function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
-    let prevTimeOut = 0;
     const stateData = useSelector((state: any) => state);
     const dispatch = useDispatch();
     const [expand, setExpand] = useState<{
         values: boolean[];
         dependency: number;
     }>({ values: [], dependency: -1 });
-    const [openLabelDialogFlag, setOpenLabelDialogFlag] = useState(false);
-    const [openSoundDialogFlag, setOpenSoundDialogFlag] = useState(false);
-    const [idForOpenLabelDialogFlag, setIdForOpenLabelDialogFlag] = useState(0);
-    const [openDatePicker, setOpenDatePicker] = useState(false);
-    const [labelText, setLabelText] = useState("");
+    const [openLabelDialogFlag, setOpenLabelDialogFlag] =
+        useState<boolean>(false);
+    const [openSoundDialogFlag, setOpenSoundDialogFlag] =
+        useState<boolean>(false);
+    const [idForOpenLabelDialogFlag, setIdForOpenLabelDialogFlag] =
+        useState<number>(0);
+    const [openDatePicker, setOpenDatePicker] = useState<boolean>(false);
+    const [labelText, setLabelText] = useState<string>("");
     const [alarmTimeOut, setAlarmTimeOut] = useState<any>([]);
-    const [alarmRunningPage, setAlarmRunningPage] = useState(false);
-    const [alarmRunningLabel, setAlarmRunningLabel] = useState("");
+    const [alarmRunningPage, setAlarmRunningPage] = useState<boolean>(false);
+    const [alarmRunningLabel, setAlarmRunningLabel] = useState<string>("");
     const [currentAlarmAudio, setCurrentAlarmAudio] = useState<any>(null);
-    const [expandBox, setExpandBox] = useState(-1);
+    const [prevTimeOut, setPrevTimeOut] = useState<number>(0);
+    const [expandBox, setExpandBox] = useState<number>(-1);
     const alarmAudio = Array.from(
         { length: stateData.alarm.alarmSounds.length },
         useRef
@@ -127,13 +130,7 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
 
     /* set all alarms. */
     const setAlarms = () => {
-        /* for clearing timeouts. */
-        for (let i = 0; i < alarmTimeOut.length; i++) {
-            if (alarmTimeOut[i] !== undefined) {
-                clearExtraTimeout(prevTimeOut, alarmTimeOut[i]);
-                prevTimeOut = alarmTimeOut[i];
-            }
-        }
+        // clearExtraTimeout();
         let tempAlarmTimeout = Array.from({
             length: stateData.alarm.alarms.length,
         });
@@ -165,55 +162,77 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
                         /* set time is past then automatically off alarm.
                             This functionality need to revise after adding date in alarm time.
                         */
-                        PlayAlarmFlag = false;  
+                        PlayAlarmFlag = false;
                         dispatch(updateAlarmScheduleFlag(value.id, false));
                     } else {
                         /* set alarm. */
                         finalAlarmTime =
-                        givenTime.getTime() - currentTime.getTime();
+                            givenTime.getTime() - currentTime.getTime();
                         PlayAlarmFlag = true;
                     }
                 }
 
                 if (PlayAlarmFlag) {
-                    let alarmDOM = new Audio(
-                        `/sounds/alarm/${value.sound}.mp3`
-                    );
-
                     tempAlarmTimeout[index] = setTimeout(() => {
                         startAlarmRinging(
                             repeatFlag,
-                            alarmDOM,
                             value.id,
-                            value.label
+                            value.label,
+                            value.sound
                         );
                     }, finalAlarmTime);
                 }
             }
         });
+        for (let i = 0; i < alarmTimeOut.length; i++) {
+            if (
+                alarmTimeOut[i] !== undefined
+            ) {
+                clearTimeout(alarmTimeOut[i]);
+            }
+        }
         setAlarmTimeOut(tempAlarmTimeout);
     };
 
     const startAlarmRinging = (
         repeatFlag: boolean,
-        alarmDOM: any,
         id: number,
-        label: string
+        label: string,
+        sound: string
     ) => {
+        console.log("11111", repeatFlag);
+        setAlarmRunningPage(true);
+        let alarmDOM = new Audio(`/sounds/alarm/${sound}.mp3`);
         setCurrentAlarmAudio(alarmDOM);
+        alarmDOM.volume = Number(stateData.alarmVolume.currentValue) / 100;
         alarmDOM.currentTime = 0;
         alarmDOM.loop = true;
         alarmDOM.play();
-        setAlarmRunningPage(true);
         setAlarmRunningLabel(label);
         if (!repeatFlag) {
             dispatch(updateAlarmScheduleFlag(id, false));
         }
+        const timeInterval = Number(
+            stateData.alarmSilent.currentSilentInterval.substring(0, 2)
+        );
+        console.log("timeInterval", timeInterval);
+        /* stop alarm after specific time. */
+        // need to work on it.
+        // setTimeout(() => {
+        //     alarmDOM.pause();
+        //     setAlarmRunningPage(false);
+        // }, timeInterval * 60 * 1000); /* 60=seconds,1000=milliseconds */
     };
 
-    const clearExtraTimeout = (prevTimeOut: number, CurrentTimeOut: number) => {
-        for (let i = prevTimeOut; i < CurrentTimeOut; i++) {
-            clearTimeout(i);
+    /* for clear extra timeouts. */
+    const clearExtraTimeout = () => {
+        for (let i = 0; i < alarmTimeOut.length; i++) {
+            if (alarmTimeOut[i] !== undefined) {
+                for (let j = prevTimeOut + 1; j < alarmTimeOut[i]; j++) {
+                    clearTimeout(j);
+                }
+                setPrevTimeOut(alarmTimeOut[i]);
+            }
         }
     };
 
@@ -295,7 +314,7 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
     };
 
     /* make first character capital in string. */
-    function capitalizeFirstLetter(inputString:string) {
+    function capitalizeFirstLetter(inputString: string) {
         return inputString.charAt(0).toUpperCase() + inputString.slice(1);
     }
     /* check/uncheck alarm schedule flag. */
@@ -332,6 +351,7 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
         for (let i = 0; i < stateData.alarm.alarmSounds.length; i++) {
             alarmAudio[i].current.pause();
         }
+        // clearExtraTimeout();
         setOpenSoundDialogFlag(false);
         if (rowId !== -1 && newValue) {
             dispatch(setAlarmSound(rowId, newValue));
@@ -387,6 +407,13 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
                     currentAlarmAudio={currentAlarmAudio}
                     setAlarmRunningPage={setAlarmRunningPage}
                     alarmRunningLabel={alarmRunningLabel}
+                    // clearExtraTimeout={clearExtraTimeout}
+                    snoozeTimeInterval={Number(
+                        stateData.alarmSnooze.currentSnoozeInterval.substring(
+                            0,
+                            2
+                        )
+                    )}
                 />
             )}
             {stateData.alarm.alarmSounds.map((value: string, index: number) => {

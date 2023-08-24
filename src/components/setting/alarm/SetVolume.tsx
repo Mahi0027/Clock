@@ -13,7 +13,7 @@ import { setVolume } from "@/redux";
 
 function SetVolume() {
     const stateData: initialStatesTypes = useSelector(
-        (state: any) => state.volume
+        (state: any) => state.alarmVolume
     );
     const dispatch = useDispatch();
 
