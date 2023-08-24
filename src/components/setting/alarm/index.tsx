@@ -30,9 +30,6 @@ function AlarmSetting() {
     const handleClick = () => {
         setOpen(!open);
     };
-    // const handleToggleShowSecond = () => {
-    //     setShowSeconds(!showSeconds);
-    // };
 
     return (
         <>

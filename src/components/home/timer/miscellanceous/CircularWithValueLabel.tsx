@@ -44,7 +44,6 @@ function CircularProgressWithLabel(props: CircularProgressWithLabelProps) {
                 {...props}
                 size="15em"
                 thickness={1}
-                // className=
             />
             <Box
                 sx={{

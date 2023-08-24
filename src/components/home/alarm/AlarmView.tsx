@@ -113,7 +113,6 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
         dispatch(getAllAlarm());
         setExpandState(stateData.alarm.alarms.length, expandBox);
         setExpandBox(-1);
-        // setAlarmTimeOut(Array.from({ length: stateData.alarm.alarms.length }));
         setAlarms();
 
         if (scrollToTop) {
@@ -140,62 +139,76 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
         });
         stateData.alarm.alarms.map((value: any, index: number) => {
             if (value.currentScheduleFlag) {
-                const givenTime = new Date(value.alarmTime);
                 const currentTime = new Date();
                 let repeatFlag = false;
-                let closestAlarmTime:number = 0;
+                let finalAlarmTime: number = Number.MAX_VALUE;
+                let PlayAlarmFlag = false;
+
+                /* check repeat alarm values. */
                 for (const day in value.repeat) {
                     if (value.repeat[day].flag) {
                         repeatFlag = true;
                         let repeatAlarmDate = new Date(value.repeat[day].time);
-                        let tempTimeDiff = repeatAlarmDate.getTime() - currentTime.getTime();
-                        if (tempTimeDiff> 0 && tempTimeDiff<closestAlarmTime) {
-
-                        } 
-                        if (alarmDay === "") {
-                            alarmDay = capitalizeFirstLetter(
-                                dayHashTable[
-                                    repeatAlarmDate.getDay()
-                                ].substring(0, 3)
-                            );
-                        } else {
-                            alarmDay =
-                                alarmDay +
-                                ", " +
-                                capitalizeFirstLetter(
-                                    dayHashTable[
-                                        repeatAlarmDate.getDay()
-                                    ].substring(0, 3)
-                                );
+                        let tempTimeDiff =
+                            repeatAlarmDate.getTime() - currentTime.getTime();
+                        if (tempTimeDiff > 0 && tempTimeDiff < finalAlarmTime) {
+                            finalAlarmTime = tempTimeDiff;
+                            PlayAlarmFlag = true;
                         }
-                        repeatDaysCounter++;
                     }
                 }
-                if (givenTime < currentTime) {
-                    /* set time is past then automatically off alarm.
-                        This functionality need to revise after adding date in alarm time.
-                    */
-                    dispatch(updateAlarmScheduleFlag(value.id, false));
-                } else {
-                    /* set alarm. */
-                    const timeDiff: number =
+
+                /* if do not set repeat then run below if condition. */
+                if (!repeatFlag) {
+                    const givenTime = new Date(value.alarmTime);
+                    if (givenTime <= currentTime) {
+                        /* set time is past then automatically off alarm.
+                            This functionality need to revise after adding date in alarm time.
+                        */
+                        PlayAlarmFlag = false;  
+                        dispatch(updateAlarmScheduleFlag(value.id, false));
+                    } else {
+                        /* set alarm. */
+                        finalAlarmTime =
                         givenTime.getTime() - currentTime.getTime();
+                        PlayAlarmFlag = true;
+                    }
+                }
+
+                if (PlayAlarmFlag) {
                     let alarmDOM = new Audio(
                         `/sounds/alarm/${value.sound}.mp3`
                     );
+
                     tempAlarmTimeout[index] = setTimeout(() => {
-                        setCurrentAlarmAudio(alarmDOM);
-                        alarmDOM.currentTime = 0;
-                        alarmDOM.loop = true;
-                        alarmDOM.play();
-                        setAlarmRunningPage(true);
-                        setAlarmRunningLabel(value.label);
-                        dispatch(updateAlarmScheduleFlag(value.id, false));
-                    }, timeDiff);
+                        startAlarmRinging(
+                            repeatFlag,
+                            alarmDOM,
+                            value.id,
+                            value.label
+                        );
+                    }, finalAlarmTime);
                 }
             }
         });
         setAlarmTimeOut(tempAlarmTimeout);
+    };
+
+    const startAlarmRinging = (
+        repeatFlag: boolean,
+        alarmDOM: any,
+        id: number,
+        label: string
+    ) => {
+        setCurrentAlarmAudio(alarmDOM);
+        alarmDOM.currentTime = 0;
+        alarmDOM.loop = true;
+        alarmDOM.play();
+        setAlarmRunningPage(true);
+        setAlarmRunningLabel(label);
+        if (!repeatFlag) {
+            dispatch(updateAlarmScheduleFlag(id, false));
+        }
     };
 
     const clearExtraTimeout = (prevTimeOut: number, CurrentTimeOut: number) => {
@@ -229,7 +242,6 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
     /* convert time into day/date, time, meridian */
     const convertTimeInMeridiemForm = (time: Date, repeat: any) => {
         let repeatFlag = false;
-        let minTime = 0;
         let date = new Date(time);
         let hour = Number(date.getHours());
         let minute = Number(date.getMinutes());
@@ -269,7 +281,7 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
         }
 
         /* set alarm time. */
-        if (hour <= 12) {
+        if (hour < 12) {
             meridiem = "AM";
         } else {
             hour = hour - 12;
@@ -283,7 +295,7 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
     };
 
     /* make first character capital in string. */
-    function capitalizeFirstLetter(inputString) {
+    function capitalizeFirstLetter(inputString:string) {
         return inputString.charAt(0).toUpperCase() + inputString.slice(1);
     }
     /* check/uncheck alarm schedule flag. */
@@ -357,6 +369,7 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
         dispatch(setRepeatAlarm(alarmId, newAlarmTime, dayOfWeek));
     };
 
+    /* schedule alarm date. */
     const updateAlarmDate = (
         alarmId: number,
         currentAlarmTime: Date,
@@ -366,6 +379,7 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
         customDate.setMinutes(currentAlarmTime.getMinutes());
         dispatch(updateAlarmTime(alarmId, customDate));
     };
+
     return (
         <>
             {alarmRunningPage && (
@@ -609,7 +623,6 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
                                         <Stack direction={"row"}>
                                             <Button
                                                 onClick={() => {
-                                                    // handleSoundAlarmEvent();
                                                     setOpenSoundDialogFlag(
                                                         true
                                                     );
