@@ -13,7 +13,6 @@ function AnalogClockThemes() {
           <ListItemButton sx={{ pl: 9 }} onClick={() => setOpen(true)}>
               <ListItemText
                   primary={<Typography variant="body1">Clock Theme</Typography>}
-                  //   secondary="selected Analog Clock"
               />
           </ListItemButton>
           <CustomDialog
