@@ -68,6 +68,7 @@ function CircularProgressWithLabel(props: CircularProgressWithLabelProps) {
         </Box>
     );
 }
+
 type CircularWithValueLabelProps = {
     timerdetails: any;
     closeRunningTimer: () => void;
@@ -110,7 +111,7 @@ export default function CircularWithValueLabel(
             dispatch(updateTimerTime(props.timerdetails.id, 0));
             clearTimeout(timerIntervalRef.current);
             let timerDOM = new Audio(
-                `sounds/alarm/${props.timerdetails.sound}.mp3`
+                `sounds/alarm/${stateData.timerSetting.currentTimerSound}.mp3` /* `sounds/alarm/${props.timerdetails.sound}.mp3` */
             );
             setTimerRingDOM(timerDOM);
             timerDOM.currentTime = 0;

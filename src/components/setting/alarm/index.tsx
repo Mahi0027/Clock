@@ -47,7 +47,7 @@ function AlarmSetting() {
                     <SetSilent />
                     <SetSnooze />
                     <SetVolume />
-                    <SetWeekOn />
+                    {/* <SetWeekOn /> */}
                 </List>
             </Collapse>
         </>

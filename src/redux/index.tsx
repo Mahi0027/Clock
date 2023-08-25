@@ -46,11 +46,17 @@ export {
 } from "./features/home/alarm/actions";
 
 export {
+    getAllTimerSounds,
+    setTimerSound,
+    setTimerVolume,
+} from "./features/setting/timer/actions";
+
+export {
     getAllTimers,
     setTimer,
     updateTimerTime,
     updateTimerScheduleFlag,
     updateTimerLabel,
-    setTimerSound,
+    // setTimerSound,
     deleteTimer,
 } from "./features/home/timer/actions";
