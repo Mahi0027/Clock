@@ -17,10 +17,6 @@ function SetSnooze() {
     useEffect(() => {
         dispatch(getAllSnoozeIntervals());
     }, [dispatch]);
-
-    // useEffect(() => {
-    //     console.log(Number(stateData.currentSnoozeInterval.substring(0, 2)));
-    // }, [stateData]);
     
     const handleClose = (newValue?: string) => {
         setOpen(false);
