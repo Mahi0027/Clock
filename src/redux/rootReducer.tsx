@@ -12,6 +12,7 @@ import AnalogClockThemeReducer from "./features/setting/clock/clockTheme/analog/
 import DigitalClockThemeReducer from "./features/setting/clock/clockTheme/digital/reducer";
 import alarmReducer from "./features/home/alarm/reducer";
 import timerReducer from "./features/home/timer/reducer";
+import timerSettingReducer from "./features/setting/timer/reducer";
 
 const rootReducer = combineReducers({
     theme: themeReducer,
@@ -24,6 +25,7 @@ const rootReducer = combineReducers({
     alarmSnooze: snoozeReducer,
     alarmVolume: volumeReducer,
     alarmWeekOn: weekOnReducer,
+    timerSetting: timerSettingReducer,
     homePage: BottomNavbar,
     alarm: alarmReducer,
     timer: timerReducer,
