@@ -18,10 +18,6 @@ function SetSilent() {
         dispatch(getAllSilentIntervals());
     }, [dispatch]);
 
-    useEffect(() => {
-        console.log(stateData);
-    }, [stateData]);
-    
     const handleClose = (newValue?: string) => {
         setOpen(false);
         if (newValue) {

@@ -30,14 +30,6 @@ function AlarmRunning({
     alarmRunningLabel,
     snoozeTimeInterval,
 }: alarmRunningProps) {
-    useEffect(() => {
-        console.log(
-            currentAlarmAudio,
-            setAlarmRunningPage,
-            alarmRunningLabel,
-            snoozeTimeInterval
-        );
-    }, []);
 
     return (
         <>

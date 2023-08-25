@@ -185,9 +185,7 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
             }
         });
         for (let i = 0; i < alarmTimeOut.length; i++) {
-            if (
-                alarmTimeOut[i] !== undefined
-            ) {
+            if (alarmTimeOut[i] !== undefined) {
                 clearTimeout(alarmTimeOut[i]);
             }
         }
@@ -200,7 +198,6 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
         label: string,
         sound: string
     ) => {
-        console.log("11111", repeatFlag);
         setAlarmRunningPage(true);
         let alarmDOM = new Audio(`/sounds/alarm/${sound}.mp3`);
         setCurrentAlarmAudio(alarmDOM);
@@ -215,13 +212,11 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
         const timeInterval = Number(
             stateData.alarmSilent.currentSilentInterval.substring(0, 2)
         );
-        console.log("timeInterval", timeInterval);
         /* stop alarm after specific time. */
-        // need to work on it.
-        // setTimeout(() => {
-        //     alarmDOM.pause();
-        //     setAlarmRunningPage(false);
-        // }, timeInterval * 60 * 1000); /* 60=seconds,1000=milliseconds */
+        setTimeout(() => {
+            alarmDOM.pause();
+            setAlarmRunningPage(false);
+        }, timeInterval * 60 * 1000); /* 60=seconds,1000=milliseconds */
     };
 
     /* for clear extra timeouts. */
