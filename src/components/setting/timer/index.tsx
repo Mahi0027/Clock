@@ -11,6 +11,8 @@ import TimerOutlinedIcon from "@mui/icons-material/TimerOutlined";
 import SetSound from "./SetSound";
 import SetGraduallyIncreaseVolume from "./SetGraduallyIncreaseVolume";
 import SetVibration from "./SetVibration";
+import SetVolume from "./SetVolume";
+import SetSilent from "./SetSilent";
 
 function TimerSetting() {
     const [open, setOpen] = useState<boolean>(true);
@@ -32,8 +34,10 @@ function TimerSetting() {
             <Collapse in={open} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
                   <SetSound />
-                  <SetGraduallyIncreaseVolume />
-                  <SetVibration />
+                  <SetSilent />
+                  <SetVolume />
+                  {/* <SetGraduallyIncreaseVolume /> */}
+                  {/* <SetVibration /> */}
                 </List>
             </Collapse>
         </>

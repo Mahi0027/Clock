@@ -103,7 +103,16 @@ export default function CircularWithValueLabel(
     }, [stateData.timer]);
 
     useEffect(() => {
-        if (timerRingDOM !== null) setTimerCompletedRingingPage(true);
+        if (timerRingDOM !== null) {
+            setTimerCompletedRingingPage(true);
+            const timeInterval = Number(
+                stateData.timerSetting.currentSilentInterval.substring(0, 2)
+            );
+            setTimeout(() => {
+                deleteTimerDOM();
+                closeTimerCompetedRingingScreen();
+            }, timeInterval * 60 * 1000);
+        }
     }, [timerRingDOM]);
 
     useEffect(() => {
@@ -114,6 +123,8 @@ export default function CircularWithValueLabel(
                 `sounds/alarm/${stateData.timerSetting.currentTimerSound}.mp3` /* `sounds/alarm/${props.timerdetails.sound}.mp3` */
             );
             setTimerRingDOM(timerDOM);
+            timerDOM.volume =
+                Number(stateData.timerSetting.timerCurrentVolume) / 100;
             timerDOM.currentTime = 0;
             timerDOM.loop = true;
             timerDOM.play();
