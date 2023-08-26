@@ -49,6 +49,7 @@ export {
     getAllTimerSounds,
     setTimerSound,
     setTimerVolume,
+    setTimerSilentInterval,
 } from "./features/setting/timer/actions";
 
 export {

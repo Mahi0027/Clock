@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemButton from "@mui/material/ListItemButton";
 import Typography from "@mui/material/Typography";
@@ -13,25 +13,46 @@ function SetSound() {
     );
     const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
-    // const [value, setValue] = useState(options[2]);
+    const timerAudio = Array.from(
+        { length: stateData.allTimerSounds.length },
+        useRef
+    );
 
-    useEffect(() => {
-      dispatch(getAllTimerSounds());
-    }, [dispatch])
-
-    useEffect(() => {
-        console.log(stateData);
-    }, [stateData]);
-    
-    
+    /* set timer Sound. */
     const handleClose = (newValue?: string) => {
+        for (let i = 0; i < stateData.allTimerSounds.length; i++) {
+            timerAudio[i].current.pause();
+        }
         setOpen(false);
         if (newValue) {
             dispatch(setTimerSound(newValue));
         }
     };
+
+    /* play timer ringtone. */
+    const playTimerSound = (value: string) => {
+        for (let i = 0; i < stateData.allTimerSounds.length; i++) {
+            timerAudio[i].current.pause();
+        }
+        timerAudio[stateData.allTimerSounds.indexOf(value)].current.play();
+    };
     return (
         <>
+            {stateData.allTimerSounds.map((value: string, index: number) => {
+                return (
+                    <span key={index}>
+                        <audio
+                            ref={(e: any) => (timerAudio[index].current = e)}
+                            loop
+                        >
+                            <source
+                                src={`/sounds/alarm/${value}.mp3`}
+                                type="audio/mpeg"
+                            />
+                        </audio>
+                    </span>
+                );
+            })}
             <ListItemButton sx={{ pl: 9 }} onClick={() => setOpen(true)}>
                 <ListItemText
                     primary={
@@ -48,6 +69,8 @@ function SetSound() {
                 value={stateData.currentTimerSound}
                 open={open}
                 onClose={handleClose}
+                soundFlag={true}
+                playSound={playTimerSound}
             />
         </>
     );
