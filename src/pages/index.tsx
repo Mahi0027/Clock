@@ -10,15 +10,17 @@ import AlarmHome from "@/components/home/alarm";
 import TimerHome from "@/components/home/timer";
 import StopwatchHome from "@/components/home/stopwatch";
 
-const inter = Inter({ subsets: ["latin"] });
-
+const homePageTitle = ["Clock", "Alarm", "Timer", "Stopwatch"];
+const MenuItems = ["Setting", "Privacy policy", "Send feedback", "Help"];
 export default function Home() {
-    const stateData = useSelector((state: any) => state);
+    const { currentHomePage, currentTheme } = useSelector((state: any) => ({
+        currentHomePage: state.homePage.currentHomePage,
+        currentTheme: state.theme.currentTheme,
+    }));
     const [myTheme, setMyTheme] = useState({});
 
-
     useEffect(() => {
-        if (stateData.theme.currentTheme === "light") {
+        if (currentTheme === "light") {
             setMyTheme({
                 backgroundColor: "#fff",
             });
@@ -27,25 +29,20 @@ export default function Home() {
                 backgroundColor: "#000000",
             });
         }
-    }, [stateData.theme.currentTheme]);
+    }, [currentTheme]);
 
     return (
         <>
             <TopNavbar
-                heading={"Clock"}
-                menuItemsProps={[
-                    "Setting",
-                    "Privacy policy",
-                    "Send feedback",
-                    "Help",
-                ]}
+                heading={homePageTitle[currentHomePage]}
+                menuItemsProps={MenuItems}
                 homepage={true}
             />
             <Stack className={styles.container} sx={myTheme}>
-                {stateData.homePage.currentHomePage === 0 && <ClockHome />}
-                {stateData.homePage.currentHomePage === 1 && <AlarmHome />}
-                {stateData.homePage.currentHomePage === 2 && <TimerHome />}
-                {stateData.homePage.currentHomePage === 3 && <StopwatchHome />}
+                {currentHomePage === 0 && <ClockHome />}
+                {currentHomePage === 1 && <AlarmHome />}
+                {currentHomePage === 2 && <TimerHome />}
+                {currentHomePage === 3 && <StopwatchHome />}
             </Stack>
             <BottomNavbar />
         </>

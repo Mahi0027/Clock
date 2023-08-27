@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
@@ -29,10 +29,13 @@ function SetDarkMode() {
         dispatch(fetchAllThemes());
     }, [dispatch]);
 
-    const onSetMode = (value: string) => {
-        setOpenDialog(false);
-        dispatch(setTheme(value));
-    };
+    const onSetMode = useCallback(
+        (value: string) => {
+            setOpenDialog(false);
+            dispatch(setTheme(value));
+        },
+        [dispatch, openDialog]
+    );
 
     return (
         <>

@@ -1,9 +1,5 @@
-import React, { useState, useRef, useEffect } from "react";
-import Box from "@mui/material/Box";
+import React, { useState, useRef, useEffect, memo } from "react";
 import Button from "@mui/material/Button";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
@@ -11,8 +7,6 @@ import Dialog from "@mui/material/Dialog";
 import RadioGroup from "@mui/material/RadioGroup";
 import Radio from "@mui/material/Radio";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import ListItemButton from "@mui/material/ListItemButton";
-import Typography from "@mui/material/Typography";
 import CustomHorizontalScrollableDialog from "./CustomHorizontalScrollableDialog";
 
 export interface ConfirmationDialogRawProps {
@@ -22,12 +16,13 @@ export interface ConfirmationDialogRawProps {
     keepMounted: boolean;
     value: string;
     open: boolean;
-    onClose: (value?: string | boolean, id?: number) => void;
+    onClose: () => void /* parameter type: value?: string | boolean, id?: number */;
     clockThemeFlag?: boolean;
     rowId?: number;
     soundFlag?: boolean;
     playSound?: (value: string) => void;
 }
+
 function CustomDialog({
     open,
     onClose,
@@ -38,7 +33,6 @@ function CustomDialog({
     rowId = -1,
     soundFlag = false,
     playSound,
-    timerSoundFlag = false,
     ...other
 }: ConfirmationDialogRawProps) {
     const [value, setValue] = useState(valueProp);
@@ -126,4 +120,4 @@ function CustomDialog({
     );
 }
 
-export default CustomDialog;
+export default memo(CustomDialog);

@@ -7,10 +7,8 @@ import Collapse from "@mui/material/Collapse";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import Typography from "@mui/material/Typography";
-import TimerOutlinedIcon from "@mui/icons-material/TimerOutlined";
 import TuneIcon from '@mui/icons-material/Tune';
 import SetDarkMode from "./SetDarkMode";
-import Paper from "@mui/material/Paper";
 
 function PersonalizeSetting() {
     const [open, setOpen] = useState<boolean>(true);
@@ -18,6 +16,7 @@ function PersonalizeSetting() {
     const handleClick = () => {
         setOpen(!open);
     };
+    
     return (
         <>
             <ListItemButton onClick={handleClick}>

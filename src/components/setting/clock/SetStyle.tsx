@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
@@ -26,12 +26,13 @@ function SetStyle() {
     }, [dispatch]);
 
     const [openDialog, setOpenDialog] = useState<boolean>(false);
-    const [chosenClockStyle, setChosenClockStyle] = useState<number>(0);
-
-    const onSetClockStyle = (value: string) => {
-        setOpenDialog(false);
-        dispatch(setStyle(value));
-    };
+    const onSetClockStyle = useCallback(
+        (value: string) => {
+            setOpenDialog(false);
+            dispatch(setStyle(value));
+        },
+        [dispatch, openDialog]
+    );
     return (
         <>
             <ListItemButton sx={{ pl: 9 }} onClick={() => setOpenDialog(true)}>

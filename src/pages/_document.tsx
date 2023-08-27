@@ -37,9 +37,7 @@ export default function Document() {
                     />
                 </Head>
                 <body>
-                    {/* <Layout> */}
                     <Main />
-                    {/* </Layout> */}
                     <NextScript />
                 </body>
             </Html>

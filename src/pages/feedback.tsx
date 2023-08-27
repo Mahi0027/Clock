@@ -2,16 +2,17 @@ import React from "react";
 import TopNavbar from "@/components/TopNavbar";
 import Layout from "@/components/Layout";
 
-function feedback() {
+const MenuItems = ["Setting", "Privacy policy", "Help"];
+function Feedback() {
     return (
         <Layout>
             <TopNavbar
                 heading={"Feedback"}
-                menuItemsProps={["Setting", "Privacy policy", "Help"]}
+                menuItemsProps={MenuItems}
                 homepage={false}
             />
         </Layout>
     );
 }
 
-export default feedback;
+export default Feedback;

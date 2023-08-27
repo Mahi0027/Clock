@@ -12,9 +12,12 @@ import { initialStatesTypes } from "@/redux/features/setting/alarm/volume/volume
 import { setVolume } from "@/redux";
 
 function SetVolume() {
-    const stateData: initialStatesTypes = useSelector(
-        (state: any) => state.alarmVolume
-    );
+    const { minValue, maxValue, currentValue }: initialStatesTypes =
+        useSelector((state: any) => ({
+            minValue: state.alarmVolume.minValue,
+            maxValue: state.alarmVolume.maxValue,
+            currentValue: state.alarmVolume.currentValue,
+        }));
     const dispatch = useDispatch();
 
     return (
@@ -34,9 +37,9 @@ function SetVolume() {
                     <VolumeDown />
                     <Slider
                         aria-label="Volume"
-                        value={stateData.currentValue}
-                        min={stateData.minValue}
-                        max={stateData.maxValue}
+                        value={currentValue}
+                        min={minValue}
+                        max={maxValue}
                         onChange={(event: Event, newValue: number | number[]) =>
                             dispatch(setVolume(newValue as number))
                         }

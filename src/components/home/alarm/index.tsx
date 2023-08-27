@@ -3,16 +3,10 @@ import Box from "@mui/material/Box";
 import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
 import styles from "@/styles/components/home/alarm/index.module.scss";
-import {
-    Dialog,
-    DialogContent,
-    DialogTitle,
-    Typography,
-    Button,
-} from "@mui/material";
+import { Dialog, DialogContent, DialogTitle } from "@mui/material";
 import ResponsiveTimePickers from "@/components/miscellaneous/ResponsiveTimePickers";
 import AlarmView from "@/components/home/alarm/AlarmView";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setAlarm } from "@/redux";
 
 function AlarmHome() {

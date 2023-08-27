@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import ListItemText from "@mui/material/ListItemText";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
@@ -9,12 +9,20 @@ import Box from "@mui/material/Box";
 import ListItem from "@mui/material/ListItem";
 import { useDispatch, useSelector } from "react-redux";
 import { setTimerVolume } from "@/redux";
-import { initialStatesTypes } from "@/redux/features/setting/timer/reducer";
+
+type stateTypes = {
+    timerMinVolume: number;
+    timerMaxVolume: number;
+    timerCurrentVolume: number;
+};
 
 function SetVolume() {
-    const stateData: initialStatesTypes = useSelector(
-        (state: any) => state.timerSetting
-    );
+    const { timerMinVolume, timerMaxVolume, timerCurrentVolume }: stateTypes =
+        useSelector((state: any) => ({
+            timerMinVolume: state.timerSetting.timerMinVolume,
+            timerMaxVolume: state.timerSetting.timerMaxVolume,
+            timerCurrentVolume: state.timerSetting.timerCurrentVolume,
+        }));
     const dispatch = useDispatch();
 
     return (
@@ -34,9 +42,9 @@ function SetVolume() {
                     <VolumeDown />
                     <Slider
                         aria-label="Volume"
-                        value={stateData.timerCurrentVolume}
-                        min={stateData.timerMinVolume}
-                        max={stateData.timerMaxVolume}
+                        value={timerCurrentVolume}
+                        min={timerMinVolume}
+                        max={timerMaxVolume}
                         onChange={(event: Event, newValue: number | number[]) =>
                             dispatch(setTimerVolume(newValue as number))
                         }

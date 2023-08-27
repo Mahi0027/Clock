@@ -8,11 +8,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCurrentHomePage } from "@/redux";
 import styles from "../styles/components/BottomNavbar.module.scss";
 
+type stateTypes = {
+    currentHomePage: number;
+    currentTheme: string;
+};
 function BottomNavbar() {
-    const { currentHomePage, currentTheme } = useSelector((state: any) => ({
-        currentHomePage: state.homePage.currentHomePage,
-        currentTheme: state.theme.currentTheme,
-    }));
+    const { currentHomePage, currentTheme }: stateTypes = useSelector(
+        (state: any) => ({
+            currentHomePage: state.homePage.currentHomePage,
+            currentTheme: state.theme.currentTheme,
+        })
+    );
     const dispatch = useDispatch();
 
     return (
