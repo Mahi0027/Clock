@@ -1,9 +1,25 @@
 import React, { useEffect, useState } from "react";
 import styles from "@/styles/components/home/clock/analogClock.module.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { initialStatesTypes } from "@/redux/features/setting/personalize/theme/themeReducer";
+
+type stateTypes = {
+    currentTheme: string;
+    analogClockCurrentTheme: string;
+    currentTimeZone: string;
+    setSecond: boolean;
+};
 function AnalogClock() {
-    const stateData = useSelector((state: any) => state);
+    const {
+        currentTheme,
+        analogClockCurrentTheme,
+        currentTimeZone,
+        setSecond,
+    }: stateTypes = useSelector((state: any) => ({
+        currentTheme: state.theme.currentTheme,
+        analogClockCurrentTheme: state.analogClockTheme.currentTheme,
+        currentTimeZone: state.timeZone.currentTimeZone,
+        setSecond: state.second.setSecond,
+    }));
     const dispatch = useDispatch();
     const time = calcTime();
     const [dateObj, setDateObj] = useState(
@@ -16,22 +32,23 @@ function AnalogClock() {
             time.second
         )
     );
-    const [htime, setHtime] = useState(dateObj.getHours());
-    const [mtime, setMtime] = useState(dateObj.getMinutes());
-    const [stime, setStime] = useState(dateObj.getSeconds());
-    const [hrotation, setHrotation] = useState(0);
-    const [mrotation, setMrotation] = useState(0);
-    const [srotation, setSrotation] = useState(0);
-    const [dropStyle, setDropStyle] = useState({});
-    const [clockStyle, setClockStyle] = useState({});
+    const [hTime, setHTime] = useState<number>(dateObj.getHours());
+    const [mTime, setMTime] = useState<number>(dateObj.getMinutes());
+    const [sTime, setSTime] = useState<number>(dateObj.getSeconds());
+    const [hRotation, setHRotation] = useState<number>(0);
+    const [mRotation, setMRotation] = useState<number>(0);
+    const [sRotation, setSRotation] = useState<number>(0);
+    const [dropStyle, setDropStyle] = useState<any>({});
+    const [clockStyle, setClockStyle] = useState<any>({});
+
     useEffect(() => {
-        if (stateData.theme.currentTheme === "dark") {
+        if (currentTheme === "dark") {
             setDropStyle({
                 boxShadow:
                     "inset 20px 20px 20px rgba(0, 0, 0, 0.05),25px 35px 20px rgba(0, 0, 0, 0.05),25px 30px 30px rgba(0, 0, 0, 0.05),inset -20px -20px 25px rgba(0, 0, 0, 0.9)",
             });
             setClockStyle({
-                background: `url(/images/clock/${stateData.analogClockTheme.currentTheme}.png) no-repeat`,
+                background: `url(/images/clock/${analogClockCurrentTheme}.png) no-repeat`,
                 backgroundSize: "contain",
                 filter: "invert(100%)",
             });
@@ -41,7 +58,7 @@ function AnalogClock() {
                     "inset 20px 20px 20px rgba(0, 0, 0, 0.05),25px 35px 20px rgba(0, 0, 0, 0.05),25px 30px 30px rgba(0, 0, 0, 0.05),inset -20px -20px 25px rgba(255, 255, 255, 0.9)",
             });
             setClockStyle({
-                background: `url(/images/clock/${stateData.analogClockTheme.currentTheme}.png) no-repeat`,
+                background: `url(/images/clock/${analogClockCurrentTheme}.png) no-repeat`,
                 backgroundSize: "contain",
                 filter: "none",
             });
@@ -63,21 +80,25 @@ function AnalogClock() {
             );
         }, 1000);
     }, []);
-    useEffect(() => {
-        setHtime(dateObj.getHours());
-        setMtime(dateObj.getMinutes());
-        setStime(dateObj.getSeconds());
-    }, [dateObj]);
-    useEffect(() => {
-        setHrotation(30 * htime + mtime / 2);
-        setMrotation(6 * mtime);
-        setSrotation(6 * stime);
-    }, [htime, mtime, stime]);
 
+    useEffect(() => {
+        setHTime(dateObj.getHours());
+        setMTime(dateObj.getMinutes());
+        setSTime(dateObj.getSeconds());
+    }, [dateObj]);
+
+    /* on hTime, mTime, sTime value change. */
+    useEffect(() => {
+        setHRotation(30 * hTime + mTime / 2);
+        setMRotation(6 * mTime);
+        setSRotation(6 * sTime);
+    }, [hTime, mTime, sTime]);
+
+    /* calculate day,month,year,hour,minute,second. */
     function calcTime() {
         const currentDate = new Date();
         const time = currentDate.toLocaleString("en-US", {
-            timeZone: stateData.timeZone.currentTimeZone,
+            timeZone: currentTimeZone,
         });
         const splitTime = time.split(" ");
         const dateSplit = splitTime[0].replace(",", "").split("/");
@@ -103,24 +124,22 @@ function AnalogClock() {
                     <div id={styles.clock} style={clockStyle}>
                         <div
                             id={styles.hour}
-                            style={{ transform: `rotate(${hrotation}deg)` }}
+                            style={{ transform: `rotate(${hRotation}deg)` }}
                         ></div>
                         <div
                             id={styles.minute}
-                            style={{ transform: `rotate(${mrotation}deg)` }}
+                            style={{ transform: `rotate(${mRotation}deg)` }}
                         ></div>
-                        {stateData.second.setSecond && (
+                        {setSecond && (
                             <div
                                 id={styles.second}
-                                style={{ transform: `rotate(${srotation}deg)` }}
+                                style={{ transform: `rotate(${sRotation}deg)` }}
                             ></div>
                         )}
                     </div>
                 </div>
             </div>
-            <div className={styles.timezone}>
-                {stateData.timeZone.currentTimeZone}
-            </div>
+            <div className={styles.timezone}>{currentTimeZone}</div>
         </>
     );
 }

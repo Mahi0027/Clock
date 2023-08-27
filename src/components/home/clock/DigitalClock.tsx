@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import styles from "@/styles/components/home/clock/digitalClock.module.scss";
-import { initialStatesTypes } from "@/redux/features/setting/personalize/theme/themeReducer";
 import { useDispatch, useSelector } from "react-redux";
 const months = [
     "January",
@@ -16,8 +15,26 @@ const months = [
     "November",
     "December",
 ];
+
+type stateTypes = {
+    currentTheme: string;
+    digitalClockCurrentTheme: string;
+    currentTimeZone: string;
+    setSecond: boolean;
+};
+
 function DigitalClock() {
-    const stateData = useSelector((state: any) => state);
+    const {
+        currentTheme,
+        digitalClockCurrentTheme,
+        currentTimeZone,
+        setSecond,
+    }: stateTypes = useSelector((state: any) => ({
+        currentTheme: state.theme.currentTheme,
+        digitalClockCurrentTheme: state.digitalClockTheme.currentTheme,
+        currentTimeZone: state.timeZone.currentTimeZone,
+        setSecond: state.second.setSecond,
+    }));
     const dispatch = useDispatch();
     const time = calcTime();
     const [dateObj, setDateObj] = useState(
@@ -30,27 +47,27 @@ function DigitalClock() {
             time.second
         )
     );
-    const [htime, setHtime] = useState(dateObj.getHours().toString());
-    const [mtime, setMtime] = useState(dateObj.getMinutes().toString());
-    const [stime, setStime] = useState(dateObj.getSeconds().toString());
-    const [day, setDay] = useState(dateObj.getDate().toString());
-    const [month, setMonth] = useState(months[dateObj.getMonth()]);
-    const [year, setYear] = useState(dateObj.getFullYear().toString());
-    const [session, setSession] = useState("");
-    const [clockStyle, setClockStyle] = useState({});
-    const [hydrated, setHydrated] = useState(false);
+    const [hTime, setHTime] = useState<string>(dateObj.getHours().toString());
+    const [mTime, setMTime] = useState<string>(dateObj.getMinutes().toString());
+    const [sTime, setSTime] = useState<string>(dateObj.getSeconds().toString());
+    const [day, setDay] = useState<string>(dateObj.getDate().toString());
+    const [month, setMonth] = useState<string>(months[dateObj.getMonth()]);
+    const [year, setYear] = useState<string>(dateObj.getFullYear().toString());
+    const [session, setSession] = useState<string>("");
+    const [clockStyle, setClockStyle] = useState<any>({});
+    const [hydrated, setHydrated] = useState<boolean>(false);
 
     useEffect(() => {
         setHydrated(true);
-        if (stateData.theme.currentTheme === "dark") {
+        if (currentTheme === "dark") {
             setClockStyle({
                 color: "#fff",
-                fontFamily: stateData.digitalClockTheme.currentTheme,
+                fontFamily: digitalClockCurrentTheme,
             });
         } else {
             setClockStyle({
                 color: "#000000",
-                fontFamily: stateData.digitalClockTheme.currentTheme,
+                fontFamily: digitalClockCurrentTheme,
             });
         }
         let interval = setInterval(() => {
@@ -73,14 +90,14 @@ function DigitalClock() {
 
     /* when time change(every second) */
     useEffect(() => {
-        setMtime(() => {
+        setMTime(() => {
             let currentMinute = dateObj.getMinutes().toString();
             if (Number(currentMinute) < 10) {
                 return currentMinute.toString().padStart(2, "0");
             }
             return currentMinute;
         });
-        setStime(() => {
+        setSTime(() => {
             let currentSecond = dateObj.getSeconds().toString();
             if (Number(currentSecond) < 10) {
                 return currentSecond.toString().padStart(2, "0");
@@ -91,7 +108,7 @@ function DigitalClock() {
 
     /* on minute change. */
     useEffect(() => {
-        setHtime(() => {
+        setHTime(() => {
             let currentHour = Number(dateObj.getHours().toString());
             if (currentHour > 12) {
                 setSession("PM");
@@ -104,12 +121,13 @@ function DigitalClock() {
             }
             return currentHour.toString();
         });
-    }, [mtime]);
+    }, [mTime]);
 
+    /* calculate day,month,year,hour,minute,second. */
     function calcTime() {
         const currentDate = new Date();
         const time = currentDate.toLocaleString("en-US", {
-            timeZone: stateData.timeZone.currentTimeZone,
+            timeZone: currentTimeZone,
         });
         const splitTime = time.split(" ");
         const dateSplit = splitTime[0].replace(",", "").split("/");
@@ -135,13 +153,13 @@ function DigitalClock() {
     return (
         <div className={styles.container}>
             <div className={styles.clock} style={clockStyle}>
-                <span className="hours">{htime}</span>
+                <span className="hours">{hTime}</span>
                 <span>:</span>
-                <span className="minutes">{mtime}</span>
-                {stateData.second.setSecond && (
+                <span className="minutes">{mTime}</span>
+                {setSecond && (
                     <>
                         <span>:</span>
-                        <span className="seconds">{stime}</span>
+                        <span className="seconds">{sTime}</span>
                     </>
                 )}
                 <span className={styles.session}>{session}</span>
@@ -154,9 +172,7 @@ function DigitalClock() {
                 <span className="seconds">{year}</span>
             </div>
             <div className={styles.date} style={clockStyle}>
-                <span className={styles.timezone}>
-                    {stateData.timeZone.currentTimeZone}
-                </span>
+                <span className={styles.timezone}>{currentTimeZone}</span>
             </div>
         </div>
     );
