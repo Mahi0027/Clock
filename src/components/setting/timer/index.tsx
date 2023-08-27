@@ -33,11 +33,11 @@ function TimerSetting() {
             </ListItemButton>
             <Collapse in={open} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
-                  <SetSound />
-                  <SetSilent />
-                  <SetVolume />
-                  {/* <SetGraduallyIncreaseVolume /> */}
-                  {/* <SetVibration /> */}
+                    <SetSound />
+                    <SetSilent />
+                    <SetVolume />
+                    {/* <SetGraduallyIncreaseVolume /> */}
+                    {/* <SetVibration /> */}
                 </List>
             </Collapse>
         </>

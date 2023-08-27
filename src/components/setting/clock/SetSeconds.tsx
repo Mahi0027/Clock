@@ -1,22 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import Typography from "@mui/material/Typography";
 import Switch from "@mui/material/Switch";
 import { useDispatch, useSelector } from "react-redux";
-import { initialStatesTypes } from "@/redux/features/setting/clock/second/secondReducer";
 import { setSecondFlag } from "@/redux";
 
 function SetSeconds() {
-    const stateData: initialStatesTypes = useSelector(
-        (state: any) => state.second
+    const setSecond: boolean = useSelector(
+        (state: any) => state.second.setSecond
     );
     const dispatch = useDispatch();
 
     return (
         <ListItemButton
             sx={{ pl: 9 }}
-            onChange={() => dispatch(setSecondFlag(!stateData.setSecond))}
+            onChange={() => dispatch(setSecondFlag(!setSecond))}
             disableRipple
         >
             <ListItemText
@@ -27,7 +26,7 @@ function SetSeconds() {
                 }
                 secondary="Ex. HH:MM:SS"
             />
-            <Switch edge="end" checked={stateData.setSecond} />
+            <Switch edge="end" checked={setSecond} />
         </ListItemButton>
     );
 }

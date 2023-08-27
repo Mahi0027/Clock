@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useCallback } from "react";
 import ListItemText from "@mui/material/ListItemText";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
@@ -9,7 +9,13 @@ import ResponsiveTimePickers from "@/components/miscellaneous/ResponsiveTimePick
 
 function SetTime() {
     const [time, setTime] = useState<Date>(new Date());
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState<boolean>(false);
+    const handleChangeTime = useCallback(
+        (value: Date | null) => {
+            if (value !== null) setTime(new Date(value));
+        },
+        [time]
+    );
     return (
         <>
             <ListItemButton sx={{ pl: 9 }} onClick={() => setOpen(true)}>
@@ -32,9 +38,7 @@ function SetTime() {
                 >
                     <ResponsiveTimePickers
                         action={() => setOpen(false)}
-                        handleChangeTime={(value: Date) =>
-                            setTime(new Date(value))
-                        }
+                        handleChangeTime={handleChangeTime}
                     />
                 </DialogContent>
             </Dialog>

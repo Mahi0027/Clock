@@ -1,16 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemButton from "@mui/material/ListItemButton";
 import Typography from "@mui/material/Typography";
 import CustomDialog from "@/components/miscellaneous/CustomDialog";
 import { useDispatch, useSelector } from "react-redux";
-import { initialStatesTypes } from "@/redux/features/setting/clock/timeZone/timeZoneReducer";
 import { fetchTimeZone, getAllTimeZones, setTimeZone } from "@/redux";
 
+type stateTypes = {
+    allTimeZones: string[];
+    currentTimeZone: string;
+};
 function SetTimeZone() {
-    const [open, setOpen] = useState(false);
-    const stateData: initialStatesTypes = useSelector(
-        (state: any) => state.timeZone
+    const [open, setOpen] = useState<boolean>(false);
+    const { allTimeZones, currentTimeZone }: stateTypes = useSelector(
+        (state: any) => ({
+            allTimeZones: state.timeZone.allTimeZones,
+            currentTimeZone: state.timeZone.currentTimeZone,
+        })
     );
     const dispatch = useDispatch();
 
@@ -18,12 +24,15 @@ function SetTimeZone() {
         dispatch(fetchTimeZone());
     }, [dispatch]);
 
-    const handleClose = (newValue?: string) => {
-        setOpen(false);
-        if (newValue) {
-            dispatch(setTimeZone(newValue));
-        }
-    };
+    const handleClose = useCallback(
+        (newValue?: string) => {
+            setOpen(false);
+            if (newValue) {
+                dispatch(setTimeZone(newValue));
+            }
+        },
+        [dispatch, open]
+    );
     return (
         <>
             <ListItemButton sx={{ pl: 9 }} onClick={() => setOpen(true)}>
@@ -31,15 +40,15 @@ function SetTimeZone() {
                     primary={
                         <Typography variant="body1">Home time zone</Typography>
                     }
-                    secondary={stateData.currentTimeZone}
+                    secondary={currentTimeZone}
                 />
             </ListItemButton>
             <CustomDialog
                 id="clock-theme"
                 title="Clock Theme"
-                data={stateData.allTimeZones}
+                data={allTimeZones}
                 keepMounted
-                value={stateData.currentTimeZone}
+                value={currentTimeZone}
                 open={open}
                 onClose={handleClose}
             />

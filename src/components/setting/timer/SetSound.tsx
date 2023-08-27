@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemButton from "@mui/material/ListItemButton";
 import Typography from "@mui/material/Typography";
@@ -7,38 +7,49 @@ import { initialStatesTypes } from "@/redux/features/setting/timer/reducer";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllTimerSounds, setTimerSound } from "@/redux";
 
+type stateTypes = {
+    allTimerSounds: string[];
+    currentTimerSound: string;
+};
 function SetSound() {
-    const stateData: initialStatesTypes = useSelector(
-        (state: any) => state.timerSetting
+    const { allTimerSounds, currentTimerSound }: stateTypes = useSelector(
+        (state: any) => ({
+            allTimerSounds: state.timerSetting.allTimerSounds,
+            currentTimerSound: state.timerSetting.currentTimerSound,
+        })
     );
     const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
-    const timerAudio = Array.from(
-        { length: stateData.allTimerSounds.length },
-        useRef
-    );
+    const timerAudio = Array.from({ length: allTimerSounds.length }, useRef);
 
     /* set timer Sound. */
-    const handleClose = (newValue?: string) => {
-        for (let i = 0; i < stateData.allTimerSounds.length; i++) {
-            timerAudio[i].current.pause();
-        }
-        setOpen(false);
-        if (newValue) {
-            dispatch(setTimerSound(newValue));
-        }
-    };
+    const handleClose = useCallback(
+        (newValue?: string) => {
+            for (let i = 0; i < allTimerSounds.length; i++) {
+                timerAudio[i].current.pause();
+            }
+            setOpen(false);
+            if (newValue) {
+                dispatch(setTimerSound(newValue));
+            }
+        },
+        [dispatch, allTimerSounds, timerAudio]
+    );
 
     /* play timer ringtone. */
-    const playTimerSound = (value: string) => {
-        for (let i = 0; i < stateData.allTimerSounds.length; i++) {
-            timerAudio[i].current.pause();
-        }
-        timerAudio[stateData.allTimerSounds.indexOf(value)].current.play();
-    };
+    const playTimerSound = useCallback(
+        (value: string) => {
+            for (let i = 0; i < allTimerSounds.length; i++) {
+                timerAudio[i].current.pause();
+            }
+            timerAudio[allTimerSounds.indexOf(value)].current.play();
+        },
+        [dispatch, timerAudio]
+    );
+
     return (
         <>
-            {stateData.allTimerSounds.map((value: string, index: number) => {
+            {allTimerSounds.map((value: string, index: number) => {
                 return (
                     <span key={index}>
                         <audio
@@ -58,15 +69,15 @@ function SetSound() {
                     primary={
                         <Typography variant="body1">Timer sound</Typography>
                     }
-                    secondary={stateData.currentTimerSound}
+                    secondary={currentTimerSound}
                 />
             </ListItemButton>
             <CustomDialog
                 id="timer-sound"
                 title="Timer sound"
-                data={stateData.allTimerSounds}
+                data={allTimerSounds}
                 keepMounted
-                value={stateData.currentTimerSound}
+                value={currentTimerSound}
                 open={open}
                 onClose={handleClose}
                 soundFlag={true}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemButton from "@mui/material/ListItemButton";
 import Typography from "@mui/material/Typography";
@@ -8,22 +8,27 @@ import { initialStatesTypes } from "@/redux/features/setting/alarm/silent/silent
 import { getAllSilentIntervals, setSilentInterval } from "@/redux";
 
 function SetSilent() {
-    const stateData: initialStatesTypes = useSelector(
-        (state: any) => state.alarmSilent
-    );
+    const { allSilentIntervals, currentSilentInterval }: initialStatesTypes =
+        useSelector((state: any) => ({
+            allSilentIntervals: state.alarmSilent.allSilentIntervals,
+            currentSilentInterval: state.alarmSilent.currentSilentInterval,
+        }));
     const dispatch = useDispatch();
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState<boolean>(false);
 
     useEffect(() => {
         dispatch(getAllSilentIntervals());
     }, [dispatch]);
 
-    const handleClose = (newValue?: string) => {
-        setOpen(false);
-        if (newValue) {
-            dispatch(setSilentInterval(newValue));
-        }
-    };
+    const handleClose = useCallback(
+        (value?: string) => {
+            setOpen(false);
+            if (value) {
+                dispatch(setSilentInterval(value));
+            }
+        },
+        [dispatch]
+    );
 
     return (
         <>
@@ -32,15 +37,15 @@ function SetSilent() {
                     primary={
                         <Typography variant="body1">Silent after</Typography>
                     }
-                    secondary={stateData.currentSilentInterval}
+                    secondary={currentSilentInterval}
                 />
             </ListItemButton>
             <CustomDialog
                 id="silent-after"
                 title="Silent after"
-                data={stateData.allSilentIntervals}
+                data={allSilentIntervals}
                 keepMounted
-                value={stateData.currentSilentInterval}
+                value={currentSilentInterval}
                 open={open}
                 onClose={handleClose}
             />

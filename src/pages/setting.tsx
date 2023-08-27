@@ -6,18 +6,17 @@ import ClockSetting from "@/components/setting/clock";
 import AlarmSetting from "@/components/setting/alarm";
 import TimerSetting from "@/components/setting/timer";
 import PersonalizeSetting from "@/components/setting/personalize";
-import { Box, Paper } from "@mui/material";
-import Layout from "@/components/Layout";
 import { useSelector } from "react-redux";
-import { initialStatesTypes } from "@/redux/features/setting/personalize/theme/themeReducer";
-function setting() {
-    const stateData: initialStatesTypes = useSelector(
-        (state: any) => state.theme
+
+const menuItems = ["Privacy policy", "Send feedback", "Help"];
+function Setting() {
+    const currentTheme: string = useSelector(
+        (state: any) => state.theme.currentTheme
     );
     const [myTheme, setMyTheme] = useState({});
 
     useEffect(() => {
-        if (stateData.currentTheme === "light") {
+        if (currentTheme === "light") {
             setMyTheme({
                 backgroundColor: "#fff",
             });
@@ -26,12 +25,12 @@ function setting() {
                 backgroundColor: "#000000",
             });
         }
-    }, [stateData.currentTheme]);
+    }, [currentTheme]);
     return (
         <>
             <TopNavbar
                 heading={"Setting"}
-                menuItemsProps={["Privacy policy", "Send feedback", "Help"]}
+                menuItemsProps={menuItems}
                 homepage={false}
             />
             <List
@@ -51,4 +50,4 @@ function setting() {
     );
 }
 
-export default setting;
+export default Setting;

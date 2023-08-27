@@ -10,13 +10,13 @@ import {
     Box,
     Paper,
 } from "@mui/material";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, memo, useCallback } from "react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CssBaseline from "@mui/material/CssBaseline";
 import { useRouter } from "next/router";
 import { initialStatesTypes } from "@/redux/features/setting/personalize/theme/themeReducer";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 interface Items {
     id: number;
@@ -55,28 +55,46 @@ const items: Items[] = [
         icon: "HelpCenterIcon",
     },
 ];
-const TopNavbar = ({ heading, menuItemsProps, homepage }) => {
-    const stateData: initialStatesTypes = useSelector(
-        (state: any) => state.theme
+
+type topNavbarTypes = {
+    heading: string;
+    menuItemsProps: string[];
+    homepage: boolean;
+};
+
+type stateTypes = {
+    backgroundColor: string;
+    color: string;
+};
+const TopNavbar = ({ heading, menuItemsProps, homepage }: topNavbarTypes) => {
+    const themeStyle: stateTypes = useSelector(
+        (state: any) => state.theme.style
     );
     const router = useRouter();
     const [ancherEI, setAncherEI] = useState<null | HTMLElement>(null);
     const open = Boolean(ancherEI);
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        setAncherEI(event.currentTarget);
-    };
-    const handleClose = () => {
-        setAncherEI(null);
-    };
     const [menuItems, setMenuItems] = useState(items);
+
     useEffect(() => {
         setMenuItems(items.filter(({ name }) => menuItemsProps.includes(name)));
     }, []);
+
+    const handleClick = useCallback(
+        (event: React.MouseEvent<HTMLButtonElement>) => {
+            setAncherEI(event.currentTarget);
+        },
+        [ancherEI]
+    );
+
+    const handleClose = useCallback(() => {
+        setAncherEI(null);
+    }, [ancherEI]);
+
     return (
         <>
             <Paper sx={{ height: "4em", boxShadow: 0 }}>
                 <CssBaseline />
-                <AppBar position="fixed" elevation={0} sx={stateData.style}>
+                <AppBar position="fixed" elevation={0} sx={themeStyle}>
                     <Toolbar>
                         {!homepage && (
                             <IconButton
@@ -134,9 +152,6 @@ const TopNavbar = ({ heading, menuItemsProps, homepage }) => {
                                             router.replace(`/${item.link}`);
                                         }}
                                     >
-                                        {/* <ListItemIcon>
-                                    {item.icon}
-                                </ListItemIcon> */}
                                         <ListItemText>{item.name}</ListItemText>
                                     </MenuItem>
                                     {menuItems.length - 1 !== index && (
@@ -152,4 +167,4 @@ const TopNavbar = ({ heading, menuItemsProps, homepage }) => {
     );
 };
 
-export default TopNavbar;
+export default memo(TopNavbar);
