@@ -7,7 +7,7 @@ import {
     DialogTitle,
     TextField,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 interface DialogBoxPropTypes {
     id: number;
     open: boolean;
@@ -23,6 +23,7 @@ function DialogBox({
     handleLabelText,
 }: DialogBoxPropTypes) {
     const [label, setLabel] = useState<string>("");
+
     useEffect(() => {
         labelText !== null ? setLabel(labelText) : setLabel("");
         return () => setLabel("");
@@ -57,4 +58,4 @@ function DialogBox({
     );
 }
 
-export default DialogBox;
+export default memo(DialogBox);

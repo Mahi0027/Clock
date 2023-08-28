@@ -46,7 +46,7 @@ export const updateAlarmLabel = (id: number, label: string) => {
     };
 };
 
-export const setAlarmSound = (id: number, alarmSound: string) => {
+export const setAlarmSound = (id: number = -1, alarmSound: string) => {
     return {
         type: SET_ALARM_SOUND,
         payload: { id, alarmSound },
