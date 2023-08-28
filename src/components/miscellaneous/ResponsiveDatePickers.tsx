@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -13,7 +13,7 @@ function ResponsiveDatePickers({
     action,
     handleChangeDate,
 }: ResponsiveDatePickersProps) {
-    const [isPortrait, setIsPortrait] = useState(
+    const [isPortrait, setIsPortrait] = useState<boolean>(
         window.matchMedia("(orientation: portrait)").matches
     );
     useEffect(() => {
@@ -45,4 +45,4 @@ function ResponsiveDatePickers({
     );
 }
 
-export default ResponsiveDatePickers;
+export default memo(ResponsiveDatePickers);

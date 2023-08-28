@@ -35,7 +35,7 @@ type actionTypes = {
     id?: number;
     payload?: any;
 };
-type initialStatesTypes = {
+export type initialStatesTypes = {
     alarms: {
         id: number;
         alarmTime: Date;

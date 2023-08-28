@@ -1,4 +1,4 @@
-import React, { RefObject, useEffect, useRef, useState } from "react";
+import React, { memo, useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styles from "@/styles/components/home/alarm/AlarmView.module.scss";
 import {
@@ -13,7 +13,6 @@ import {
     Box,
     Button,
     Card,
-    CardContent,
     Collapse,
     Dialog,
     DialogContent,
@@ -35,6 +34,7 @@ import AlarmRunning from "./AlarmRunning";
 import { updateAlarmTime } from "@/redux";
 import EditCalendarIcon from "@mui/icons-material/EditCalendar";
 import ResponsiveDatePickers from "@/components/miscellaneous/ResponsiveDatePickers";
+import { initialStatesTypes } from "@/redux/features/home/alarm/reducer";
 
 interface ExpandMoreProps extends IconButtonProps {
     expand: boolean;
@@ -80,8 +80,25 @@ const months = [
     "November",
     "December",
 ];
+
+type stateTypes = {
+    alarmDetail: initialStatesTypes;
+    alarmCurrentVolume: number;
+    alarmCurrentSilentInterval: string;
+    alarmCurrentSnoozeInterval: string;
+};
 function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
-    const stateData = useSelector((state: any) => state);
+    const {
+        alarmDetail,
+        alarmCurrentVolume,
+        alarmCurrentSilentInterval,
+        alarmCurrentSnoozeInterval,
+    }: stateTypes = useSelector((state: any) => ({
+        alarmDetail: state.alarm,
+        alarmCurrentVolume: state.alarmVolume.currentValue,
+        alarmCurrentSilentInterval: state.alarmSilent.currentSilentInterval,
+        alarmCurrentSnoozeInterval: state.alarmSnooze.currentSnoozeInterval,
+    }));
     const dispatch = useDispatch();
     const [expand, setExpand] = useState<{
         values: boolean[];
@@ -102,19 +119,19 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
     const [prevTimeOut, setPrevTimeOut] = useState<number>(0);
     const [expandBox, setExpandBox] = useState<number>(-1);
     const alarmAudio = Array.from(
-        { length: stateData.alarm.alarmSounds.length },
+        { length: alarmDetail.alarmSounds.length },
         useRef
     );
 
     useEffect(() => {
-        setExpandState(stateData.alarm.alarms.length, expandBox);
+        setExpandState(alarmDetail.alarms.length, expandBox);
         setExpandBox(-1);
         dispatch(getAllAlarm());
     }, [dispatch]);
 
     useEffect(() => {
         dispatch(getAllAlarm());
-        setExpandState(stateData.alarm.alarms.length, expandBox);
+        setExpandState(alarmDetail.alarms.length, expandBox);
         setExpandBox(-1);
         setAlarms();
 
@@ -126,15 +143,14 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
             });
             closeScrollToTop();
         }
-    }, [stateData.alarm]);
+    }, [alarmDetail]);
 
     /* set all alarms. */
     const setAlarms = () => {
-        // clearExtraTimeout();
         let tempAlarmTimeout = Array.from({
-            length: stateData.alarm.alarms.length,
+            length: alarmDetail.alarms.length,
         });
-        stateData.alarm.alarms.map((value: any, index: number) => {
+        alarmDetail.alarms.map((value: any, index: number) => {
             if (value.currentScheduleFlag) {
                 const currentTime = new Date();
                 let repeatFlag = false;
@@ -192,6 +208,7 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
         setAlarmTimeOut(tempAlarmTimeout);
     };
 
+    /* This function start ringing alarm. */
     const startAlarmRinging = (
         repeatFlag: boolean,
         id: number,
@@ -201,7 +218,7 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
         setAlarmRunningPage(true);
         let alarmDOM = new Audio(`/sounds/alarm/${sound}.mp3`);
         setCurrentAlarmAudio(alarmDOM);
-        alarmDOM.volume = Number(stateData.alarmVolume.currentValue) / 100;
+        alarmDOM.volume = Number(alarmCurrentVolume) / 100;
         alarmDOM.currentTime = 0;
         alarmDOM.loop = true;
         alarmDOM.play();
@@ -209,26 +226,12 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
         if (!repeatFlag) {
             dispatch(updateAlarmScheduleFlag(id, false));
         }
-        const timeInterval = Number(
-            stateData.alarmSilent.currentSilentInterval.substring(0, 2)
-        );
+        const timeInterval = Number(alarmCurrentSilentInterval.substring(0, 2));
         /* stop alarm after specific time. */
         setTimeout(() => {
             alarmDOM.pause();
             setAlarmRunningPage(false);
         }, timeInterval * 60 * 1000); /* 60=seconds,1000=milliseconds */
-    };
-
-    /* for clear extra timeouts. */
-    const clearExtraTimeout = () => {
-        for (let i = 0; i < alarmTimeOut.length; i++) {
-            if (alarmTimeOut[i] !== undefined) {
-                for (let j = prevTimeOut + 1; j < alarmTimeOut[i]; j++) {
-                    clearTimeout(j);
-                }
-                setPrevTimeOut(alarmTimeOut[i]);
-            }
-        }
     };
 
     /* it use to manage expand state variable */
@@ -320,10 +323,13 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
         dispatch(updateAlarmScheduleFlag(alarmId, event.target.checked));
     };
 
-    const handleLabelText = (alarmId: number, label: string) => {
-        dispatch(updateAlarmLabel(alarmId, label));
-        setOpenLabelDialogFlag(false);
-    };
+    const handleLabelText = useCallback(
+        (alarmId: number, label: string) => {
+            dispatch(updateAlarmLabel(alarmId, label));
+            setOpenLabelDialogFlag(false);
+        },
+        [dispatch, openLabelDialogFlag]
+    );
 
     /* on click in label button icon event. */
     const handleLabelButtonEvent = (
@@ -342,24 +348,29 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
     };
 
     /* set alarm ringtone. */
-    const handleCloseAlarmSoundDialog = (newValue?: string, rowId?: number) => {
-        for (let i = 0; i < stateData.alarm.alarmSounds.length; i++) {
-            alarmAudio[i].current.pause();
-        }
-        // clearExtraTimeout();
-        setOpenSoundDialogFlag(false);
-        if (rowId !== -1 && newValue) {
-            dispatch(setAlarmSound(rowId, newValue));
-        }
-    };
+    const handleCloseAlarmSoundDialog = useCallback(
+        (newValue?: string, rowId?: number) => {
+            for (let i = 0; i < alarmDetail.alarmSounds.length; i++) {
+                alarmAudio[i].current.pause();
+            }
+            setOpenSoundDialogFlag(false);
+            if (rowId !== -1 && newValue) {
+                dispatch(setAlarmSound(rowId, newValue));
+            }
+        },
+        [dispatch, alarmAudio, openSoundDialogFlag]
+    );
 
     /* play alarm ringtone. */
-    const playAlarmSound = (value: string) => {
-        for (let i = 0; i < stateData.alarm.alarmSounds.length; i++) {
-            alarmAudio[i].current.pause();
-        }
-        alarmAudio[stateData.alarm.alarmSounds.indexOf(value)].current.play();
-    };
+    const playAlarmSound = useCallback(
+        (value: string) => {
+            for (let i = 0; i < alarmDetail.alarmSounds.length; i++) {
+                alarmAudio[i].current.pause();
+            }
+            alarmAudio[alarmDetail.alarmSounds.indexOf(value)].current.play();
+        },
+        [alarmAudio]
+    );
 
     /* set repeat alarm.  */
     const handleRepeatAlarm = (
@@ -385,15 +396,14 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
     };
 
     /* schedule alarm date. */
-    const updateAlarmDate = (
-        alarmId: number,
-        currentAlarmTime: Date,
-        customDate: Date
-    ) => {
-        customDate.setHours(currentAlarmTime.getHours());
-        customDate.setMinutes(currentAlarmTime.getMinutes());
-        dispatch(updateAlarmTime(alarmId, customDate));
-    };
+    const updateAlarmDate = useCallback(
+        (alarmId: number, currentAlarmTime: Date, customDate: Date) => {
+            customDate.setHours(currentAlarmTime.getHours());
+            customDate.setMinutes(currentAlarmTime.getMinutes());
+            dispatch(updateAlarmTime(alarmId, customDate));
+        },
+        [dispatch]
+    );
 
     return (
         <>
@@ -402,16 +412,12 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
                     currentAlarmAudio={currentAlarmAudio}
                     setAlarmRunningPage={setAlarmRunningPage}
                     alarmRunningLabel={alarmRunningLabel}
-                    // clearExtraTimeout={clearExtraTimeout}
                     snoozeTimeInterval={Number(
-                        stateData.alarmSnooze.currentSnoozeInterval.substring(
-                            0,
-                            2
-                        )
+                        alarmCurrentSnoozeInterval.substring(0, 2)
                     )}
                 />
             )}
-            {stateData.alarm.alarmSounds.map((value: string, index: number) => {
+            {alarmDetail.alarmSounds.map((value: string, index: number) => {
                 return (
                     <span key={index}>
                         <audio
@@ -428,7 +434,7 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
             })}
             {!alarmRunningPage && (
                 <Box sx={{ marginBottom: "32vh" }}>
-                    {stateData.alarm.alarms.map((alarm: any, index: number) => {
+                    {alarmDetail.alarms.map((alarm: any, index: number) => {
                         const [alarmDay, alarmTime, meridiem] =
                             convertTimeInMeridiemForm(
                                 alarm.alarmTime,
@@ -511,17 +517,6 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
                                         >
                                             {meridiem}
                                         </Typography>
-                                        {/* <Typography
-                                            variant="subtitle2"
-                                            sx={{
-                                                fontSize: "0.7em",
-                                                fontFamily: "monospace",
-                                                margin: "2.6em 0 0 -1.9em",
-                                                opacity: "0.8",
-                                            }}
-                                        >
-                                            ({alarmDate})
-                                        </Typography> */}
                                     </Stack>
                                     <Stack
                                         direction={"row"}
@@ -658,9 +653,7 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
                                             <CustomDialog
                                                 id="alarm-ringtone"
                                                 title="Alarm Ringtone"
-                                                data={
-                                                    stateData.alarm.alarmSounds
-                                                }
+                                                data={alarmDetail.alarmSounds}
                                                 keepMounted
                                                 value={alarm.sound}
                                                 open={openSoundDialogFlag}
@@ -698,4 +691,4 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
     );
 }
 
-export default AlarmView;
+export default memo(AlarmView);

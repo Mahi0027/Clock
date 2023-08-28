@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useState } from "react";
 import Box from "@mui/material/Box";
 import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
@@ -11,22 +11,26 @@ import { setAlarm } from "@/redux";
 
 function AlarmHome() {
     const dispatch = useDispatch();
-    const [open, setOpen] = useState(false);
-    const [scrollToTop, setScrollToTop] = useState(false);
+    const [open, setOpen] = useState<boolean>(false);
+    const [scrollToTop, setScrollToTop] = useState<boolean>(false);
 
-    const addNewAlarm = (alarmTime: Date) => {
-        const currentTime = new Date();
-        /* set alarm for next day if chosen time is gone today. */
-        if (currentTime.getTime() > alarmTime.getTime()) {
-            alarmTime.setDate(alarmTime.getDate() + 1);
-        }
-        dispatch(setAlarm(alarmTime));
-        setScrollToTop(true);
-    };
+    const addNewAlarm = useCallback(
+        (alarmTime: Date) => {
+            const currentTime = new Date();
+            /* set alarm for next day if chosen time is gone today. */
+            if (currentTime.getTime() > alarmTime.getTime()) {
+                alarmTime.setDate(alarmTime.getDate() + 1);
+            }
+            dispatch(setAlarm(alarmTime));
+            setScrollToTop(true);
+        },
+        [dispatch, scrollToTop]
+    );
 
-    const closeScrollToTop = () => {
+    const closeScrollToTop = useCallback(() => {
         setScrollToTop(false);
-    };
+    }, [scrollToTop]);
+
     return (
         <>
             <Box>

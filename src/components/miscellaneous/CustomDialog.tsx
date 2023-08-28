@@ -35,7 +35,7 @@ function CustomDialog({
     playSound,
     ...other
 }: ConfirmationDialogRawProps) {
-    const [value, setValue] = useState(valueProp);
+    const [value, setValue] = useState<string>(valueProp);
     const radioGroupRef = useRef<HTMLElement>(null);
 
     useEffect(() => {

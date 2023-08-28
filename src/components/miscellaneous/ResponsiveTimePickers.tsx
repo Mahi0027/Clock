@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { StaticTimePicker } from "@mui/x-date-pickers/StaticTimePicker";
@@ -7,18 +7,18 @@ export interface ResponsiveTimePickersProps {
     action: () => void;
     handleChangeTime: (value: Date | null) => void;
 }
-export default function ResponsiveTimePickers({
+function ResponsiveTimePickers({
     action,
     handleChangeTime,
 }: ResponsiveTimePickersProps) {
-    const [isPortrait, setIsPortrait] = useState(
+    const [isPortrait, setIsPortrait] = useState<boolean>(
         window.matchMedia("(orientation: portrait)").matches
     );
 
     useEffect(() => {
         const mediaQuery = window.matchMedia("(orientation: portrait)");
 
-        const handleOrientationChange = (e:any) => {
+        const handleOrientationChange = (e: any) => {
             setIsPortrait(e.matches);
         };
 
@@ -45,3 +45,5 @@ export default function ResponsiveTimePickers({
         </LocalizationProvider>
     );
 }
+
+export default memo(ResponsiveTimePickers);
