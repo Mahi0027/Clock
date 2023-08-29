@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
@@ -34,26 +34,34 @@ function SetDarkMode() {
             setOpenDialog(false);
             dispatch(setTheme(value));
         },
-        [dispatch, openDialog]
+        [dispatch]
     );
 
-    return (
-        <>
-            <ListItemButton sx={{ pl: 9 }} onClick={() => setOpenDialog(true)}>
-                <ListItemText
-                    primary={<Typography variant="body1">Modes</Typography>}
-                    secondary={stateData.currentTheme}
+    /* JSX code under useMemo for optimization and improving performance. */
+    const setDarkModeComponent = useMemo(() => {
+        return (
+            <>
+                <ListItemButton
+                    sx={{ pl: 9 }}
+                    onClick={() => setOpenDialog(true)}
+                >
+                    <ListItemText
+                        primary={<Typography variant="body1">Modes</Typography>}
+                        secondary={stateData.currentTheme}
+                    />
+                </ListItemButton>
+                {/* set modes dialog box */}
+                <SetMode
+                    openDialog={openDialog}
+                    stateData={stateData}
+                    onSetMode={onSetMode}
+                    setOpenDialog={setOpenDialog}
                 />
-            </ListItemButton>
-            {/* set modes dialog box */}
-            <SetMode
-                openDialog={openDialog}
-                stateData={stateData}
-                onSetMode={onSetMode}
-                setOpenDialog={setOpenDialog}
-            />
-        </>
-    );
+            </>
+        );
+    }, [onSetMode, openDialog, stateData]);
+
+    return <>{setDarkModeComponent}</>;
 }
 
 interface SimpleDialogProps {
@@ -69,52 +77,64 @@ function SetMode({
     onSetMode,
     setOpenDialog,
 }: SimpleDialogProps) {
-    const handleChangeMode = (value: string) => {
-        onSetMode(value);
-    };
-
-    return (
-        <Dialog onClose={() => setOpenDialog(false)} open={openDialog}>
-            <DialogTitle>Set mode</DialogTitle>
-            <List sx={{ pt: 0 }}>
-                {stateData.allThemes.map((value, index) => (
-                    <ListItem key={index} disableGutters>
-                        <ListItemButton
-                            key={index}
-                            onClick={() => handleChangeMode(value)}
-                            selected={
-                                value === stateData.currentTheme ? true : false
-                            }
-                        >
-                            <ListItemAvatar>
-                                <Avatar
-                                    sx={{
-                                        bgcolor: blue[100],
-                                        color: blue[600],
-                                    }}
-                                >
-                                    {index ? (
-                                        <DarkModeIcon
-                                            sx={{
-                                                color: grey[600],
-                                            }}
-                                        />
-                                    ) : (
-                                        <LightModeIcon />
-                                    )}
-                                </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText
-                                primary={
-                                    value.charAt(0).toUpperCase() +
-                                    value.slice(1)
+    /* JSX code under useMemo for optimization and improving performance. */
+    const setModeComponent = useMemo(() => {
+        const handleChangeMode = (value: string) => {
+            onSetMode(value);
+        };
+        return (
+            <Dialog onClose={() => setOpenDialog(false)} open={openDialog}>
+                <DialogTitle>Set mode</DialogTitle>
+                <List sx={{ pt: 0 }}>
+                    {stateData.allThemes.map((value, index) => (
+                        <ListItem key={index} disableGutters>
+                            <ListItemButton
+                                key={index}
+                                onClick={() => handleChangeMode(value)}
+                                selected={
+                                    value === stateData.currentTheme
+                                        ? true
+                                        : false
                                 }
-                            />
-                        </ListItemButton>
-                    </ListItem>
-                ))}
-            </List>
-        </Dialog>
-    );
+                            >
+                                <ListItemAvatar>
+                                    <Avatar
+                                        sx={{
+                                            bgcolor: blue[100],
+                                            color: blue[600],
+                                        }}
+                                    >
+                                        {index ? (
+                                            <DarkModeIcon
+                                                sx={{
+                                                    color: grey[600],
+                                                }}
+                                            />
+                                        ) : (
+                                            <LightModeIcon />
+                                        )}
+                                    </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText
+                                    primary={
+                                        value.charAt(0).toUpperCase() +
+                                        value.slice(1)
+                                    }
+                                />
+                            </ListItemButton>
+                        </ListItem>
+                    ))}
+                </List>
+            </Dialog>
+        );
+    }, [
+        onSetMode,
+        openDialog,
+        setOpenDialog,
+        stateData.allThemes,
+        stateData.currentTheme,
+    ]);
+
+    return <>{setModeComponent}</>;
 }
 export default SetDarkMode;
