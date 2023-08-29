@@ -1,4 +1,11 @@
-import React, { memo, useCallback, useEffect, useRef, useState } from "react";
+import React, {
+    memo,
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styles from "@/styles/components/home/alarm/AlarmView.module.scss";
 import {
@@ -315,20 +322,13 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
     function capitalizeFirstLetter(inputString: string) {
         return inputString.charAt(0).toUpperCase() + inputString.slice(1);
     }
-    /* check/uncheck alarm schedule flag. */
-    const handleChangeSwitch = (
-        alarmId: number,
-        event: React.ChangeEvent<HTMLInputElement>
-    ) => {
-        dispatch(updateAlarmScheduleFlag(alarmId, event.target.checked));
-    };
 
     const handleLabelText = useCallback(
         (alarmId: number, label: string) => {
             dispatch(updateAlarmLabel(alarmId, label));
             setOpenLabelDialogFlag(false);
         },
-        [dispatch, openLabelDialogFlag]
+        [dispatch]
     );
 
     /* on click in label button icon event. */
@@ -342,11 +342,6 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
         setLabelText(alarmLabel);
     };
 
-    /* on click on delete button. */
-    const handleDeleteAlarmEvent = (alarmId: number) => {
-        dispatch(deleteAlarm(alarmId));
-    };
-
     /* set alarm ringtone. */
     const handleCloseAlarmSoundDialog = useCallback(
         (newValue?: string, rowId?: number) => {
@@ -358,7 +353,7 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
                 dispatch(setAlarmSound(rowId, newValue));
             }
         },
-        [dispatch, alarmAudio, openSoundDialogFlag]
+        [alarmDetail.alarmSounds.length, alarmAudio, dispatch]
     );
 
     /* play alarm ringtone. */
@@ -369,31 +364,8 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
             }
             alarmAudio[alarmDetail.alarmSounds.indexOf(value)].current.play();
         },
-        [alarmAudio]
+        [alarmAudio, alarmDetail.alarmSounds]
     );
-
-    /* set repeat alarm.  */
-    const handleRepeatAlarm = (
-        alarmId: number,
-        alarmTime: Date,
-        dayOfWeek: number,
-        expandIndex: number
-    ) => {
-        let date = new Date(alarmTime);
-        const currentAlarmDayOfWeek = date.getDay();
-        let newAlarmTime = date;
-        if (currentAlarmDayOfWeek <= dayOfWeek) {
-            newAlarmTime.setDate(
-                date.getDate() + (dayOfWeek - currentAlarmDayOfWeek)
-            );
-        } else {
-            newAlarmTime.setDate(
-                date.getDate() + (7 - (currentAlarmDayOfWeek - dayOfWeek))
-            );
-        }
-        setExpandBox(expandIndex);
-        dispatch(setRepeatAlarm(alarmId, newAlarmTime, dayOfWeek));
-    };
 
     /* schedule alarm date. */
     const updateAlarmDate = useCallback(
@@ -405,290 +377,371 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
         [dispatch]
     );
 
-    return (
-        <>
-            {alarmRunningPage && (
-                <AlarmRunning
-                    currentAlarmAudio={currentAlarmAudio}
-                    setAlarmRunningPage={setAlarmRunningPage}
-                    alarmRunningLabel={alarmRunningLabel}
-                    snoozeTimeInterval={Number(
-                        alarmCurrentSnoozeInterval.substring(0, 2)
-                    )}
-                />
-            )}
-            {alarmDetail.alarmSounds.map((value: string, index: number) => {
-                return (
-                    <span key={index}>
-                        <audio
-                            ref={(e: any) => (alarmAudio[index].current = e)}
-                            loop
-                        >
-                            <source
-                                src={`/sounds/alarm/${value}.mp3`}
-                                type="audio/mpeg"
-                            />
-                        </audio>
-                    </span>
+    /* JSX code under useMemo for optimization and improving performance. */
+    const alarmViewComponent = useMemo(() => {
+        /* check/uncheck alarm schedule flag. */
+        const handleChangeSwitch = (
+            alarmId: number,
+            event: React.ChangeEvent<HTMLInputElement>
+        ) => {
+            dispatch(updateAlarmScheduleFlag(alarmId, event.target.checked));
+        };
+        /* set repeat alarm.  */
+        const handleRepeatAlarm = (
+            alarmId: number,
+            alarmTime: Date,
+            dayOfWeek: number,
+            expandIndex: number
+        ) => {
+            let date = new Date(alarmTime);
+            const currentAlarmDayOfWeek = date.getDay();
+            let newAlarmTime = date;
+            if (currentAlarmDayOfWeek <= dayOfWeek) {
+                newAlarmTime.setDate(
+                    date.getDate() + (dayOfWeek - currentAlarmDayOfWeek)
                 );
-            })}
-            {!alarmRunningPage && (
-                <Box sx={{ marginBottom: "32vh" }}>
-                    {alarmDetail.alarms.map((alarm: any, index: number) => {
-                        const [alarmDay, alarmTime, meridiem] =
-                            convertTimeInMeridiemForm(
-                                alarm.alarmTime,
-                                alarm.repeat
-                            );
-                        return (
-                            <Box key={alarm.id} sx={{ margin: "2vh" }}>
-                                <Card
-                                    variant="outlined"
-                                    sx={{
-                                        borderRadius: "10px",
-                                        padding: "0 2vw",
-                                        "@media (orientation: landscape)": {
-                                            width: "70vw",
-                                        },
-                                    }}
-                                >
-                                    <Stack
-                                        direction={"row"}
+            } else {
+                newAlarmTime.setDate(
+                    date.getDate() + (7 - (currentAlarmDayOfWeek - dayOfWeek))
+                );
+            }
+            setExpandBox(expandIndex);
+            dispatch(setRepeatAlarm(alarmId, newAlarmTime, dayOfWeek));
+        };
+
+        return (
+            <>
+                {alarmRunningPage && (
+                    <AlarmRunning
+                        currentAlarmAudio={currentAlarmAudio}
+                        setAlarmRunningPage={setAlarmRunningPage}
+                        alarmRunningLabel={alarmRunningLabel}
+                        snoozeTimeInterval={Number(
+                            alarmCurrentSnoozeInterval.substring(0, 2)
+                        )}
+                    />
+                )}
+                {alarmDetail.alarmSounds.map((value: string, index: number) => {
+                    return (
+                        <span key={index}>
+                            <audio
+                                ref={(e: any) =>
+                                    (alarmAudio[index].current = e)
+                                }
+                                loop
+                            >
+                                <source
+                                    src={`/sounds/alarm/${value}.mp3`}
+                                    type="audio/mpeg"
+                                />
+                            </audio>
+                        </span>
+                    );
+                })}
+                {!alarmRunningPage && (
+                    <Box sx={{ marginBottom: "32vh" }}>
+                        {alarmDetail.alarms.map((alarm: any, index: number) => {
+                            const [alarmDay, alarmTime, meridiem] =
+                                convertTimeInMeridiemForm(
+                                    alarm.alarmTime,
+                                    alarm.repeat
+                                );
+                            return (
+                                <Box key={alarm.id} sx={{ margin: "2vh" }}>
+                                    <Card
+                                        variant="outlined"
                                         sx={{
-                                            display: "flex",
-                                            justifyContent: "space-between",
-                                            padding: "2vh 0 0 0",
+                                            borderRadius: "10px",
+                                            padding: "0 2vw",
+                                            "@media (orientation: landscape)": {
+                                                width: "70vw",
+                                            },
                                         }}
-                                    >
-                                        <IconButton
-                                            onClick={() =>
-                                                handleLabelButtonEvent(
-                                                    true,
-                                                    alarm.id,
-                                                    alarm.label
-                                                )
-                                            }
-                                        >
-                                            <LabelOutlinedIcon />
-                                            <Typography
-                                                variant="body1"
-                                                sx={{ paddingLeft: "2vw" }}
-                                            >
-                                                {"  "}
-                                                {alarm.label}
-                                            </Typography>
-                                        </IconButton>
-                                        <DialogBox
-                                            id={idForOpenLabelDialogFlag}
-                                            open={openLabelDialogFlag}
-                                            close={setOpenLabelDialogFlag}
-                                            labelText={labelText}
-                                            handleLabelText={handleLabelText}
-                                        />
-                                        <ExpandMore
-                                            expand={expand.values[index]}
-                                            onClick={() => handleExpand(index)}
-                                            aria-expanded={expand.values[index]}
-                                            aria-label="show more"
-                                        >
-                                            <ExpandMoreIcon />
-                                        </ExpandMore>
-                                    </Stack>
-                                    <Stack
-                                        direction={"row"}
-                                        sx={{
-                                            display: "flex",
-                                            paddingLeft: "2vw",
-                                        }}
-                                    >
-                                        <Typography
-                                            variant="h3"
-                                            sx={{
-                                                fontWeight: "bold",
-                                            }}
-                                        >
-                                            {alarmTime}
-                                        </Typography>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                marginBottom: "1.5em",
-                                            }}
-                                        >
-                                            {meridiem}
-                                        </Typography>
-                                    </Stack>
-                                    <Stack
-                                        direction={"row"}
-                                        sx={{
-                                            display: "flex",
-                                            justifyContent: "space-between",
-                                            paddingLeft: "2vw",
-                                        }}
-                                    >
-                                        {alarm.currentScheduleFlag ? (
-                                            <Typography variant="body2">
-                                                {alarmDay}
-                                            </Typography>
-                                        ) : (
-                                            <Typography
-                                                variant="body2"
-                                                sx={{ opacity: "0.5" }}
-                                            >
-                                                Not Scheduled
-                                            </Typography>
-                                        )}
-                                        <Switch
-                                            checked={alarm.currentScheduleFlag}
-                                            onChange={(e) =>
-                                                handleChangeSwitch(alarm.id, e)
-                                            }
-                                            inputProps={{
-                                                "aria-label": "controlled",
-                                            }}
-                                        />
-                                    </Stack>
-                                    <Collapse
-                                        in={expand.values[index]}
-                                        timeout="auto"
-                                        unmountOnExit
                                     >
                                         <Stack
                                             direction={"row"}
                                             sx={{
                                                 display: "flex",
                                                 justifyContent: "space-between",
+                                                padding: "2vh 0 0 0",
                                             }}
                                         >
-                                            {dayHashTable.map(
-                                                (day, dayHashTableIndex) => (
-                                                    <Button
-                                                        variant={
-                                                            alarm.repeat[day]
-                                                                .flag
-                                                                ? "contained"
-                                                                : "outlined"
-                                                        }
-                                                        key={dayHashTableIndex}
-                                                        className={
-                                                            styles.scheduleByDay
-                                                        }
-                                                        onClick={() =>
-                                                            handleRepeatAlarm(
-                                                                alarm.id,
-                                                                alarm.alarmTime,
-                                                                dayHashTableIndex,
-                                                                index
-                                                            )
-                                                        }
-                                                        disabled={
-                                                            !alarm.currentScheduleFlag
-                                                        }
-                                                    >
-                                                        {day
-                                                            .charAt(0)
-                                                            .toUpperCase()}
-                                                    </Button>
-                                                )
-                                            )}
-                                        </Stack>
-                                        <Divider />
-                                        <Stack direction={"row"}>
-                                            <Button
+                                            <IconButton
                                                 onClick={() =>
-                                                    setOpenDatePicker(true)
-                                                }
-                                            >
-                                                <EditCalendarIcon
-                                                    className={styles.icon}
-                                                />
-                                                Schedule Alarm
-                                            </Button>
-                                            <Dialog open={openDatePicker}>
-                                                <DialogTitle>
-                                                    Custom Schedule Alarm
-                                                </DialogTitle>
-                                                <DialogContent
-                                                    className={
-                                                        styles.dialogBoxContent
-                                                    }
-                                                    dividers
-                                                >
-                                                    <ResponsiveDatePickers
-                                                        action={() =>
-                                                            setOpenDatePicker(
-                                                                false
-                                                            )
-                                                        }
-                                                        handleChangeDate={(
-                                                            value: Date | null
-                                                        ) => {
-                                                            value !== null &&
-                                                                updateAlarmDate(
-                                                                    alarm.id,
-                                                                    alarm.alarmTime,
-                                                                    new Date(
-                                                                        value
-                                                                    )
-                                                                );
-                                                        }}
-                                                    />
-                                                </DialogContent>
-                                            </Dialog>
-                                        </Stack>
-                                        <Divider />
-                                        <Stack direction={"row"}>
-                                            <Button
-                                                onClick={() => {
-                                                    setOpenSoundDialogFlag(
-                                                        true
-                                                    );
-                                                }}
-                                            >
-                                                <MusicNoteOutlinedIcon
-                                                    className={styles.icon}
-                                                />
-                                                Sound
-                                            </Button>
-                                            <CustomDialog
-                                                id="alarm-ringtone"
-                                                title="Alarm Ringtone"
-                                                data={alarmDetail.alarmSounds}
-                                                keepMounted
-                                                value={alarm.sound}
-                                                open={openSoundDialogFlag}
-                                                onClose={
-                                                    handleCloseAlarmSoundDialog
-                                                }
-                                                rowId={alarm.id}
-                                                soundFlag={true}
-                                                playSound={playAlarmSound}
-                                            />
-                                        </Stack>
-                                        <Divider />
-                                        <Stack direction={"row"}>
-                                            <Button
-                                                onClick={() =>
-                                                    handleDeleteAlarmEvent(
-                                                        alarm.id
+                                                    handleLabelButtonEvent(
+                                                        true,
+                                                        alarm.id,
+                                                        alarm.label
                                                     )
                                                 }
                                             >
-                                                <DeleteOutlineOutlinedIcon
-                                                    className={styles.icon}
-                                                />
-                                                Delete
-                                            </Button>
+                                                <LabelOutlinedIcon />
+                                                <Typography
+                                                    variant="body1"
+                                                    sx={{ paddingLeft: "2vw" }}
+                                                >
+                                                    {"  "}
+                                                    {alarm.label}
+                                                </Typography>
+                                            </IconButton>
+                                            <DialogBox
+                                                id={idForOpenLabelDialogFlag}
+                                                open={openLabelDialogFlag}
+                                                close={setOpenLabelDialogFlag}
+                                                labelText={labelText}
+                                                handleLabelText={
+                                                    handleLabelText
+                                                }
+                                            />
+                                            <ExpandMore
+                                                expand={expand.values[index]}
+                                                onClick={() =>
+                                                    handleExpand(index)
+                                                }
+                                                aria-expanded={
+                                                    expand.values[index]
+                                                }
+                                                aria-label="show more"
+                                            >
+                                                <ExpandMoreIcon />
+                                            </ExpandMore>
                                         </Stack>
-                                    </Collapse>
-                                </Card>
-                            </Box>
-                        );
-                    })}
-                </Box>
-            )}
-        </>
-    );
+                                        <Stack
+                                            direction={"row"}
+                                            sx={{
+                                                display: "flex",
+                                                paddingLeft: "2vw",
+                                            }}
+                                        >
+                                            <Typography
+                                                variant="h3"
+                                                sx={{
+                                                    fontWeight: "bold",
+                                                }}
+                                            >
+                                                {alarmTime}
+                                            </Typography>
+                                            <Typography
+                                                variant="body2"
+                                                sx={{
+                                                    marginBottom: "1.5em",
+                                                }}
+                                            >
+                                                {meridiem}
+                                            </Typography>
+                                        </Stack>
+                                        <Stack
+                                            direction={"row"}
+                                            sx={{
+                                                display: "flex",
+                                                justifyContent: "space-between",
+                                                paddingLeft: "2vw",
+                                            }}
+                                        >
+                                            {alarm.currentScheduleFlag ? (
+                                                <Typography variant="body2">
+                                                    {alarmDay}
+                                                </Typography>
+                                            ) : (
+                                                <Typography
+                                                    variant="body2"
+                                                    sx={{ opacity: "0.5" }}
+                                                >
+                                                    Not Scheduled
+                                                </Typography>
+                                            )}
+                                            <Switch
+                                                checked={
+                                                    alarm.currentScheduleFlag
+                                                }
+                                                onChange={(e) =>
+                                                    handleChangeSwitch(
+                                                        alarm.id,
+                                                        e
+                                                    )
+                                                }
+                                                inputProps={{
+                                                    "aria-label": "controlled",
+                                                }}
+                                            />
+                                        </Stack>
+                                        <Collapse
+                                            in={expand.values[index]}
+                                            timeout="auto"
+                                            unmountOnExit
+                                        >
+                                            <Stack
+                                                direction={"row"}
+                                                sx={{
+                                                    display: "flex",
+                                                    justifyContent:
+                                                        "space-between",
+                                                }}
+                                            >
+                                                {dayHashTable.map(
+                                                    (
+                                                        day,
+                                                        dayHashTableIndex
+                                                    ) => (
+                                                        <Button
+                                                            variant={
+                                                                alarm.repeat[
+                                                                    day
+                                                                ].flag
+                                                                    ? "contained"
+                                                                    : "outlined"
+                                                            }
+                                                            key={
+                                                                dayHashTableIndex
+                                                            }
+                                                            className={
+                                                                styles.scheduleByDay
+                                                            }
+                                                            onClick={() =>
+                                                                handleRepeatAlarm(
+                                                                    alarm.id,
+                                                                    alarm.alarmTime,
+                                                                    dayHashTableIndex,
+                                                                    index
+                                                                )
+                                                            }
+                                                            disabled={
+                                                                !alarm.currentScheduleFlag
+                                                            }
+                                                        >
+                                                            {day
+                                                                .charAt(0)
+                                                                .toUpperCase()}
+                                                        </Button>
+                                                    )
+                                                )}
+                                            </Stack>
+                                            <Divider />
+                                            <Stack direction={"row"}>
+                                                <Button
+                                                    onClick={() =>
+                                                        setOpenDatePicker(true)
+                                                    }
+                                                >
+                                                    <EditCalendarIcon
+                                                        className={styles.icon}
+                                                    />
+                                                    Schedule Alarm
+                                                </Button>
+                                                <Dialog open={openDatePicker}>
+                                                    <DialogTitle>
+                                                        Custom Schedule Alarm
+                                                    </DialogTitle>
+                                                    <DialogContent
+                                                        className={
+                                                            styles.dialogBoxContent
+                                                        }
+                                                        dividers
+                                                    >
+                                                        <ResponsiveDatePickers
+                                                            action={() =>
+                                                                setOpenDatePicker(
+                                                                    false
+                                                                )
+                                                            }
+                                                            handleChangeDate={(
+                                                                value: Date | null
+                                                            ) => {
+                                                                value !==
+                                                                    null &&
+                                                                    updateAlarmDate(
+                                                                        alarm.id,
+                                                                        alarm.alarmTime,
+                                                                        new Date(
+                                                                            value
+                                                                        )
+                                                                    );
+                                                            }}
+                                                        />
+                                                    </DialogContent>
+                                                </Dialog>
+                                            </Stack>
+                                            <Divider />
+                                            <Stack direction={"row"}>
+                                                <Button
+                                                    onClick={() => {
+                                                        setOpenSoundDialogFlag(
+                                                            true
+                                                        );
+                                                    }}
+                                                >
+                                                    <MusicNoteOutlinedIcon
+                                                        className={styles.icon}
+                                                    />
+                                                    Sound
+                                                </Button>
+                                                <CustomDialog
+                                                    id="alarm-ringtone"
+                                                    title="Alarm Ringtone"
+                                                    data={
+                                                        alarmDetail.alarmSounds
+                                                    }
+                                                    keepMounted
+                                                    value={alarm.sound}
+                                                    open={openSoundDialogFlag}
+                                                    onClose={
+                                                        handleCloseAlarmSoundDialog
+                                                    }
+                                                    rowId={alarm.id}
+                                                    soundFlag={true}
+                                                    playSound={playAlarmSound}
+                                                />
+                                            </Stack>
+                                            <Divider />
+                                            <Stack direction={"row"}>
+                                                <Button
+                                                    onClick={() =>
+                                                        dispatch(
+                                                            deleteAlarm(
+                                                                alarm.id
+                                                            )
+                                                        )
+                                                    }
+                                                >
+                                                    <DeleteOutlineOutlinedIcon
+                                                        className={styles.icon}
+                                                    />
+                                                    Delete
+                                                </Button>
+                                            </Stack>
+                                        </Collapse>
+                                    </Card>
+                                </Box>
+                            );
+                        })}
+                    </Box>
+                )}
+            </>
+        );
+    }, [
+        alarmAudio,
+        alarmCurrentSnoozeInterval,
+        alarmDetail.alarmSounds,
+        alarmDetail.alarms,
+        alarmRunningLabel,
+        alarmRunningPage,
+        convertTimeInMeridiemForm,
+        currentAlarmAudio,
+        dispatch,
+        expand.values,
+        handleCloseAlarmSoundDialog,
+        handleExpand,
+        handleLabelText,
+        idForOpenLabelDialogFlag,
+        labelText,
+        openDatePicker,
+        openLabelDialogFlag,
+        openSoundDialogFlag,
+        playAlarmSound,
+        updateAlarmDate,
+    ]);
+
+    return <>{alarmViewComponent}</>;
 }
 
 export default memo(AlarmView);
