@@ -10,7 +10,7 @@ import {
     Box,
     Paper,
 } from "@mui/material";
-import React, { useState, useEffect, memo, useCallback } from "react";
+import React, { useState, useEffect, memo, useCallback, useMemo } from "react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -90,81 +90,99 @@ const TopNavbar = ({ heading, menuItemsProps, homepage }: topNavbarTypes) => {
         setAncherEI(null);
     }, [ancherEI]);
 
-    return (
-        <>
-            <Paper sx={{ height: "4em", boxShadow: 0 }}>
-                <CssBaseline />
-                <AppBar position="fixed" elevation={0} sx={themeStyle}>
-                    <Toolbar>
-                        {!homepage && (
+    const topNavbarComponent = useMemo(() => {
+        return (
+            <>
+                <Paper sx={{ height: "4em", boxShadow: 0 }}>
+                    <CssBaseline />
+                    <AppBar position="fixed" elevation={0} sx={themeStyle}>
+                        <Toolbar>
+                            {!homepage && (
+                                <IconButton
+                                    size="large"
+                                    edge="start"
+                                    aria-label="back button"
+                                    id="back-button"
+                                    onClick={() => {
+                                        router.replace("/");
+                                    }}
+                                >
+                                    <ArrowBackIcon />
+                                </IconButton>
+                            )}
+                            <Typography
+                                variant="h5"
+                                component={"div"}
+                                sx={{ flexGrow: 1 }}
+                            >
+                                {heading}
+                            </Typography>
                             <IconButton
                                 size="large"
-                                edge="start"
-                                aria-label="back button"
-                                id="back-button"
-                                onClick={() => {
-                                    router.replace("/");
+                                edge="end"
+                                aria-label="more option"
+                                id="resource-button"
+                                onClick={handleClick}
+                                aria-controls={
+                                    open ? "resource-menu" : undefined
+                                }
+                                aria-haspopup="true"
+                                aria-expanded={open ? "true" : undefined}
+                            >
+                                <MoreVertIcon />
+                            </IconButton>
+                            <Menu
+                                id="resource-menu"
+                                anchorEl={ancherEI}
+                                open={open}
+                                MenuListProps={{
+                                    "aria-labelledby": "resource-button",
+                                }}
+                                onClick={handleClose}
+                                anchorOrigin={{
+                                    vertical: "bottom",
+                                    horizontal: "right",
+                                }}
+                                transformOrigin={{
+                                    vertical: "top",
+                                    horizontal: "right",
                                 }}
                             >
-                                <ArrowBackIcon />
-                            </IconButton>
-                        )}
-                        <Typography
-                            variant="h5"
-                            component={"div"}
-                            sx={{ flexGrow: 1 }}
-                        >
-                            {heading}
-                        </Typography>
-                        <IconButton
-                            size="large"
-                            edge="end"
-                            aria-label="more option"
-                            id="resource-button"
-                            onClick={handleClick}
-                            aria-controls={open ? "resource-menu" : undefined}
-                            aria-haspopup="true"
-                            aria-expanded={open ? "true" : undefined}
-                        >
-                            <MoreVertIcon />
-                        </IconButton>
-                        <Menu
-                            id="resource-menu"
-                            anchorEl={ancherEI}
-                            open={open}
-                            MenuListProps={{
-                                "aria-labelledby": "resource-button",
-                            }}
-                            onClick={handleClose}
-                            anchorOrigin={{
-                                vertical: "bottom",
-                                horizontal: "right",
-                            }}
-                            transformOrigin={{
-                                vertical: "top",
-                                horizontal: "right",
-                            }}
-                        >
-                            {menuItems.map((item, index) => (
-                                <Box key={item.id}>
-                                    <MenuItem
-                                        onClick={() => {
-                                            router.replace(`/${item.link}`);
-                                        }}
-                                    >
-                                        <ListItemText>{item.name}</ListItemText>
-                                    </MenuItem>
-                                    {menuItems.length - 1 !== index && (
-                                        <Divider />
-                                    )}
-                                </Box>
-                            ))}
-                        </Menu>
-                    </Toolbar>
-                </AppBar>
-            </Paper>
-        </>
-    );
+                                {menuItems.map((item, index) => (
+                                    <Box key={item.id}>
+                                        <MenuItem
+                                            onClick={() => {
+                                                router.replace(`/${item.link}`);
+                                            }}
+                                        >
+                                            <ListItemText>
+                                                {item.name}
+                                            </ListItemText>
+                                        </MenuItem>
+                                        {menuItems.length - 1 !== index && (
+                                            <Divider />
+                                        )}
+                                    </Box>
+                                ))}
+                            </Menu>
+                        </Toolbar>
+                    </AppBar>
+                </Paper>
+            </>
+        );
+    }, [
+        ancherEI,
+        handleClick,
+        handleClose,
+        heading,
+        homepage,
+        menuItems,
+        open,
+        router,
+        themeStyle,
+    ]);
+
+    return <>{topNavbarComponent}</>;
 };
 
 export default memo(TopNavbar);

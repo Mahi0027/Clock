@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemButton from "@mui/material/ListItemButton";
 import Typography from "@mui/material/Typography";
@@ -29,27 +29,35 @@ function SetWeekOn() {
         },
         [dispatch, open]
     );
-    return (
-        <>
-            <ListItemButton sx={{ pl: 9 }} onClick={() => setOpen(true)}>
-                <ListItemText
-                    primary={
-                        <Typography variant="body1">Start week on</Typography>
-                    }
-                    secondary={currentWeekOnValue}
+
+    /* JSX code under useMemo for optimization and improving performance. */
+    const setWeekOnComponent = useMemo(() => {
+        return (
+            <>
+                <ListItemButton sx={{ pl: 9 }} onClick={() => setOpen(true)}>
+                    <ListItemText
+                        primary={
+                            <Typography variant="body1">
+                                Start week on
+                            </Typography>
+                        }
+                        secondary={currentWeekOnValue}
+                    />
+                </ListItemButton>
+                <CustomDialog
+                    id="start-week-on"
+                    title="Start week on"
+                    data={allWeekOnValues}
+                    keepMounted
+                    value={currentWeekOnValue}
+                    open={open}
+                    onClose={handleClose}
                 />
-            </ListItemButton>
-            <CustomDialog
-                id="start-week-on"
-                title="Start week on"
-                data={allWeekOnValues}
-                keepMounted
-                value={currentWeekOnValue}
-                open={open}
-                onClose={handleClose}
-            />
-        </>
-    );
+            </>
+        );
+    }, [allWeekOnValues, currentWeekOnValue, handleClose, open]);
+
+    return <>{setWeekOnComponent}</>;
 }
 
 export default SetWeekOn;

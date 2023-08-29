@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemButton from "@mui/material/ListItemButton";
 import Typography from "@mui/material/Typography";
@@ -31,29 +31,36 @@ function SetTimeZone() {
                 dispatch(setTimeZone(newValue));
             }
         },
-        [dispatch, open]
+        [dispatch]
     );
-    return (
-        <>
-            <ListItemButton sx={{ pl: 9 }} onClick={() => setOpen(true)}>
-                <ListItemText
-                    primary={
-                        <Typography variant="body1">Home time zone</Typography>
-                    }
-                    secondary={currentTimeZone}
+
+    const setTimeZoneComponent = useMemo(() => {
+        return (
+            <>
+                <ListItemButton sx={{ pl: 9 }} onClick={() => setOpen(true)}>
+                    <ListItemText
+                        primary={
+                            <Typography variant="body1">
+                                Home time zone
+                            </Typography>
+                        }
+                        secondary={currentTimeZone}
+                    />
+                </ListItemButton>
+                <CustomDialog
+                    id="clock-theme"
+                    title="Clock Theme"
+                    data={allTimeZones}
+                    keepMounted
+                    value={currentTimeZone}
+                    open={open}
+                    onClose={handleClose}
                 />
-            </ListItemButton>
-            <CustomDialog
-                id="clock-theme"
-                title="Clock Theme"
-                data={allTimeZones}
-                keepMounted
-                value={currentTimeZone}
-                open={open}
-                onClose={handleClose}
-            />
-        </>
-    );
+            </>
+        );
+    }, [allTimeZones, currentTimeZone, handleClose, open]);
+
+    return <>{setTimeZoneComponent}</>;
 }
 
 export default SetTimeZone;

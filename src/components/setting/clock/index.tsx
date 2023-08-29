@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -17,32 +17,33 @@ import SetClockThemes from "./SetClockThemes";
 function ClockSetting() {
     const [open, setOpen] = useState<boolean>(true);
 
-    const handleClick = () => {
-        setOpen(!open);
-    };
+    /* JSX code under useMemo for optimization and improving performance. */
+    const clockSettingComponent = useMemo(() => {
+        return (
+            <>
+                <ListItemButton onClick={() => setOpen(!open)}>
+                    <ListItemIcon>
+                        <AccessTimeIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                        primary={<Typography variant="h6">Clock</Typography>}
+                    />
+                    {open ? <ExpandLess /> : <ExpandMore />}
+                </ListItemButton>
+                <Collapse in={open} timeout="auto" unmountOnExit>
+                    <List component="div" disablePadding>
+                        <SetStyle />
+                        <SetClockThemes />
+                        <SetSeconds />
+                        <SetTimeZone />
+                        {/* <SetTime /> */}
+                    </List>
+                </Collapse>
+            </>
+        );
+    }, [open]);
 
-    return (
-        <>
-            <ListItemButton onClick={handleClick}>
-                <ListItemIcon>
-                    <AccessTimeIcon />
-                </ListItemIcon>
-                <ListItemText
-                    primary={<Typography variant="h6">Clock</Typography>}
-                />
-                {open ? <ExpandLess /> : <ExpandMore />}
-            </ListItemButton>
-            <Collapse in={open} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                    <SetStyle />
-                    <SetClockThemes />
-                    <SetSeconds />
-                    <SetTimeZone />
-                    {/* <SetTime /> */}
-                </List>
-            </Collapse>
-        </>
-    );
+    return <>{clockSettingComponent}</>;
 }
 
 export default ClockSetting;
