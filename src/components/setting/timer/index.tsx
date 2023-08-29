@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -17,31 +17,33 @@ import SetSilent from "./SetSilent";
 function TimerSetting() {
     const [open, setOpen] = useState<boolean>(true);
 
-    const handleClick = () => {
-        setOpen(!open);
-    };
-    return (
-        <>
-            <ListItemButton onClick={handleClick}>
-                <ListItemIcon>
-                    <TimerOutlinedIcon />
-                </ListItemIcon>
-                <ListItemText
-                    primary={<Typography variant="h6">Timer</Typography>}
-                />
-                {open ? <ExpandLess /> : <ExpandMore />}
-            </ListItemButton>
-            <Collapse in={open} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                    <SetSound />
-                    <SetSilent />
-                    <SetVolume />
-                    {/* <SetGraduallyIncreaseVolume /> */}
-                    {/* <SetVibration /> */}
-                </List>
-            </Collapse>
-        </>
-    );
+    /* JSX code under useMemo for optimization and improving performance. */
+    const timerSettingComponent = useMemo(() => {
+        return (
+            <>
+                <ListItemButton onClick={() => setOpen(!open)}>
+                    <ListItemIcon>
+                        <TimerOutlinedIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                        primary={<Typography variant="h6">Timer</Typography>}
+                    />
+                    {open ? <ExpandLess /> : <ExpandMore />}
+                </ListItemButton>
+                <Collapse in={open} timeout="auto" unmountOnExit>
+                    <List component="div" disablePadding>
+                        <SetSound />
+                        <SetSilent />
+                        <SetVolume />
+                        {/* <SetGraduallyIncreaseVolume /> */}
+                        {/* <SetVibration /> */}
+                    </List>
+                </Collapse>
+            </>
+        );
+    }, [open]);
+
+    return <>{timerSettingComponent}</>;
 }
 
 export default TimerSetting;
