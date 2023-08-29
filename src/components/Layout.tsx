@@ -1,4 +1,4 @@
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import { Box, ThemeProvider, createTheme } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import { useSelector } from "react-redux";
@@ -43,14 +43,19 @@ const Layout = ({ children }: any) => {
         },
     });
 
-    return (
-        <ThemeProvider theme={theme}>
-            <Box sx={myTheme}>
-                <CssBaseline />
-                {children}
-            </Box>
-        </ThemeProvider>
-    );
+    /* JSX code under useMemo for optimization and improving performance. */
+    const layoutComponent = useMemo(() => {
+        return (
+            <ThemeProvider theme={theme}>
+                <Box sx={myTheme}>
+                    <CssBaseline />
+                    {children}
+                </Box>
+            </ThemeProvider>
+        );
+    }, [theme, myTheme, children]);
+
+    return <>{layoutComponent}</>;
 };
 
 export default memo(Layout);

@@ -1,3 +1,6 @@
+import { ThunkDispatch } from "redux-thunk";
+import { AnyAction } from "redux";
+
 import {
     FETCH_TIME_ZONE_FAILURE,
     FETCH_TIME_ZONE_REQUEST,
@@ -40,7 +43,7 @@ export const setTimeZone = (value: string) => {
 };
 
 export const fetchTimeZone = () => {
-    return async (dispatch) => {
+    return async (dispatch: ThunkDispatch<any, any, AnyAction>) => {
         try {
             dispatch(fetchTimeZoneRequest());
             const response = await fetch(
@@ -52,7 +55,7 @@ export const fetchTimeZone = () => {
             }
             const timeZones = await response.json();
             dispatch(fetchTimeZonesSuccess(timeZones));
-        } catch (error:any) {
+        } catch (error: any) {
             dispatch(fetchTimeZoneFailure(error));
         }
     };

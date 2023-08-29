@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import DigitalClock from "./DigitalClock";
 import { useSelector } from "react-redux";
 import AnalogClock from "./AnalogClock";
@@ -8,12 +8,17 @@ function ClockHome() {
         (state: any) => state.clockStyle.currentStyle
     );
 
-    return (
-        <>
-            {currentStyle === "Analog" && <AnalogClock />}
-            {currentStyle === "Digital" && <DigitalClock />}
-        </>
-    );
+    const clockComponent = useMemo(() => {
+        if (currentStyle === "Analog") {
+            return <AnalogClock />;
+        }
+        if (currentStyle === "Digital") {
+            return <DigitalClock />;
+        }
+        return null;
+    }, [currentStyle]);
+
+    return <>{clockComponent}</>;
 }
 
 export default ClockHome;

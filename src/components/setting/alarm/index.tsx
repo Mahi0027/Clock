@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useMemo, useState } from "react";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -15,32 +15,33 @@ import SetWeekOn from "./SetWeekOn";
 
 function AlarmSetting() {
     const [open, setOpen] = useState<boolean>(true);
-    
-    const handleClick = () => {
-        setOpen(!open);
-    };
 
-    return (
-        <>
-            <ListItemButton onClick={handleClick}>
-                <ListItemIcon>
-                    <AccessAlarmIcon />
-                </ListItemIcon>
-                <ListItemText
-                    primary={<Typography variant="h6">Alarm</Typography>}
-                />
-                {open ? <ExpandLess /> : <ExpandMore />}
-            </ListItemButton>
-            <Collapse in={open} timeout="auto">
-                <List component="div" disablePadding>
-                    <SetSilent />
-                    <SetSnooze />
-                    <SetVolume />
-                    {/* <SetWeekOn /> */}
-                </List>
-            </Collapse>
-        </>
-    );
+    /* JSX code under useMemo for optimization and improving performance. */
+    const alarmSettingComponent = useMemo(() => {
+        return (
+            <>
+                <ListItemButton onClick={() => setOpen(!open)}>
+                    <ListItemIcon>
+                        <AccessAlarmIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                        primary={<Typography variant="h6">Alarm</Typography>}
+                    />
+                    {open ? <ExpandLess /> : <ExpandMore />}
+                </ListItemButton>
+                <Collapse in={open} timeout="auto">
+                    <List component="div" disablePadding>
+                        <SetSilent />
+                        <SetSnooze />
+                        <SetVolume />
+                        {/* <SetWeekOn /> */}
+                    </List>
+                </Collapse>
+            </>
+        );
+    }, [open]);
+
+    return <>{alarmSettingComponent}</>;
 }
 
 export default AlarmSetting;

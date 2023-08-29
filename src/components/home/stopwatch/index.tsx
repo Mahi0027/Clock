@@ -1,4 +1,4 @@
-import { Box, Button, Chip, Grid, Stack, Typography } from "@mui/material";
+import { Button, Chip, Grid, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import styles from "@/styles/components/home/stopwatch/index.module.scss";
 import ReplayIcon from "@mui/icons-material/Replay";

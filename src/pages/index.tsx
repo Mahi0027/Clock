@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Inter } from "next/font/google";
 import { Stack } from "@mui/material";
 import BottomNavbar from "@/components/BottomNavbar";
@@ -31,20 +31,25 @@ export default function Home() {
         }
     }, [currentTheme]);
 
-    return (
-        <>
-            <TopNavbar
-                heading={homePageTitle[currentHomePage]}
-                menuItemsProps={MenuItems}
-                homepage={true}
-            />
-            <Stack className={styles.container} sx={myTheme}>
-                {currentHomePage === 0 && <ClockHome />}
-                {currentHomePage === 1 && <AlarmHome />}
-                {currentHomePage === 2 && <TimerHome />}
-                {currentHomePage === 3 && <StopwatchHome />}
-            </Stack>
-            <BottomNavbar />
-        </>
-    );
+    /* JSX code under useMemo for optimization and improving performance. */
+    const indexPageComponent = useMemo(() => {
+        return (
+            <>
+                <TopNavbar
+                    heading={homePageTitle[currentHomePage]}
+                    menuItemsProps={MenuItems}
+                    homepage={true}
+                />
+                <Stack className={styles.container} sx={myTheme}>
+                    {currentHomePage === 0 && <ClockHome />}
+                    {currentHomePage === 1 && <AlarmHome />}
+                    {currentHomePage === 2 && <TimerHome />}
+                    {currentHomePage === 3 && <StopwatchHome />}
+                </Stack>
+                <BottomNavbar />
+            </>
+        );
+    }, [myTheme, currentHomePage]);
+
+    return <>{indexPageComponent}</>;
 }

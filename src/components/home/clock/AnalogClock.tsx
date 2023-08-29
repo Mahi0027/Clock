@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import styles from "@/styles/components/home/clock/analogClock.module.scss";
+import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import styles from "@/styles/components/home/clock/analogClock.module.scss";
 
 type stateTypes = {
     currentTheme: string;
@@ -117,31 +117,46 @@ function AnalogClock() {
         return data;
     }
 
-    return (
-        <>
-            <div id={styles.clockContainer}>
-                <div id={styles.drop} style={dropStyle}>
-                    <div id={styles.clock} style={clockStyle}>
-                        <div
-                            id={styles.hour}
-                            style={{ transform: `rotate(${hRotation}deg)` }}
-                        ></div>
-                        <div
-                            id={styles.minute}
-                            style={{ transform: `rotate(${mRotation}deg)` }}
-                        ></div>
-                        {setSecond && (
+    /* JSX code under useMemo for optimization and improving performance. */
+    const analogClockComponent = useMemo(() => {
+        return (
+            <>
+                <div id={styles.clockContainer}>
+                    <div id={styles.drop} style={dropStyle}>
+                        <div id={styles.clock} style={clockStyle}>
                             <div
-                                id={styles.second}
-                                style={{ transform: `rotate(${sRotation}deg)` }}
+                                id={styles.hour}
+                                style={{ transform: `rotate(${hRotation}deg)` }}
                             ></div>
-                        )}
+                            <div
+                                id={styles.minute}
+                                style={{ transform: `rotate(${mRotation}deg)` }}
+                            ></div>
+                            {setSecond && (
+                                <div
+                                    id={styles.second}
+                                    style={{
+                                        transform: `rotate(${sRotation}deg)`,
+                                    }}
+                                ></div>
+                            )}
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div className={styles.timezone}>{currentTimeZone}</div>
-        </>
-    );
+                <div className={styles.timezone}>{currentTimeZone}</div>
+            </>
+        );
+    }, [
+        dropStyle,
+        clockStyle,
+        hRotation,
+        mRotation,
+        setSecond,
+        sRotation,
+        currentTimeZone,
+    ]);
+
+    return <>{analogClockComponent}</>;
 }
 
 export default AnalogClock;

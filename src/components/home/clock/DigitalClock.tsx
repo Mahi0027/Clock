@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import styles from "@/styles/components/home/clock/digitalClock.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 const months = [
@@ -146,36 +146,53 @@ function DigitalClock() {
         return data;
     }
 
+    /* JSX code under useMemo for optimization and improving performance. */
+    const digitalClockComponent = useMemo(() => {
+        return (
+            <div className={styles.container}>
+                <div className={styles.clock} style={clockStyle}>
+                    <span className="hours">{hTime}</span>
+                    <span>:</span>
+                    <span className="minutes">{mTime}</span>
+                    {setSecond && (
+                        <>
+                            <span>:</span>
+                            <span className="seconds">{sTime}</span>
+                        </>
+                    )}
+                    <span className={styles.session}>{session}</span>
+                </div>
+                <div className={styles.date} style={clockStyle}>
+                    <span className="hours">{day}</span>
+                    <span>/</span>
+                    <span className="minutes">{month}</span>
+                    <span>/</span>
+                    <span className="seconds">{year}</span>
+                </div>
+                <div className={styles.date} style={clockStyle}>
+                    <span className={styles.timezone}>{currentTimeZone}</span>
+                </div>
+            </div>
+        );
+    }, [
+        clockStyle,
+        hTime,
+        mTime,
+        sTime,
+        session,
+        setSecond,
+        day,
+        month,
+        year,
+        currentTimeZone,
+    ]);
+
     if (!hydrated) {
         // Returns null on first render, so the client and server match
         return null;
     }
-    return (
-        <div className={styles.container}>
-            <div className={styles.clock} style={clockStyle}>
-                <span className="hours">{hTime}</span>
-                <span>:</span>
-                <span className="minutes">{mTime}</span>
-                {setSecond && (
-                    <>
-                        <span>:</span>
-                        <span className="seconds">{sTime}</span>
-                    </>
-                )}
-                <span className={styles.session}>{session}</span>
-            </div>
-            <div className={styles.date} style={clockStyle}>
-                <span className="hours">{day}</span>
-                <span>/</span>
-                <span className="minutes">{month}</span>
-                <span>/</span>
-                <span className="seconds">{year}</span>
-            </div>
-            <div className={styles.date} style={clockStyle}>
-                <span className={styles.timezone}>{currentTimeZone}</span>
-            </div>
-        </div>
-    );
+
+    return <>{digitalClockComponent}</>;
 }
 
 export default DigitalClock;

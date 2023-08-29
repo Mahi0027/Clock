@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
@@ -31,25 +31,34 @@ function SetStyle() {
             setOpenDialog(false);
             dispatch(setStyle(value));
         },
-        [dispatch, openDialog]
+        [dispatch]
     );
-    return (
-        <>
-            <ListItemButton sx={{ pl: 9 }} onClick={() => setOpenDialog(true)}>
-                <ListItemText
-                    primary={<Typography variant="body1">Style</Typography>}
-                    secondary={stateData.currentStyle}
+
+    /* JSX code under useMemo for optimization and improving performance. */
+    const setStyleComponent = useMemo(() => {
+        return (
+            <>
+                <ListItemButton
+                    sx={{ pl: 9 }}
+                    onClick={() => setOpenDialog(true)}
+                >
+                    <ListItemText
+                        primary={<Typography variant="body1">Style</Typography>}
+                        secondary={stateData.currentStyle}
+                    />
+                </ListItemButton>
+                {/* set clock style dialog box */}
+                <SetClockStyle
+                    openDialog={openDialog}
+                    stateData={stateData}
+                    onSetClockStyle={onSetClockStyle}
+                    setOpenDialog={setOpenDialog}
                 />
-            </ListItemButton>
-            {/* set clock style dialog box */}
-            <SetClockStyle
-                openDialog={openDialog}
-                stateData={stateData}
-                onSetClockStyle={onSetClockStyle}
-                setOpenDialog={setOpenDialog}
-            />
-        </>
-    );
+            </>
+        );
+    }, [onSetClockStyle, openDialog, stateData]);
+
+    return <>{setStyleComponent}</>;
 }
 
 interface SimpleDialogProps {
@@ -65,48 +74,58 @@ function SetClockStyle({
     onSetClockStyle,
     setOpenDialog,
 }: SimpleDialogProps) {
-    const handleChangeClockStyle = (value: string) => {
-        onSetClockStyle(value);
-    };
-    return (
-        <Dialog onClose={() => setOpenDialog(false)} open={openDialog}>
-            <DialogTitle>Set clock style</DialogTitle>
-            <List sx={{ pt: 0 }}>
-                {stateData.allStyles.map((value, index) => (
-                    <ListItem key={index} disableGutters>
-                        <ListItemButton
-                            key={index}
-                            onClick={() => handleChangeClockStyle(value)}
-                            selected={
-                                value === stateData.currentStyle ? true : false
-                            }
-                        >
-                            <ListItemAvatar>
-                                <Avatar
-                                    sx={{
-                                        bgcolor: blue[100],
-                                        color: blue[600],
-                                    }}
-                                >
-                                    {index ? (
-                                        <AccessTimeIcon />
-                                    ) : (
-                                        <MemoryIcon />
-                                    )}
-                                </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText
-                                primary={
-                                    value.charAt(0).toUpperCase() +
-                                    value.slice(1)
+    /* JSX code under useMemo for optimization and improving performance. */
+    const setClockStyleComponent = useMemo(() => {
+        return (
+            <Dialog onClose={() => setOpenDialog(false)} open={openDialog}>
+                <DialogTitle>Set clock style</DialogTitle>
+                <List sx={{ pt: 0 }}>
+                    {stateData.allStyles.map((value, index) => (
+                        <ListItem key={index} disableGutters>
+                            <ListItemButton
+                                key={index}
+                                onClick={() => onSetClockStyle(value)}
+                                selected={
+                                    value === stateData.currentStyle
+                                        ? true
+                                        : false
                                 }
-                            />
-                        </ListItemButton>
-                    </ListItem>
-                ))}
-            </List>
-        </Dialog>
-    );
+                            >
+                                <ListItemAvatar>
+                                    <Avatar
+                                        sx={{
+                                            bgcolor: blue[100],
+                                            color: blue[600],
+                                        }}
+                                    >
+                                        {index ? (
+                                            <AccessTimeIcon />
+                                        ) : (
+                                            <MemoryIcon />
+                                        )}
+                                    </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText
+                                    primary={
+                                        value.charAt(0).toUpperCase() +
+                                        value.slice(1)
+                                    }
+                                />
+                            </ListItemButton>
+                        </ListItem>
+                    ))}
+                </List>
+            </Dialog>
+        );
+    }, [
+        onSetClockStyle,
+        openDialog,
+        setOpenDialog,
+        stateData.allStyles,
+        stateData.currentStyle,
+    ]);
+
+    return <>{setClockStyleComponent}</>;
 }
 
 export default SetStyle;
