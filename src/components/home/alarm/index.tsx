@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import Box from "@mui/material/Box";
 import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
@@ -24,41 +24,46 @@ function AlarmHome() {
             dispatch(setAlarm(alarmTime));
             setScrollToTop(true);
         },
-        [dispatch, scrollToTop]
+        [dispatch]
     );
 
-    const closeScrollToTop = useCallback(() => {
-        setScrollToTop(false);
-    }, [scrollToTop]);
+    /* JSX code under useMemo for optimization and improving performance. */
+    const alarmHomeComponent = useMemo(() => {
+        return (
+            <>
+                <Box>
+                    <AlarmView
+                        scrollToTop={scrollToTop}
+                        closeScrollToTop={() => setScrollToTop(false)}
+                    />
+                    <Fab
+                        className={styles.addAlarmButton}
+                        color="secondary"
+                        aria-label="add"
+                        onClick={() => setOpen(true)}
+                    >
+                        <AddIcon />
+                    </Fab>
+                    <Dialog open={open}>
+                        <DialogTitle>Set Alarm</DialogTitle>
+                        <DialogContent
+                            className={styles.dialogBoxContent}
+                            dividers
+                        >
+                            <ResponsiveTimePickers
+                                action={() => setOpen(false)}
+                                handleChangeTime={(value: Date | null) => {
+                                    value !== null &&
+                                        addNewAlarm(new Date(value));
+                                }}
+                            />
+                        </DialogContent>
+                    </Dialog>
+                </Box>
+            </>
+        );
+    }, [addNewAlarm, setScrollToTop, open, scrollToTop]);
 
-    return (
-        <>
-            <Box>
-                <AlarmView
-                    scrollToTop={scrollToTop}
-                    closeScrollToTop={closeScrollToTop}
-                />
-                <Fab
-                    className={styles.addAlarmButton}
-                    color="secondary"
-                    aria-label="add"
-                    onClick={() => setOpen(true)}
-                >
-                    <AddIcon />
-                </Fab>
-                <Dialog open={open}>
-                    <DialogTitle>Set Alarm</DialogTitle>
-                    <DialogContent className={styles.dialogBoxContent} dividers>
-                        <ResponsiveTimePickers
-                            action={() => setOpen(false)}
-                            handleChangeTime={(value: Date | null) => {
-                                value !== null && addNewAlarm(new Date(value));
-                            }}
-                        />
-                    </DialogContent>
-                </Dialog>
-            </Box>
-        </>
-    );
+    return <>{alarmHomeComponent}</>;
 }
 export default AlarmHome;

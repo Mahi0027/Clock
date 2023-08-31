@@ -13,6 +13,7 @@ import DigitalClockThemeReducer from "./features/setting/clock/clockTheme/digita
 import alarmReducer from "./features/home/alarm/reducer";
 import timerReducer from "./features/home/timer/reducer";
 import timerSettingReducer from "./features/setting/timer/reducer";
+import stopwatchReducer from "./features/home/stopwatch/reducer";
 
 const rootReducer = combineReducers({
     theme: themeReducer,
@@ -29,6 +30,7 @@ const rootReducer = combineReducers({
     homePage: BottomNavbar,
     alarm: alarmReducer,
     timer: timerReducer,
+    stopwatch: stopwatchReducer,
 });
 
 export default rootReducer;
