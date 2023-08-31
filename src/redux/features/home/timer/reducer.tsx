@@ -25,7 +25,7 @@ type actionTypes = {
     id?: number;
     payload?: any;
 };
-type initialStatesTypes = {
+export type initialStatesTypes = {
     timers: {
         id: number;
         timerTime: number;
