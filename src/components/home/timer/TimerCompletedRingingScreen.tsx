@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo, useMemo } from "react";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import Typography from "@mui/material/Typography";
@@ -6,7 +6,7 @@ import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
 import timer from "@/../public/animations/timer.json";
 import Lottie from "lottie-react";
-import { Box, Grid } from "@mui/material";
+import { Grid } from "@mui/material";
 import styles from "@/styles/components/home/timer/TimerCompletedRingingScreen.module.scss";
 
 const Transition = React.forwardRef(function Transition(
@@ -30,28 +30,33 @@ function TimerCompletedRingingScreen({
     closeTimerCompetedRingingScreen,
     timerRunningLabel,
 }: TimerCompletedRingingScreenProps) {
-    return (
-        <>
-            <Dialog fullScreen open={true} TransitionComponent={Transition}>
-                <Grid container className={styles.container}>
-                    <Grid item sm={6} className={styles.animation}>
-                        <Lottie loop={true} animationData={timer} />
-                    </Grid>
-                    <Grid item sm={6}>
-                        <Typography variant="h6" gutterBottom className={styles.label}>
-                            {timerRunningLabel}
-                        </Typography>
-                        <Button
-                            className={styles.button}
-                            variant="outlined"
-                            onClick={() => {
-                                deleteTimerDOM();
-                                closeTimerCompetedRingingScreen();
-                            }}
-                        >
-                            Stop
-                        </Button>
-                        {/* <Button
+    const timerCompletedRingingScreenComponent = useMemo(() => {
+        return (
+            <>
+                <Dialog fullScreen open={true} TransitionComponent={Transition}>
+                    <Grid container className={styles.container}>
+                        <Grid item sm={6} className={styles.animation}>
+                            <Lottie loop={true} animationData={timer} />
+                        </Grid>
+                        <Grid item sm={6}>
+                            <Typography
+                                variant="h6"
+                                gutterBottom
+                                className={styles.label}
+                            >
+                                {timerRunningLabel}
+                            </Typography>
+                            <Button
+                                className={styles.button}
+                                variant="outlined"
+                                onClick={() => {
+                                    deleteTimerDOM();
+                                    closeTimerCompetedRingingScreen();
+                                }}
+                            >
+                                Stop
+                            </Button>
+                            {/* <Button
                                 className={styles.button}
                                 variant="contained"
                                 color="warning"
@@ -66,11 +71,14 @@ function TimerCompletedRingingScreen({
                             >
                                 Snooze
                             </Button> */}
+                        </Grid>
                     </Grid>
-                </Grid>
-            </Dialog>
-        </>
-    );
+                </Dialog>
+            </>
+        );
+    }, [closeTimerCompetedRingingScreen, deleteTimerDOM, timerRunningLabel]);
+
+    return <>{timerCompletedRingingScreenComponent}</>;
 }
 
-export default TimerCompletedRingingScreen;
+export default memo(TimerCompletedRingingScreen);
