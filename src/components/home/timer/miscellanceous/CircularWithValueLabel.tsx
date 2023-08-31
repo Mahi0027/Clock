@@ -1,83 +1,42 @@
 import * as React from "react";
-import CircularProgress, {
-    CircularProgressProps,
-} from "@mui/material/CircularProgress";
+import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo, memo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteTimer, setTimer, updateTimerTime } from "@/redux";
+import { deleteTimer, updateTimerTime } from "@/redux";
 import ReplayIcon from "@mui/icons-material/Replay";
 import { Button } from "@mui/material";
 import PauseIcon from "@mui/icons-material/Pause";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import TimerCompletedRingingScreen from "../TimerCompletedRingingScreen";
-interface CircularProgressWithLabelProps extends CircularProgressProps {
-    value: number;
-    humanreadabletime: string;
-    playtimer: () => void;
-    pausetimer: () => void;
-}
-
-function CircularProgressWithLabel(props: CircularProgressWithLabelProps) {
-    const [playFlag, setPlayFlag] = useState(true);
-
-    const handlePlayPause = () => {
-        if (playFlag) {
-            props.pausetimer();
-        } else {
-            props.playtimer();
-        }
-        setPlayFlag(!playFlag);
-    };
-
-    return (
-        <Box
-            sx={{
-                position: "relative",
-                display: "inline-flex",
-            }}
-        >
-            <CircularProgress
-                variant="determinate"
-                color="primary"
-                {...props}
-                size="15em"
-                thickness={1}
-            />
-            <Box
-                sx={{
-                    top: "20%",
-                    left: 0,
-                    bottom: 0,
-                    right: 0,
-                    position: "absolute",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                }}
-            >
-                <Typography variant="h4">{props.humanreadabletime}</Typography>
-
-                <Button sx={{ top: "10%" }} onClick={handlePlayPause}>
-                    {playFlag && <PauseIcon sx={{ scale: "1.5" }} />}
-                    {!playFlag && <PlayArrowIcon sx={{ scale: "1.5" }} />}
-                </Button>
-            </Box>
-        </Box>
-    );
-}
-
+import { initialStatesTypes } from "@/redux/features/home/timer/reducer";
 
 type CircularWithValueLabelProps = {
     timerdetails: any;
     closeRunningTimer: () => void;
 };
-export default function CircularWithValueLabel(
+
+type stateTypes = {
+    timer: initialStatesTypes;
+    currentSilentInterval: string;
+    currentTimerSound: string;
+    timerCurrentVolume: number;
+};
+export default memo(function CircularWithValueLabel(
     props: CircularWithValueLabelProps
 ) {
-    const stateData = useSelector((state: any) => state);
+    const {
+        timer,
+        currentSilentInterval,
+        currentTimerSound,
+        timerCurrentVolume,
+    }: stateTypes = useSelector((state: any) => ({
+        timer: state.timer,
+        currentSilentInterval: state.timerSetting.currentSilentInterval,
+        currentTimerSound: state.timerSetting.currentTimerSound,
+        timerCurrentVolume: state.timerSetting.timerCurrentVolume,
+    }));
     const dispatch = useDispatch();
     const [remainingTime, setRemainingTime] = useState(
         props.timerdetails.timerTime
@@ -90,6 +49,7 @@ export default function CircularWithValueLabel(
         useState<boolean>(false);
     const timerIntervalRef = useRef<any>(null);
     const totalTime = useRef<number>(Number(props.timerdetails.persistTime));
+    const [playFlag, setPlayFlag] = useState(true);
 
     useEffect(() => {
         playTimer();
@@ -101,14 +61,12 @@ export default function CircularWithValueLabel(
     useEffect(() => {
         setRemainingTime(props.timerdetails.timerTime);
         if (!pauseFlag) playTimer();
-    }, [stateData.timer]);
+    }, [timer]);
 
     useEffect(() => {
         if (timerRingDOM !== null) {
             setTimerCompletedRingingPage(true);
-            const timeInterval = Number(
-                stateData.timerSetting.currentSilentInterval.substring(0, 2)
-            );
+            const timeInterval = Number(currentSilentInterval.substring(0, 2));
             setTimeout(() => {
                 deleteTimerDOM();
                 closeTimerCompetedRingingScreen();
@@ -121,11 +79,10 @@ export default function CircularWithValueLabel(
             dispatch(updateTimerTime(props.timerdetails.id, 0));
             clearTimeout(timerIntervalRef.current);
             let timerDOM = new Audio(
-                `sounds/alarm/${stateData.timerSetting.currentTimerSound}.mp3` /* `sounds/alarm/${props.timerdetails.sound}.mp3` */
+                `sounds/alarm/${currentTimerSound}.mp3` /* `sounds/alarm/${props.timerdetails.sound}.mp3` */
             );
             setTimerRingDOM(timerDOM);
-            timerDOM.volume =
-                Number(stateData.timerSetting.timerCurrentVolume) / 100;
+            timerDOM.volume = Number(timerCurrentVolume) / 100;
             timerDOM.currentTime = 0;
             timerDOM.loop = true;
             timerDOM.play();
@@ -157,16 +114,16 @@ export default function CircularWithValueLabel(
     };
 
     /* delete timer */
-    const deleteTimerDOM = () => {
+    const deleteTimerDOM = useCallback(() => {
         clearTimeout(timerIntervalRef.current);
         timerRingDOM.pause();
         dispatch(deleteTimer(props.timerdetails.id));
-    };
+    }, [dispatch, props.timerdetails.id, timerRingDOM]);
 
-    const closeTimerCompetedRingingScreen = () => {
+    const closeTimerCompetedRingingScreen = useCallback(() => {
         setTimerCompletedRingingPage(false);
-        if (stateData.timer.timers.length === 0) props.closeRunningTimer();
-    };
+        if (timer.timers.length === 0) props.closeRunningTimer();
+    }, [props, timer.timers.length]);
 
     /* make human readable time form milliseconds. */
     const getHumanReadableRemainingTime = () => {
@@ -182,26 +139,86 @@ export default function CircularWithValueLabel(
             ${seconds < 10 ? "0" + seconds : seconds}`
         );
     };
-    return (
-        <>
-            {timerCompletedRingingPage && (
-                <TimerCompletedRingingScreen
-                    currentTimerAudio={timerRingDOM}
-                    deleteTimerDOM={deleteTimerDOM}
-                    closeTimerCompetedRingingScreen={
-                        closeTimerCompetedRingingScreen
-                    }
-                    timerRunningLabel={props.timerdetails.label}
-                />
-            )}
-            {!timerCompletedRingingPage && (
-                <CircularProgressWithLabel
-                    value={progress}
-                    humanreadabletime={humanReadableTime}
-                    playtimer={playTimer}
-                    pausetimer={pauseTimer}
-                />
-            )}
-        </>
-    );
-}
+
+    const handlePlayPause = useCallback(() => {
+        if (playFlag) {
+            pauseTimer();
+        } else {
+            playTimer();
+        }
+        setPlayFlag(!playFlag);
+    }, [playFlag]);
+
+    const circularWithValueLabelComponent = useMemo(() => {
+        return (
+            <>
+                {timerCompletedRingingPage && (
+                    <TimerCompletedRingingScreen
+                        currentTimerAudio={timerRingDOM}
+                        deleteTimerDOM={deleteTimerDOM}
+                        closeTimerCompetedRingingScreen={
+                            closeTimerCompetedRingingScreen
+                        }
+                        timerRunningLabel={props.timerdetails.label}
+                    />
+                )}
+                {!timerCompletedRingingPage && (
+                    <Box
+                        sx={{
+                            position: "relative",
+                            display: "inline-flex",
+                        }}
+                    >
+                        <CircularProgress
+                            variant="determinate"
+                            color="primary"
+                            value={progress}
+                            size="15em"
+                            thickness={1}
+                        />
+                        <Box
+                            sx={{
+                                top: "20%",
+                                left: 0,
+                                bottom: 0,
+                                right: 0,
+                                position: "absolute",
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                justifyContent: "center",
+                            }}
+                        >
+                            <Typography variant="h4">
+                                {humanReadableTime}
+                            </Typography>
+
+                            <Button
+                                sx={{ top: "10%" }}
+                                onClick={handlePlayPause}
+                            >
+                                {playFlag && (
+                                    <PauseIcon sx={{ scale: "1.5" }} />
+                                )}
+                                {!playFlag && (
+                                    <PlayArrowIcon sx={{ scale: "1.5" }} />
+                                )}
+                            </Button>
+                        </Box>
+                    </Box>
+                )}
+            </>
+        );
+    }, [
+        closeTimerCompetedRingingScreen,
+        deleteTimerDOM,
+        handlePlayPause,
+        humanReadableTime,
+        playFlag,
+        progress,
+        props.timerdetails.label,
+        timerCompletedRingingPage,
+        timerRingDOM,
+    ]);
+    return <>{circularWithValueLabelComponent}</>;
+});

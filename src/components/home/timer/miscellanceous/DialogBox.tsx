@@ -7,7 +7,7 @@ import {
     DialogTitle,
     TextField,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useMemo, useState } from "react";
 interface DialogBoxPropTypes {
     id: number;
     open: boolean;
@@ -28,33 +28,39 @@ function DialogBox({
         return () => setLabel("");
     }, [labelText]);
 
-    return (
-        <Dialog open={open} onClose={() => close(false)}>
-            <DialogTitle>Timer Label</DialogTitle>
-            <DialogContent>
-                <TextField
-                    autoFocus
-                    margin="dense"
-                    id="label"
-                    label="label"
-                    type="text"
-                    fullWidth
-                    variant="outlined"
-                    value={label}
-                    onChange={(e) => {
-                        const newValue = e.target.value;
-                        if (newValue.length < 30) {
-                            setLabel(newValue);
-                        }
-                    }}
-                />
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={() => close(false)}>Cancel</Button>
-                <Button onClick={() => handleLabelText(id, label)}>Set</Button>
-            </DialogActions>
-        </Dialog>
-    );
+    const dialogBoxComponent = useMemo(() => {
+        return (
+            <Dialog open={open} onClose={() => close(false)}>
+                <DialogTitle>Timer Label</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="label"
+                        label="label"
+                        type="text"
+                        fullWidth
+                        variant="outlined"
+                        value={label}
+                        onChange={(e) => {
+                            const newValue = e.target.value;
+                            if (newValue.length < 30) {
+                                setLabel(newValue);
+                            }
+                        }}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => close(false)}>Cancel</Button>
+                    <Button onClick={() => handleLabelText(id, label)}>
+                        Set
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        );
+    }, [close, handleLabelText, id, label, open]);
+
+    return <>{dialogBoxComponent}</>;
 }
 
-export default DialogBox;
+export default memo(DialogBox);
