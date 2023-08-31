@@ -1,5 +1,5 @@
 .stopwatchTime {
-    font-size: 18vw;
+    font-size: 25vw;
 }
 
 .snapshots {
@@ -30,7 +30,7 @@
 
 @media (orientation: portrait) {
     .stopwatchTime {
-        font-size: 18vw;
+        font-size: 25vw;
     }
 
     .buttons>Button {
@@ -50,7 +50,7 @@
 
 @media (orientation: landscape) {
     .stopwatchTime {
-        font-size: 18vh;
+        font-size: 25vh;
     }
 
     .buttons>Button {

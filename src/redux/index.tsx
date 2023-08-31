@@ -76,6 +76,5 @@ export {
     setCurrentPlayFlag,
     setLeavePageTime,
     getStopwatchStates,
-    startStopwatch,
     stopStopwatch,
 } from "./features/home/stopwatch/actions";

@@ -12,11 +12,9 @@ import {
     SET_SHOW_SECOND,
     SET_STOPWATCH_TIMER,
     GET_STOPWATCH_STATES,
-    START_STOPWATCH,
     STOP_STOPWATCH,
     SET_LEAVE_PAGE_TIME,
 } from "./types";
-import { setMillisecond } from "./actions";
 
 type actionTypes = {
     type: string;
@@ -35,7 +33,6 @@ export type initialStatesTypes = {
     timer: any;
     snapshots: string[];
     currentPlayFlag: boolean;
-    leavePageTime: Date | null;
 };
 const initialStates: initialStatesTypes = {
     hour: 0,
@@ -49,7 +46,6 @@ const initialStates: initialStatesTypes = {
     timer: null,
     snapshots: [],
     currentPlayFlag: false,
-    leavePageTime: null,
 };
 
 const stopwatchReducer = (state = initialStates, action: actionTypes) => {
@@ -116,22 +112,6 @@ const stopwatchReducer = (state = initialStates, action: actionTypes) => {
             };
         case GET_STOPWATCH_STATES:
             return state;
-        case START_STOPWATCH:
-            if (state.timer !== null) {
-                clearInterval(state.timer);
-            }
-            const interval = setInterval(() => {
-                const newMillisecond = state.millisecond + 1000;
-                return {
-                    ...state,
-                    millisecond: newMillisecond,
-                };
-            }, 1000);
-            return {
-                ...state,
-                timer: interval,
-                currentPlayFlag: true,
-            };
         case STOP_STOPWATCH:
             clearInterval(state.timer);
             return {

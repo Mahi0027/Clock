@@ -1,5 +1,5 @@
 import { Button, Fab, Grid, TextField, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import styles from "@/styles/components/home/timer/index.module.scss";
 import BackspaceIcon from "@mui/icons-material/Backspace";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
@@ -9,8 +9,21 @@ import { useDispatch, useSelector } from "react-redux";
 import { setTimer } from "@/redux";
 import ListIcon from "@mui/icons-material/List";
 
+type stateTypes = {
+    timers: {
+        id: number;
+        timerTime: number;
+        persistTime: number;
+        currentScheduleFlag: boolean;
+        repeatFlag: boolean;
+        sound: string;
+        label: string | null;
+    }[];
+};
 function TimerHome() {
-    const stateData = useSelector((state: any) => state);
+    const { timers }: stateTypes = useSelector((state: any) => ({
+        timers: state.timer.timers,
+    }));
     const dispatch = useDispatch();
     const [hour, setHour] = useState<string>("00");
     const [minute, setMinute] = useState<string>("00");
@@ -23,33 +36,29 @@ function TimerHome() {
         setTime();
     }, [userValue]);
 
-    const handleNumberClick = (value: string) => {
-        if (userValue.length < 6) {
-            setUserValue((prevValue) => value + prevValue);
-        }
-    };
+    const handleNumberClick = useCallback(
+        (value: number | string) => {
+            if (userValue.length < 6) {
+                setUserValue((prevValue) => value + prevValue);
+            }
+        },
+        [userValue.length]
+    );
 
-    const handleDeleteClick = () => {
-        setUserValue("");
-    };
-    const handleBackspaceClick = () => {
-        setUserValue(userValue.slice(1));
-    };
-
-    const handleStartTimer = () => {
+    const handleStartTimer = useCallback(() => {
         let milliSeconds =
             (Number(hour) * 60 * 60 + Number(second) + Number(minute) * 60) *
             1000;
         dispatch(setTimer(milliSeconds));
         setStartTimerDisplayFlag(true);
-    };
+    }, [dispatch, hour, minute, second]);
 
     const closeRunningTimer = () => {
-        handleDeleteClick();
+        setUserValue(""); //clear out  user value
         setStartTimerDisplayFlag(false);
     };
     /* base on input value set values which show on display. */
-    const setTime = () => {
+    const setTime = useCallback(() => {
         let userValueLength = userValue.length;
         let [tempSecond, tempMinute, tempHour] = ["00", "00", "00"];
         let temp;
@@ -93,145 +102,170 @@ function TimerHome() {
         setSecond(tempSecond);
         setMinute(tempMinute);
         setHour(tempHour);
-    };
-    return (
-        <>
-            {!startTimerDisplayFlag && (
-                <Grid container spacing={2} className={styles.container}>
-                    <Grid item sm={6}>
-                        <Typography className={styles.timerTypography}>
-                            <span
-                                style={{
-                                    opacity: userValue.length > 4 ? 1 : 0.5,
-                                }}
-                            >
-                                {hour}
-                                <span className={styles.timerTypographyType}>
-                                    h
+    }, [userValue]);
+
+    const timerHomeComponent = useMemo(() => {
+        return (
+            <>
+                {!startTimerDisplayFlag && (
+                    <Grid container spacing={2} className={styles.container}>
+                        <Grid item sm={6}>
+                            <Typography className={styles.timerTypography}>
+                                <span
+                                    style={{
+                                        opacity: userValue.length > 4 ? 1 : 0.5,
+                                    }}
+                                >
+                                    {hour}
+                                    <span
+                                        className={styles.timerTypographyType}
+                                    >
+                                        h
+                                    </span>
                                 </span>
-                            </span>
-                            <span
-                                style={{
-                                    opacity: userValue.length > 2 ? 1 : 0.5,
-                                }}
-                            >
-                                {minute}
-                                <span className={styles.timerTypographyType}>
-                                    m
+                                <span
+                                    style={{
+                                        opacity: userValue.length > 2 ? 1 : 0.5,
+                                    }}
+                                >
+                                    {minute}
+                                    <span
+                                        className={styles.timerTypographyType}
+                                    >
+                                        m
+                                    </span>
                                 </span>
-                            </span>
-                            <span
-                                style={{
-                                    opacity: userValue.length > 0 ? 1 : 0.5,
-                                }}
-                            >
-                                {second}
-                                <span className={styles.timerTypographyType}>
-                                    s
+                                <span
+                                    style={{
+                                        opacity: userValue.length > 0 ? 1 : 0.5,
+                                    }}
+                                >
+                                    {second}
+                                    <span
+                                        className={styles.timerTypographyType}
+                                    >
+                                        s
+                                    </span>
                                 </span>
-                            </span>
-                        </Typography>
-                    </Grid>
-                    <Grid item sm={6} className={styles.dialerBox}>
-                        <Grid container spacing={1}>
-                            {[
-                                1,
-                                2,
-                                3,
-                                4,
-                                5,
-                                6,
-                                7,
-                                8,
-                                9,
-                                0,
-                                "backspace",
-                                "delete",
-                                "save",
-                            ].map((number) => {
-                                if (number === "backspace") {
-                                    return (
-                                        <Grid item xs={4} key={number}>
-                                            <Button
-                                                variant="outlined"
-                                                fullWidth
-                                                onClick={() =>
-                                                    handleBackspaceClick()
-                                                }
-                                                className={styles.button}
-                                            >
-                                                <BackspaceIcon />
-                                            </Button>
-                                        </Grid>
-                                    );
-                                } else if (number === "delete") {
-                                    return (
-                                        <Grid item xs={4} key={number}>
-                                            <Button
-                                                variant="outlined"
-                                                fullWidth
-                                                onClick={() =>
-                                                    handleDeleteClick()
-                                                }
-                                                className={styles.button}
-                                            >
-                                                <DeleteOutlineIcon />
-                                            </Button>
-                                        </Grid>
-                                    );
-                                } else if (number === "save") {
-                                    if (userValue.length) {
+                            </Typography>
+                        </Grid>
+                        <Grid item sm={6} className={styles.dialerBox}>
+                            <Grid container spacing={1}>
+                                {[
+                                    1,
+                                    2,
+                                    3,
+                                    4,
+                                    5,
+                                    6,
+                                    7,
+                                    8,
+                                    9,
+                                    0,
+                                    "backspace",
+                                    "delete",
+                                    "save",
+                                ].map((number) => {
+                                    if (number === "backspace") {
                                         return (
-                                            <Grid item xs={12} key={number}>
+                                            <Grid item xs={4} key={number}>
                                                 <Button
-                                                    variant="contained"
+                                                    variant="outlined"
                                                     fullWidth
                                                     onClick={() =>
-                                                        handleStartTimer()
+                                                        setUserValue(
+                                                            userValue.slice(1)
+                                                        )
                                                     }
                                                     className={styles.button}
                                                 >
-                                                    <PlayArrowIcon />
+                                                    <BackspaceIcon />
+                                                </Button>
+                                            </Grid>
+                                        );
+                                    } else if (number === "delete") {
+                                        return (
+                                            <Grid item xs={4} key={number}>
+                                                <Button
+                                                    variant="outlined"
+                                                    fullWidth
+                                                    onClick={() =>
+                                                        setUserValue("")
+                                                    }
+                                                    className={styles.button}
+                                                >
+                                                    <DeleteOutlineIcon />
+                                                </Button>
+                                            </Grid>
+                                        );
+                                    } else if (number === "save") {
+                                        if (userValue.length) {
+                                            return (
+                                                <Grid item xs={12} key={number}>
+                                                    <Button
+                                                        variant="contained"
+                                                        fullWidth
+                                                        onClick={() =>
+                                                            handleStartTimer()
+                                                        }
+                                                        className={
+                                                            styles.button
+                                                        }
+                                                    >
+                                                        <PlayArrowIcon />
+                                                    </Button>
+                                                </Grid>
+                                            );
+                                        }
+                                    } else {
+                                        return (
+                                            <Grid item xs={4} key={number}>
+                                                <Button
+                                                    variant="outlined"
+                                                    fullWidth
+                                                    onClick={() =>
+                                                        handleNumberClick(
+                                                            number
+                                                        )
+                                                    }
+                                                    className={styles.button}
+                                                >
+                                                    {number}
                                                 </Button>
                                             </Grid>
                                         );
                                     }
-                                } else {
-                                    return (
-                                        <Grid item xs={4} key={number}>
-                                            <Button
-                                                variant="outlined"
-                                                fullWidth
-                                                onClick={() =>
-                                                    handleNumberClick(number)
-                                                }
-                                                className={styles.button}
-                                            >
-                                                {number}
-                                            </Button>
-                                        </Grid>
-                                    );
-                                }
-                            })}
+                                })}
+                            </Grid>
                         </Grid>
                     </Grid>
-                </Grid>
-            )}
-            {startTimerDisplayFlag && (
-                <RunningTimer closeRunningTimer={closeRunningTimer} />
-            )}
-            {!startTimerDisplayFlag && stateData.timer.timers.length > 0 && (
-                <Fab
-                    className={styles.addAlarmButton}
-                    color="secondary"
-                    aria-label="add"
-                    onClick={() => setStartTimerDisplayFlag(true)}
-                >
-                    <ListIcon />
-                </Fab>
-            )}
-        </>
-    );
+                )}
+                {startTimerDisplayFlag && (
+                    <RunningTimer closeRunningTimer={closeRunningTimer} />
+                )}
+                {!startTimerDisplayFlag && timers.length > 0 && (
+                    <Fab
+                        className={styles.addAlarmButton}
+                        color="secondary"
+                        aria-label="add"
+                        onClick={() => setStartTimerDisplayFlag(true)}
+                    >
+                        <ListIcon />
+                    </Fab>
+                )}
+            </>
+        );
+    }, [
+        handleNumberClick,
+        handleStartTimer,
+        hour,
+        minute,
+        second,
+        startTimerDisplayFlag,
+        timers.length,
+        userValue,
+    ]);
+    return <>{timerHomeComponent}</>;
 }
 
 export default TimerHome;

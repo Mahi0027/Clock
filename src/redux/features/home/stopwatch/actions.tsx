@@ -11,7 +11,6 @@ import {
     SET_SHOW_SECOND,
     SET_STOPWATCH_TIMER,
     GET_STOPWATCH_STATES,
-    START_STOPWATCH,
     STOP_STOPWATCH,
     SET_LEAVE_PAGE_TIME,
 } from "./types";
@@ -103,12 +102,6 @@ export const setLeavePageTime = (value: Date) => {
 export const getStopwatchStates = () => {
     return {
         type: GET_STOPWATCH_STATES,
-    };
-};
-
-export const startStopwatch = () => {
-    return {
-        type: START_STOPWATCH,
     };
 };
 

@@ -69,6 +69,7 @@ function CircularProgressWithLabel(props: CircularProgressWithLabelProps) {
     );
 }
 
+
 type CircularWithValueLabelProps = {
     timerdetails: any;
     closeRunningTimer: () => void;
