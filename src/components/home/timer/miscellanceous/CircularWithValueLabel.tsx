@@ -6,6 +6,8 @@ import { useState, useEffect, useRef, useCallback, useMemo, memo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
     deleteTimer,
+    setTimerCompletedFlag,
+    setTimerRingDOM,
     updatePauseFlag,
     updateRemainingTimerTime,
     updateTimerIntervalRef,
@@ -44,13 +46,13 @@ export default memo(function CircularWithValueLabel(
         timerCurrentVolume: state.timerSetting.timerCurrentVolume,
     }));
     const dispatch = useDispatch();
-    const [humanReadableTime, setHumanReadableTime] = useState<string>("");
-    const [progress, setProgress] = useState<number>(100);
-    const [timerRingDOM, setTimerRingDOM] = useState<any>(null);
-    const [timerCompletedRingingPage, setTimerCompletedRingingPage] =
-        useState<boolean>(false);
-    const timerIntervalRef = useRef<any>(null);
-    const totalTime = useRef<number>(Number(props.timerdetails.persistTime));
+    const [humanReadableTime, setHumanReadableTime] =
+        useState<string>(""); /* same page */
+    const [progress, setProgress] = useState<number>(100); /* same page */
+    const timerIntervalRef = useRef<any>(null); /* not sure */
+    const totalTime = useRef<number>(
+        Number(props.timerdetails.persistTime)
+    ); /* same page */
 
     useEffect(() => {
         playTimer();
@@ -64,27 +66,27 @@ export default memo(function CircularWithValueLabel(
     }, [props.timerdetails.pauseFlag]);
 
     useEffect(() => {
-        if (timerRingDOM !== null) {
-            setTimerCompletedRingingPage(true);
+        if (props.timerdetails.timerRingDOM !== null) {
+            dispatch(setTimerCompletedFlag(props.timerdetails.id, true));
             const timeInterval = Number(currentSilentInterval.substring(0, 2));
             setTimeout(() => {
                 deleteTimerDOM();
                 closeTimerCompetedRingingScreen();
             }, timeInterval * 60 * 1000);
         }
-    }, [timerRingDOM]);
+    }, [props.timerdetails.timerRingDOM]);
 
     useEffect(() => {
         if (
             props.timerdetails.remainingTime <= 0 &&
-            !timerCompletedRingingPage
+            !props.timerdetails.timerCompletedFlag
         ) {
             dispatch(updateTimerTime(props.timerdetails.id, 0));
             clearTimeout(timerIntervalRef.current);
             let timerDOM = new Audio(
                 `sounds/alarm/${currentTimerSound}.mp3` /* `sounds/alarm/${props.timerdetails.sound}.mp3` */
             );
-            setTimerRingDOM(timerDOM);
+            dispatch(setTimerRingDOM(props.timerdetails.id, timerDOM));
             timerDOM.volume = Number(timerCurrentVolume) / 100;
             timerDOM.currentTime = 0;
             timerDOM.loop = true;
@@ -119,14 +121,14 @@ export default memo(function CircularWithValueLabel(
     /* delete timer */
     const deleteTimerDOM = useCallback(() => {
         clearTimeout(timerIntervalRef.current);
-        timerRingDOM.pause();
+        props.timerdetails.timerRingDOM.pause();
         dispatch(deleteTimer(props.timerdetails.id));
-    }, [dispatch, props.timerdetails.id, timerRingDOM]);
+    }, [dispatch, props.timerdetails.id, props.timerdetails.timerRingDOM]);
 
     const closeTimerCompetedRingingScreen = useCallback(() => {
-        setTimerCompletedRingingPage(false);
+        dispatch(setTimerCompletedFlag(props.timerdetails.id, false));
         if (timer.timers.length === 0) props.closeRunningTimer();
-    }, [props, timer.timers.length]);
+    }, [dispatch, props, timer.timers.length]);
 
     /* make human readable time form milliseconds. */
     const getHumanReadableRemainingTime = () => {
@@ -167,9 +169,9 @@ export default memo(function CircularWithValueLabel(
     const circularWithValueLabelComponent = useMemo(() => {
         return (
             <>
-                {timerCompletedRingingPage && (
+                {props.timerdetails.timerCompletedFlag && (
                     <TimerCompletedRingingScreen
-                        currentTimerAudio={timerRingDOM}
+                        currentTimerAudio={props.timerdetails.timerRingDOM}
                         deleteTimerDOM={deleteTimerDOM}
                         closeTimerCompetedRingingScreen={
                             closeTimerCompetedRingingScreen
@@ -177,7 +179,7 @@ export default memo(function CircularWithValueLabel(
                         timerRunningLabel={props.timerdetails.label}
                     />
                 )}
-                {!timerCompletedRingingPage && (
+                {!props.timerdetails.timerCompletedFlag && (
                     <Box
                         sx={{
                             position: "relative",
@@ -232,8 +234,8 @@ export default memo(function CircularWithValueLabel(
         progress,
         props.timerdetails.label,
         props.timerdetails.pauseFlag,
-        timerCompletedRingingPage,
-        timerRingDOM,
+        props.timerdetails.timerCompletedFlag,
+        props.timerdetails.timerRingDOM,
     ]);
     return <>{circularWithValueLabelComponent}</>;
 });

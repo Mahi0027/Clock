@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Stack } from "@mui/material";
 import BottomNavbar from "@/components/BottomNavbar";
 import TopNavbar from "@/components/TopNavbar";
@@ -19,7 +19,6 @@ import {
     setShowMinute,
     setShowSecond,
     setStopwatchTimer,
-    updateRemainingTimerTime,
 } from "@/redux";
 
 const homePageTitle = ["Clock", "Alarm", "Timer", "Stopwatch"];
@@ -53,8 +52,7 @@ export default function Home() {
     }));
     const dispatch = useDispatch();
     const [myTheme, setMyTheme] = useState({});
-    const timerIntervalRef = useRef<any>(null);
-    
+
     useEffect(() => {
         if (currentTheme === "light") {
             setMyTheme({
@@ -66,14 +64,6 @@ export default function Home() {
             });
         }
     }, [currentTheme]);
-
-    /* timer related code start. */
-    // const runTimer = useCallback(() => {
-    //     return setInterval(() => {
-    //         dispatch(updateRemainingTimerTime());
-    //     }, 1000);
-    // }, []);
-    /* timer related code end. */
 
     /* stopwatch related code start. */
     useEffect(() => {
@@ -144,8 +134,8 @@ export default function Home() {
                     {currentHomePage === 1 && <AlarmHome />}
                     {currentHomePage === 2 && (
                         <TimerHome
-                            // runTimer={runTimer}
-                            // timerIntervalRef={timerIntervalRef}
+                        // runTimer={runTimer}
+                        // timerIntervalRef={timerIntervalRef}
                         />
                     )}
                     {currentHomePage === 3 && (

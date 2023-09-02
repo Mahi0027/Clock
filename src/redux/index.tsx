@@ -64,6 +64,8 @@ export {
     updateTimerIntervalRef,
     updatePauseFlag,
     addOrReduceTimeInTimer,
+    setTimerRingDOM,
+    setTimerCompletedFlag,
 } from "./features/home/timer/actions";
 
 export {

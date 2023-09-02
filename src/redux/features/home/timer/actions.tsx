@@ -3,6 +3,8 @@ import {
     DELETE_TIMER,
     GET_ALL_TIMERS,
     SET_TIMER,
+    SET_TIMER_COMPLETED_FLAG,
+    SET_TIMER_RING_DOM,
     SET_TIMER_SOUND,
     UPDATE_REMAINING_TIME,
     UPDATE_TIMER_INTERVAL_REF,
@@ -88,5 +90,19 @@ export const addOrReduceTimeInTimer = (id: number, newPeriod: number) => {
     return {
         type: ADD_OR_REDUCE_TIME_IN_TIMER,
         payload: { id, newPeriod },
+    };
+};
+
+export const setTimerRingDOM = (id: number, value: any) => {
+    return {
+        type: SET_TIMER_RING_DOM,
+        payload: { id, value },
+    };
+};
+
+export const setTimerCompletedFlag = (id: number, flag: boolean) => {
+    return {
+        type: SET_TIMER_COMPLETED_FLAG,
+        payload: { id, flag },
     };
 };

@@ -20,9 +20,6 @@ type stateTypes = {
         label: string | null;
     }[];
 };
-// type timerHomePropsTypes = {
-//     runTimer: () => void;
-// };
 function TimerHome() {
     const { timers }: stateTypes = useSelector((state: any) => ({
         timers: state.timer.timers,
