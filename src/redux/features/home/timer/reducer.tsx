@@ -3,6 +3,8 @@ import {
     DELETE_TIMER,
     GET_ALL_TIMERS,
     SET_TIMER,
+    SET_TIMER_COMPLETED_FLAG,
+    SET_TIMER_RING_DOM,
     SET_TIMER_SOUND,
     UPDATE_REMAINING_TIME,
     UPDATE_TIMER_INTERVAL_REF,
@@ -41,6 +43,8 @@ export type initialStatesTypes = {
         sound: string;
         label: string | null;
         timerIntervalRef: null;
+        timerRingDOM: null;
+        timerCompletedFlag: false;
     }[];
     timerSounds: string[];
 };
@@ -71,6 +75,8 @@ const timerReducer = (state = initialStates, action: actionTypes) => {
                         sound: state.timerSounds[1],
                         label: null,
                         timerIntervalRef: null,
+                        timerRingDOM: null,
+                        timerCompletedFlag: false,
                     },
                     ...state.timers,
                 ],
@@ -183,6 +189,34 @@ const timerReducer = (state = initialStates, action: actionTypes) => {
             return {
                 ...state,
                 timers: addOrRemoveTimeForTimer,
+            };
+        case SET_TIMER_RING_DOM:
+            const updatedTimerForRingDOM = state.timers.map((timer) => {
+                return timer.id === action.payload.id
+                    ? {
+                          ...timer,
+                          timerRingDOM: action.payload.value,
+                      }
+                    : timer;
+            });
+            return {
+                ...state,
+                timers: updatedTimerForRingDOM,
+            };
+        case SET_TIMER_COMPLETED_FLAG:
+            const updatedTimerForTimerCompletedFlag = state.timers.map(
+                (timer) => {
+                    return timer.id === action.payload.id
+                        ? {
+                              ...timer,
+                              timerCompletedFlag: action.payload.flag,
+                          }
+                        : timer;
+                }
+            );
+            return {
+                ...state,
+                timers: updatedTimerForTimerCompletedFlag,
             };
         default:
             return state;
