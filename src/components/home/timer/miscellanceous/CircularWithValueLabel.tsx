@@ -4,7 +4,13 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { useState, useEffect, useRef, useCallback, useMemo, memo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteTimer, updateTimerTime } from "@/redux";
+import {
+    deleteTimer,
+    updatePauseFlag,
+    updateRemainingTimerTime,
+    updateTimerIntervalRef,
+    updateTimerTime,
+} from "@/redux";
 import ReplayIcon from "@mui/icons-material/Replay";
 import { Button } from "@mui/material";
 import PauseIcon from "@mui/icons-material/Pause";
@@ -38,18 +44,13 @@ export default memo(function CircularWithValueLabel(
         timerCurrentVolume: state.timerSetting.timerCurrentVolume,
     }));
     const dispatch = useDispatch();
-    const [remainingTime, setRemainingTime] = useState(
-        props.timerdetails.timerTime
-    );
     const [humanReadableTime, setHumanReadableTime] = useState<string>("");
     const [progress, setProgress] = useState<number>(100);
-    const [pauseFlag, setPauseFlag] = useState<boolean>(false);
     const [timerRingDOM, setTimerRingDOM] = useState<any>(null);
     const [timerCompletedRingingPage, setTimerCompletedRingingPage] =
         useState<boolean>(false);
     const timerIntervalRef = useRef<any>(null);
     const totalTime = useRef<number>(Number(props.timerdetails.persistTime));
-    const [playFlag, setPlayFlag] = useState(true);
 
     useEffect(() => {
         playTimer();
@@ -59,9 +60,8 @@ export default memo(function CircularWithValueLabel(
     }, []);
 
     useEffect(() => {
-        setRemainingTime(props.timerdetails.timerTime);
-        if (!pauseFlag) playTimer();
-    }, [timer]);
+        if (!props.timerdetails.pauseFlag) playTimer();
+    }, [props.timerdetails.pauseFlag]);
 
     useEffect(() => {
         if (timerRingDOM !== null) {
@@ -75,7 +75,10 @@ export default memo(function CircularWithValueLabel(
     }, [timerRingDOM]);
 
     useEffect(() => {
-        if (remainingTime <= 0 && !timerCompletedRingingPage) {
+        if (
+            props.timerdetails.remainingTime <= 0 &&
+            !timerCompletedRingingPage
+        ) {
             dispatch(updateTimerTime(props.timerdetails.id, 0));
             clearTimeout(timerIntervalRef.current);
             let timerDOM = new Audio(
@@ -87,31 +90,31 @@ export default memo(function CircularWithValueLabel(
             timerDOM.loop = true;
             timerDOM.play();
         } else {
-            dispatch(updateTimerTime(props.timerdetails.id, remainingTime));
+            dispatch(
+                updateTimerTime(
+                    props.timerdetails.id,
+                    props.timerdetails.remainingTime
+                )
+            );
         }
 
         if (progress > 0) {
-            setProgress(Math.trunc((remainingTime * 100) / totalTime.current));
+            setProgress(
+                Math.trunc(
+                    (props.timerdetails.remainingTime * 100) / totalTime.current
+                )
+            );
             getHumanReadableRemainingTime();
         }
-    }, [remainingTime]);
+    }, [props.timerdetails.remainingTime]);
 
     /* play timer */
-    const playTimer = () => {
-        setPauseFlag(false);
+    const playTimer = useCallback(() => {
         clearInterval(timerIntervalRef.current);
         timerIntervalRef.current = setInterval(() => {
-            setRemainingTime(
-                (prevRemainingTime: number) => prevRemainingTime - 1000
-            );
+            dispatch(updateRemainingTimerTime(props.timerdetails.id));
         }, 1000);
-    };
-
-    /* pause timer */
-    const pauseTimer = () => {
-        clearTimeout(timerIntervalRef.current);
-        setPauseFlag(true);
-    };
+    }, [dispatch]);
 
     /* delete timer */
     const deleteTimerDOM = useCallback(() => {
@@ -127,7 +130,7 @@ export default memo(function CircularWithValueLabel(
 
     /* make human readable time form milliseconds. */
     const getHumanReadableRemainingTime = () => {
-        let tempTime = remainingTime;
+        let tempTime = props.timerdetails.remainingTime;
         const hours = Math.floor(tempTime / 3600000);
         tempTime %= 3600000;
         const minutes = Math.floor(tempTime / 60000);
@@ -141,13 +144,25 @@ export default memo(function CircularWithValueLabel(
     };
 
     const handlePlayPause = useCallback(() => {
-        if (playFlag) {
-            pauseTimer();
+        if (!props.timerdetails.pauseFlag) {
+            // pauseTimer();
+            /* pause timer. */
+            clearTimeout(timerIntervalRef.current);
         } else {
             playTimer();
         }
-        setPlayFlag(!playFlag);
-    }, [playFlag]);
+        dispatch(
+            updatePauseFlag(
+                props.timerdetails.id,
+                !props.timerdetails.pauseFlag
+            )
+        );
+    }, [
+        dispatch,
+        playTimer,
+        props.timerdetails.id,
+        props.timerdetails.pauseFlag,
+    ]);
 
     const circularWithValueLabelComponent = useMemo(() => {
         return (
@@ -197,10 +212,10 @@ export default memo(function CircularWithValueLabel(
                                 sx={{ top: "10%" }}
                                 onClick={handlePlayPause}
                             >
-                                {playFlag && (
+                                {!props.timerdetails.pauseFlag && (
                                     <PauseIcon sx={{ scale: "1.5" }} />
                                 )}
-                                {!playFlag && (
+                                {props.timerdetails.pauseFlag && (
                                     <PlayArrowIcon sx={{ scale: "1.5" }} />
                                 )}
                             </Button>
@@ -214,9 +229,9 @@ export default memo(function CircularWithValueLabel(
         deleteTimerDOM,
         handlePlayPause,
         humanReadableTime,
-        playFlag,
         progress,
         props.timerdetails.label,
+        props.timerdetails.pauseFlag,
         timerCompletedRingingPage,
         timerRingDOM,
     ]);
