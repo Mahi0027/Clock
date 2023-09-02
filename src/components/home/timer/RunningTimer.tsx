@@ -22,10 +22,10 @@ import LabelOutlinedIcon from "@mui/icons-material/LabelOutlined";
 import CircularWithValueLabel from "./miscellanceous/CircularWithValueLabel";
 import DialogBox from "./miscellanceous/DialogBox";
 import {
+    addOrReduceTimeInTimer,
     deleteTimer,
     setTimerSound,
     updateTimerLabel,
-    updateTimerTime,
 } from "@/redux";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import CancelTwoToneIcon from "@mui/icons-material/CancelTwoTone";
@@ -73,9 +73,11 @@ function RunningTimer(props: RunningTimerProps) {
         (timer: any) => {
             const addTime = 60000; /* 60 seconds */
             if (timer.persistTime > timer.timerTime + addTime) {
-                dispatch(updateTimerTime(timer.id, timer.timerTime + addTime));
+                dispatch(
+                    addOrReduceTimeInTimer(timer.id, timer.timerTime + addTime)
+                );
             } else {
-                dispatch(updateTimerTime(timer.id, timer.persistTime));
+                dispatch(addOrReduceTimeInTimer(timer.id, timer.persistTime));
             }
         },
         [dispatch]
@@ -86,10 +88,13 @@ function RunningTimer(props: RunningTimerProps) {
         (timer: any) => {
             const reduceTime = 60000; /* 60 seconds */
             if (timer.timerTime - reduceTime < 0) {
-                dispatch(updateTimerTime(timer.id, 0));
+                dispatch(addOrReduceTimeInTimer(timer.id, 0));
             } else {
                 dispatch(
-                    updateTimerTime(timer.id, timer.timerTime - reduceTime)
+                    addOrReduceTimeInTimer(
+                        timer.id,
+                        timer.timerTime - reduceTime
+                    )
                 );
             }
         },
@@ -257,7 +262,7 @@ function RunningTimer(props: RunningTimerProps) {
                                                 variant="text"
                                                 onClick={() =>
                                                     dispatch(
-                                                        updateTimerTime(
+                                                        addOrReduceTimeInTimer(
                                                             timer.id,
                                                             timer.persistTime
                                                         )

@@ -1,4 +1,4 @@
-import { Button, Fab, Grid, TextField, Typography } from "@mui/material";
+import { Button, Fab, Grid, Typography } from "@mui/material";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import styles from "@/styles/components/home/timer/index.module.scss";
 import BackspaceIcon from "@mui/icons-material/Backspace";
@@ -20,6 +20,9 @@ type stateTypes = {
         label: string | null;
     }[];
 };
+// type timerHomePropsTypes = {
+//     runTimer: () => void;
+// };
 function TimerHome() {
     const { timers }: stateTypes = useSelector((state: any) => ({
         timers: state.timer.timers,
@@ -37,7 +40,7 @@ function TimerHome() {
     }, [userValue]);
 
     const handleNumberClick = useCallback(
-        (value: number | string) => {
+        (value: string) => {
             if (userValue.length < 6) {
                 setUserValue((prevValue) => value + prevValue);
             }
@@ -225,7 +228,7 @@ function TimerHome() {
                                                     fullWidth
                                                     onClick={() =>
                                                         handleNumberClick(
-                                                            number
+                                                            number.toString()
                                                         )
                                                     }
                                                     className={styles.button}

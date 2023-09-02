@@ -36,11 +36,11 @@ function TimerCompletedRingingScreen({
                 <Dialog fullScreen open={true} TransitionComponent={Transition}>
                     <Grid container className={styles.container}>
                         <Grid item sm={6} className={styles.animation}>
-                            <Lottie loop={true} animationData={timer} />
+                            <Lottie loop={true} animationData={timer} /* style={{width: "100vw"}} */ />
                         </Grid>
                         <Grid item sm={6}>
                             <Typography
-                                variant="h6"
+                                variant="h6"    
                                 gutterBottom
                                 className={styles.label}
                             >

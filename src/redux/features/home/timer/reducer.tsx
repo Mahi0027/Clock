@@ -1,9 +1,13 @@
 import {
+    ADD_OR_REDUCE_TIME_IN_TIMER,
     DELETE_TIMER,
     GET_ALL_TIMERS,
     SET_TIMER,
     SET_TIMER_SOUND,
+    UPDATE_REMAINING_TIME,
+    UPDATE_TIMER_INTERVAL_REF,
     UPDATE_TIMER_LABEL,
+    UPDATE_TIMER_PAUSE_FLAG,
     UPDATE_TIMER_SCHEDULE_FLAG,
     UPDATE_TIMER_TIME,
 } from "./types";
@@ -30,10 +34,13 @@ export type initialStatesTypes = {
         id: number;
         timerTime: number;
         persistTime: number;
+        remainingTime: number;
         currentScheduleFlag: boolean;
         repeatFlag: boolean;
+        pauseFlag: boolean;
         sound: string;
         label: string | null;
+        timerIntervalRef: null;
     }[];
     timerSounds: string[];
 };
@@ -49,9 +56,7 @@ const timerReducer = (state = initialStates, action: actionTypes) => {
             return state;
         case SET_TIMER:
             const lastTimerId =
-                state.timers.length === 0
-                    ? 0
-                    : state.timers[0].id;
+                state.timers.length === 0 ? 0 : state.timers[0].id;
             return {
                 ...state,
                 timers: [
@@ -59,10 +64,13 @@ const timerReducer = (state = initialStates, action: actionTypes) => {
                         id: lastTimerId + 1,
                         timerTime: action.payload,
                         persistTime: action.payload,
+                        remainingTime: action.payload,
                         currentScheduleFlag: true,
                         repeatFlag: false,
+                        pauseFlag: false,
                         sound: state.timerSounds[1],
                         label: null,
+                        timerIntervalRef: null,
                     },
                     ...state.timers,
                 ],
@@ -79,6 +87,19 @@ const timerReducer = (state = initialStates, action: actionTypes) => {
             return {
                 ...state,
                 timers: updatedTimerForTime,
+            };
+        case UPDATE_REMAINING_TIME:
+            const updatedTimerForRemainingTime = state.timers.map((timer) => {
+                return !timer.pauseFlag && timer.id === action.payload.id
+                    ? {
+                          ...timer,
+                          remainingTime: timer.remainingTime - 1000,
+                      }
+                    : timer;
+            });
+            return {
+                ...state,
+                timers: updatedTimerForRemainingTime,
             };
         case UPDATE_TIMER_SCHEDULE_FLAG:
             const updatedTimerForScheduledFlag = state.timers.map((timer) => {
@@ -122,6 +143,46 @@ const timerReducer = (state = initialStates, action: actionTypes) => {
                 state.timers.splice(indexOfDeleteTimer, 1);
             return {
                 ...state,
+            };
+        case UPDATE_TIMER_INTERVAL_REF:
+            const updatedTimerForIntervalRef = state.timers.map((timer) => {
+                return timer.id === action.payload.id
+                    ? {
+                          ...timer,
+                          timerIntervalRef: action.payload.timerIntervalRef,
+                      }
+                    : timer;
+            });
+            return {
+                ...state,
+                timers: updatedTimerForIntervalRef,
+            };
+        case UPDATE_TIMER_PAUSE_FLAG:
+            const updatedTimerForPauseFlag = state.timers.map((timer) => {
+                return timer.id === action.payload.id
+                    ? {
+                          ...timer,
+                          pauseFlag: action.payload.flag,
+                      }
+                    : timer;
+            });
+            return {
+                ...state,
+                timers: updatedTimerForPauseFlag,
+            };
+        case ADD_OR_REDUCE_TIME_IN_TIMER:
+            const addOrRemoveTimeForTimer = state.timers.map((timer) => {
+                return timer.id === action.payload.id
+                    ? {
+                          ...timer,
+                          timerTime: action.payload.newPeriod,
+                          remainingTime: action.payload.newPeriod,
+                      }
+                    : timer;
+            });
+            return {
+                ...state,
+                timers: addOrRemoveTimeForTimer,
             };
         default:
             return state;

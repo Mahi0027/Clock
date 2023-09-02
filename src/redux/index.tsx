@@ -56,10 +56,14 @@ export {
     getAllTimers,
     setTimer,
     updateTimerTime,
+    updateRemainingTimerTime,
     updateTimerScheduleFlag,
     updateTimerLabel,
     // setTimerSound,
     deleteTimer,
+    updateTimerIntervalRef,
+    updatePauseFlag,
+    addOrReduceTimeInTimer,
 } from "./features/home/timer/actions";
 
 export {
