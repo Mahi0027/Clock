@@ -15,6 +15,7 @@ interface DialogBoxPropTypes {
     close: (value: boolean) => void;
     handleLabelText: (id: number, label: string) => void;
 }
+
 function DialogBox({
     id,
     open,
