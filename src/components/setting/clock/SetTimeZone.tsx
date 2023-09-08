@@ -4,7 +4,8 @@ import ListItemButton from "@mui/material/ListItemButton";
 import Typography from "@mui/material/Typography";
 import CustomDialog from "@/components/miscellaneous/CustomDialog";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchTimeZone, getAllTimeZones, setTimeZone } from "@/redux";
+import { fetchTimeZone } from "@/redux";
+import { setCurrentTimeZoneMiddleware } from "@/middleware/setting/clock/timeZone";
 
 type stateTypes = {
     allTimeZones: string[];
@@ -28,7 +29,8 @@ function SetTimeZone() {
         (newValue?: string) => {
             setOpen(false);
             if (newValue) {
-                dispatch(setTimeZone(newValue));
+                // dispatch(setTimeZone(newValue));
+                dispatch(setCurrentTimeZoneMiddleware(newValue));
             }
         },
         [dispatch]

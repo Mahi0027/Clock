@@ -1,9 +1,8 @@
 import {
-    setCurrentDigitalClockThemeInDB,
-} from "@/database/indexedDB/setting/clock/clockTheme/digital";
-import { setCurrentClockStyleInDB, storeInitialClockStyleDataInDB } from "@/database/indexedDB/setting/clock/style";
+    setCurrentClockStyleInDB,
+    storeInitialClockStyleDataInDB,
+} from "@/database/indexedDB/setting/clock/style";
 import {
-    setDigitalClockTheme,
     setInitialStatesForClockStyle,
     setStyle,
 } from "@/redux";
@@ -14,7 +13,7 @@ export const initializeClockStyleStatesMiddleware = () => {
             const result = await storeInitialClockStyleDataInDB();
             dispatch(setInitialStatesForClockStyle(result));
         } catch (error) {
-            console.log("Error adding task:", error);
+            console.log("Error:", error);
         }
     };
 };
@@ -25,7 +24,7 @@ export const setCurrentClockStyleMiddleware = (value: string) => {
             await setCurrentClockStyleInDB(value);
             dispatch(setStyle(value));
         } catch (error) {
-            console.log("Error setting current theme:", error);
+            console.log("Error:", error);
         }
     };
 };

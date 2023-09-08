@@ -6,6 +6,7 @@ import CustomDialog from "@/components/miscellaneous/CustomDialog";
 import { useDispatch, useSelector } from "react-redux";
 import { initialStatesTypes } from "@/redux/features/setting/alarm/silent/silentReducer";
 import { getAllSilentIntervals, setSilentInterval } from "@/redux";
+import { setCurrentAlarmSilentMiddleware } from "@/middleware/setting/alarm/silent";
 
 function SetSilent() {
     const { allSilentIntervals, currentSilentInterval }: initialStatesTypes =
@@ -16,15 +17,16 @@ function SetSilent() {
     const dispatch = useDispatch();
     const [open, setOpen] = useState<boolean>(false);
 
-    useEffect(() => {
-        dispatch(getAllSilentIntervals());
-    }, [dispatch]);
+    // useEffect(() => {
+    //     dispatch(getAllSilentIntervals());
+    // }, [dispatch]);
 
     const handleClose = useCallback(
         (value?: string) => {
             setOpen(false);
             if (value) {
-                dispatch(setSilentInterval(value));
+                // dispatch(setSilentInterval(value));
+                dispatch(setCurrentAlarmSilentMiddleware(value));
             }
         },
         [dispatch]

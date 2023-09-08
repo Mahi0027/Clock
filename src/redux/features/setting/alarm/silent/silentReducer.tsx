@@ -1,6 +1,10 @@
-import { GET_ALL_SILENT_INTERVALS, SET_SILENT_INTERVAL } from "./silentTypes";
+import {
+    GET_ALL_SILENT_INTERVALS,
+    SET_INITIAL_STATES_FOR_ALARM_SILENT,
+    SET_SILENT_INTERVAL,
+} from "./silentTypes";
 
-const allSilentIntervalStaticValues:string[] = [
+const allSilentIntervalStaticValues: string[] = [
     "1 minute",
     "5 minutes",
     "10 minutes",
@@ -24,6 +28,8 @@ const initialStates: initialStatesTypes = {
 
 const silentReducer = (state = initialStates, action: actionTypes) => {
     switch (action.type) {
+        case SET_INITIAL_STATES_FOR_ALARM_SILENT:
+            return action.payload;
         case GET_ALL_SILENT_INTERVALS:
             return {
                 ...state,

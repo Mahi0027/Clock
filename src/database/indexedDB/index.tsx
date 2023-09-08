@@ -7,6 +7,10 @@ const allCollectionsName = [
     "digitalClockSetting",
     "clockStyleSetting",
     "secondFlagSetting",
+    "timeZoneSetting",
+    "alarmSilentSetting",
+    "alarmSnoozeSetting",
+    "alarmVolumeSetting",
 ];
 export const openDB = () => {
     return new Promise((resolve, reject) => {

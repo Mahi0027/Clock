@@ -10,7 +10,7 @@ export const initializeSecondFlagStatesMiddleware = () => {
             const result = await storeInitialSecondFlagDataInDB();
             dispatch(setInitialStatesForSecondFlag(result));
         } catch (error) {
-            console.log("Error adding task:", error);
+            console.log("Error:", error);
         }
     };
 };
@@ -21,7 +21,7 @@ export const setCurrentSecondFlagMiddleware = (value: boolean) => {
             await setCurrentSecondFlagInDB(value);
             dispatch(setSecondFlag(value));
         } catch (error) {
-            console.log("Error setting current theme:", error);
+            console.log("Error:", error);
         }
     };
 };
