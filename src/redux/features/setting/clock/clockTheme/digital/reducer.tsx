@@ -1,4 +1,4 @@
-import { SET_DIGITAL_CLOCK_THEME } from "./types";
+import { SET_DIGITAL_CLOCK_THEME, SET_INITIAL_STATES_FOR_DIGITAL_CLOCK } from "./types";
 
 const themes = [
     "Open Sans, sans-serif",
@@ -31,6 +31,8 @@ const DigitalClockThemeReducer = (
     action: actionTypes
 ) => {
     switch (action.type) {
+        case SET_INITIAL_STATES_FOR_DIGITAL_CLOCK:
+            return action.payload;
         case SET_DIGITAL_CLOCK_THEME:
             return {
                 ...state,

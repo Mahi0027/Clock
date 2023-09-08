@@ -1,14 +1,23 @@
 export {
+    setInitialStatesForClockStyle,
     fetchAllStyles,
     setStyle,
 } from "./features/setting/clock/style/styleActions";
 export {
+    setInitialStatesForThemes,
     fetchAllThemes,
     setTheme,
 } from "./features/setting/personalize/theme/themeActions";
-export { setAnalogClockTheme } from "./features/setting/clock/clockTheme/analog/actions";
-export { setDigitalClockTheme } from "./features/setting/clock/clockTheme/digital/actions";
 export {
+    setInitialStatesForAnalogClockThemes,
+    setAnalogClockTheme,
+} from "./features/setting/clock/clockTheme/analog/actions";
+export {
+    setInitialStatesForDigitalClockThemes,
+    setDigitalClockTheme,
+} from "./features/setting/clock/clockTheme/digital/actions";
+export {
+    setInitialStatesForSecondFlag,
     getSecondFlag,
     setSecondFlag,
 } from "./features/setting/clock/second/secondAction";

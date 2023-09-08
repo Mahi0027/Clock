@@ -14,6 +14,28 @@ import DarkModeIcon from "@mui/icons-material/DarkMode";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllThemes, setTheme } from "@/redux";
 import { initialStatesTypes } from "@/redux/features/setting/personalize/theme/themeReducer";
+import { addInitialValues, setCurrentTheme } from "@/middleware/setting/personalize";
+
+
+// export type initialStatesTypesForTheme = {
+//     id: number,
+//     allThemes: string[];
+//     currentTheme: string;
+//     style: {
+//         backgroundColor: string;
+//         color: string;
+//     };
+// };
+// const allThemes = ["light", "dark"];
+// const initialStates: initialStatesTypesForTheme = {
+//     id: 1,
+//     allThemes: allThemes,
+//     currentTheme: allThemes[0],
+//     style: {
+//         backgroundColor: "#ffffff",
+//         color: "#000000",
+//     },
+// };
 
 /* set dark mode. */
 function SetDarkMode() {
@@ -26,13 +48,15 @@ function SetDarkMode() {
 
     useEffect(() => {
         /* get all themes */
+        // dispatch(addInitialValues(initialStates));
         dispatch(fetchAllThemes());
     }, [dispatch]);
 
     const onSetMode = useCallback(
         (value: string) => {
             setOpenDialog(false);
-            dispatch(setTheme(value));
+            // dispatch(setTheme(value));
+            dispatch(setCurrentTheme(value));
         },
         [dispatch]
     );

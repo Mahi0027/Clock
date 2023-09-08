@@ -1,15 +1,12 @@
-import {
-    FETCH_ALL_THEMES,
-    SET_THEME,
-} from "./themeTypes";
+import { FETCH_ALL_THEMES, SET_INITIAL_STATES, SET_THEME } from "./themeTypes";
 
 /* type defined start */
 export type initialStatesTypes = {
     allThemes: string[];
     currentTheme: string;
     style: {
-        backgroundColor: string,
-        color: string
+        backgroundColor: string;
+        color: string;
     };
 };
 type actionType = {
@@ -33,6 +30,8 @@ const initialStates: initialStatesTypes = {
 /* theme reducer function start */
 const themeReducer = (state = initialStates, action: actionType) => {
     switch (action.type) {
+        case SET_INITIAL_STATES:
+            return action.payload;
         case FETCH_ALL_THEMES:
             return {
                 ...state,
