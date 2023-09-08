@@ -13,7 +13,7 @@ export const initializeAnalogClockThemeStates = () => {
             const result = await storeInitialAnalogClockSettingDataInDB();
             dispatch(setInitialStatesForAnalogClockThemes(result));
         } catch (error) {
-            console.log("Error adding task:", error);
+            console.log("Error:", error);
         }
     };
 };
@@ -24,7 +24,7 @@ export const setCurrentAnalogClockTheme = (value: string) => {
             await setCurrentAnalogClockThemeInDB(value);
             dispatch(setAnalogClockTheme(value));
         } catch (error) {
-            console.log("Error setting current theme:", error);
+            console.log("Error:", error);
         }
     };
 };

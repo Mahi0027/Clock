@@ -10,6 +10,7 @@ import ListItem from "@mui/material/ListItem";
 import { useDispatch, useSelector } from "react-redux";
 import { initialStatesTypes } from "@/redux/features/setting/alarm/volume/volumeReducer";
 import { setVolume } from "@/redux";
+import { setCurrentAlarmVolumeMiddleware } from "@/middleware/setting/alarm/volume";
 
 function SetVolume() {
     const { minValue, maxValue, currentValue }: initialStatesTypes =
@@ -47,7 +48,11 @@ function SetVolume() {
                             onChange={(
                                 event: Event,
                                 newValue: number | number[]
-                            ) => dispatch(setVolume(newValue as number))}
+                            ) =>
+                                dispatch(
+                                    setCurrentAlarmVolumeMiddleware(newValue)
+                                )
+                            }
                             valueLabelDisplay="auto"
                         />
                         <VolumeUp />

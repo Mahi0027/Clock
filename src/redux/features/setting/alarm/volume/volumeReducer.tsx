@@ -1,4 +1,4 @@
-import { SET_VOLUME } from "./volumeTypes";
+import { SET_INITIAL_STATES_FOR_ALARM_VOLUME, SET_VOLUME } from "./volumeTypes";
 
 type actionTypes = {
     type: string;
@@ -18,6 +18,8 @@ const initialStates: initialStatesTypes = {
 
 const volumeReducer = (state = initialStates, action: actionTypes) => {
     switch (action.type) {
+        case SET_INITIAL_STATES_FOR_ALARM_VOLUME:
+            return action.payload;
         case SET_VOLUME:
             return {
                 ...state,

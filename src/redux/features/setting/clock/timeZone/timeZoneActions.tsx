@@ -6,8 +6,16 @@ import {
     FETCH_TIME_ZONE_REQUEST,
     FETCH_TIME_ZONE_SUCCESS,
     GET_ALL_TIME_ZONES,
+    SET_INITIAL_STATES_FOR_TIME_ZONE,
     SET_TIME_ZONE,
 } from "./timeZoneTypes";
+
+export const setInitialStatesForTimeZone = (value: any) => {
+    return {
+        type: SET_INITIAL_STATES_FOR_TIME_ZONE,
+        payload: value,
+    };
+};
 
 export const fetchTimeZoneRequest = () => {
     return {

@@ -13,7 +13,7 @@ export const initializeDigitalClockThemeStates = () => {
             const result = await storeInitialDigitalClockSettingDataInDB();
             dispatch(setInitialStatesForDigitalClockThemes(result));
         } catch (error) {
-            console.log("Error adding task:", error);
+            console.log("Error:", error);
         }
     };
 };
@@ -24,7 +24,7 @@ export const setCurrentDigitalClockTheme = (value: string) => {
             await setCurrentDigitalClockThemeInDB(value);
             dispatch(setDigitalClockTheme(value));
         } catch (error) {
-            console.log("Error setting current theme:", error);
+            console.log("Error:", error);
         }
     };
 };
