@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import styles from "@/styles/miscellaneous/Dialog.module.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { setAnalogClockTheme, setDigitalClockTheme } from "@/redux";
 import DigitalClock from "../home/clock/DigitalClock";
+import { setCurrentAnalogClockTheme } from "@/middleware/setting/clock/clockTheme/analog";
+import { setCurrentDigitalClockTheme } from "@/middleware/setting/clock/clockTheme/digital";
 
 export interface ConfirmationDialogRawProps {
     onComplete: () => void;
@@ -38,10 +39,10 @@ function CustomHorizontalScrollableDialog({
     const handleOptionChange = (event: any) => {
         if (stateData.clockStyle.currentStyle === "Analog") {
             //set all themes from analog themes.
-            dispatch(setAnalogClockTheme(event.target.value));
+            dispatch(setCurrentAnalogClockTheme(event.target.value));
         } else {
             //set all themes from digital themes.
-            dispatch(setDigitalClockTheme(event.target.value));
+            dispatch(setCurrentDigitalClockTheme(event.target.value));
         }
         setCurrentClockTheme(event.target.value);
         onComplete();
