@@ -7,7 +7,7 @@ export const initializeThemeStates = () => {
             const result = await storeInitialData();
             dispatch(setInitialStatesForThemes(result));
         } catch (error) {
-            console.log("Error adding task:", error);
+            console.log("Error:", error);
         }
     };
 };
@@ -18,7 +18,7 @@ export const setCurrentTheme = (value: string) => {
             await setCurrentThemeInDB(value);
             dispatch(setTheme(value));
         } catch(error) {
-            console.log("Error setting current theme:", error);
+            console.log("Error:", error);
         }
     }
 }

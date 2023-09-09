@@ -32,12 +32,10 @@ export {
 } from "./features/setting/clock/timeZone/timeZoneActions";
 export {
     setInitialStatesForAlarmSilent,
-    getAllSilentIntervals,
     setSilentInterval,
 } from "./features/setting/alarm/silent/silentActions";
 export {
     setInitialStatesForAlarmSnooze,
-    getAllSnoozeIntervals,
     setSnoozeInterval,
 } from "./features/setting/alarm/snooze/snoozeActions";
 export {
@@ -61,7 +59,7 @@ export {
 } from "./features/home/alarm/actions";
 
 export {
-    getAllTimerSounds,
+    setInitialStatesForTimerSetting,
     setTimerSound,
     setTimerVolume,
     setTimerSilentInterval,

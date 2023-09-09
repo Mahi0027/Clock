@@ -11,12 +11,6 @@ export const setInitialStatesForAlarmSnooze = (value: any) => {
     };
 };
 
-export const getAllSnoozeIntervals = () => {
-    return {
-        type: GET_ALL_SNOOZE_INTERVALS,
-    };
-};
-
 export const setSnoozeInterval = (value: string) => {
     return {
         type: SET_SNOOZE_INTERVAL,

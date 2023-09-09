@@ -1,13 +1,15 @@
 import {
     GET_ALL_TIMER_SOUNDS,
+    SET_INITIAL_STATES_FOR_TIMER_SETTING,
     SET_TIMER_SILENT_INTERVAL,
     SET_TIMER_SOUND,
     SET_TIMER_VOLUME,
 } from "./types";
 
-export const getAllTimerSounds = () => {
+export const setInitialStatesForTimerSetting = (value: any) => {
     return {
-        type: GET_ALL_TIMER_SOUNDS,
+        type: SET_INITIAL_STATES_FOR_TIMER_SETTING,
+        payload: value,
     };
 };
 

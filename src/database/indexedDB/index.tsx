@@ -1,5 +1,5 @@
 const DB_NAME: string = "clock";
-let DB_VERSION: number = 2;
+let DB_VERSION: number = 3;
 export let db: any;
 const allCollectionsName = [
     "personalizeSetting",
@@ -11,6 +11,7 @@ const allCollectionsName = [
     "alarmSilentSetting",
     "alarmSnoozeSetting",
     "alarmVolumeSetting",
+    "timerSetting",
 ];
 export const openDB = () => {
     return new Promise((resolve, reject) => {
