@@ -65,12 +65,6 @@ function CustomDialog({
         setValue(newValue);
     };
 
-    // useEffect(() => {
-        // if (!soundFlag) {
-        //     closeAndSetValue(value);
-        // }
-    // }, [value]);
-
     const closeAndSetValue = (value: any, id = -1) => {
         id === -1 ? onClose(value) : onClose(value, id);
     };

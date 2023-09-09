@@ -15,7 +15,6 @@ const initialStates: initialStatesTypes = {
 };
 /* initial data */
 export const storeInitialClockStyleDataInDB = async () => {
-    // initialDataInIndexedDB(COLLECTION_NAME, initialStates);
     if (!db) await openDB();
     const transaction = db.transaction(COLLECTION_NAME, "readwrite");
     const objectStore = transaction.objectStore(COLLECTION_NAME);

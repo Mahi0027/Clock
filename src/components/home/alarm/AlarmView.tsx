@@ -8,13 +8,7 @@ import React, {
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styles from "@/styles/components/home/alarm/AlarmView.module.scss";
-import {
-    deleteAlarm,
-    getAllAlarm,
-    updateAlarmLabel,
-    updateAlarmScheduleFlag,
-    setRepeatAlarm,
-} from "@/redux";
+import { getAllAlarm } from "@/redux";
 import { styled } from "@mui/material/styles";
 import {
     Box,
@@ -36,12 +30,18 @@ import DialogBox from "./miscellaneous/DialogBox";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import MusicNoteOutlinedIcon from "@mui/icons-material/MusicNoteOutlined";
 import CustomDialog from "@/components/miscellaneous/CustomDialog";
-import { setAlarmSound } from "@/redux/features/home/alarm/actions";
 import AlarmRunning from "./AlarmRunning";
-import { updateAlarmTime } from "@/redux";
 import EditCalendarIcon from "@mui/icons-material/EditCalendar";
 import ResponsiveDatePickers from "@/components/miscellaneous/ResponsiveDatePickers";
 import { initialStatesTypes } from "@/redux/features/home/alarm/reducer";
+import {
+    deleteAlarmMiddleware,
+    setAlarmSoundMiddleware,
+    setRepeatAlarmMiddleware,
+    updateAlarmLabelMiddleware,
+    updateAlarmScheduleFlagMiddleware,
+    updateAlarmTimeMiddleware,
+} from "@/middleware/home/alarm";
 
 interface ExpandMoreProps extends IconButtonProps {
     expand: boolean;
@@ -130,6 +130,9 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
         useRef
     );
 
+    const getStateData = () => {
+        return alarmDetail;
+    };
     useEffect(() => {
         setExpandState(alarmDetail.alarms.length, expandBox);
         setExpandBox(-1);
@@ -186,7 +189,13 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
                             This functionality need to revise after adding date in alarm time.
                         */
                         PlayAlarmFlag = false;
-                        dispatch(updateAlarmScheduleFlag(value.id, false));
+                        dispatch(
+                            updateAlarmScheduleFlagMiddleware(
+                                value.id,
+                                false,
+                                getStateData
+                            )
+                        );
                     } else {
                         /* set alarm. */
                         finalAlarmTime =
@@ -231,7 +240,9 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
         alarmDOM.play();
         setAlarmRunningLabel(label);
         if (!repeatFlag) {
-            dispatch(updateAlarmScheduleFlag(id, false));
+            dispatch(
+                updateAlarmScheduleFlagMiddleware(id, false, getStateData)
+            );
         }
         const timeInterval = Number(alarmCurrentSilentInterval.substring(0, 2));
         /* stop alarm after specific time. */
@@ -325,7 +336,7 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
 
     const handleLabelText = useCallback(
         (alarmId: number, label: string) => {
-            dispatch(updateAlarmLabel(alarmId, label));
+            dispatch(updateAlarmLabelMiddleware(alarmId, label, getStateData));
             setOpenLabelDialogFlag(false);
         },
         [dispatch]
@@ -350,7 +361,9 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
             }
             setOpenSoundDialogFlag(false);
             if (rowId !== -1 && newValue) {
-                dispatch(setAlarmSound(rowId, newValue));
+                dispatch(
+                    setAlarmSoundMiddleware(rowId, newValue, getStateData)
+                );
             }
         },
         [alarmDetail.alarmSounds.length, alarmAudio, dispatch]
@@ -372,7 +385,9 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
         (alarmId: number, currentAlarmTime: Date, customDate: Date) => {
             customDate.setHours(currentAlarmTime.getHours());
             customDate.setMinutes(currentAlarmTime.getMinutes());
-            dispatch(updateAlarmTime(alarmId, customDate));
+            dispatch(
+                updateAlarmTimeMiddleware(alarmId, customDate, getStateData)
+            );
         },
         [dispatch]
     );
@@ -384,7 +399,13 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
             alarmId: number,
             event: React.ChangeEvent<HTMLInputElement>
         ) => {
-            dispatch(updateAlarmScheduleFlag(alarmId, event.target.checked));
+            dispatch(
+                updateAlarmScheduleFlagMiddleware(
+                    alarmId,
+                    event.target.checked,
+                    getStateData
+                )
+            );
         };
         /* set repeat alarm.  */
         const handleRepeatAlarm = (
@@ -406,7 +427,14 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
                 );
             }
             setExpandBox(expandIndex);
-            dispatch(setRepeatAlarm(alarmId, newAlarmTime, dayOfWeek));
+            dispatch(
+                setRepeatAlarmMiddleware(
+                    alarmId,
+                    newAlarmTime,
+                    dayOfWeek,
+                    getStateData
+                )
+            );
         };
 
         return (
@@ -697,8 +725,9 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
                                                 <Button
                                                     onClick={() =>
                                                         dispatch(
-                                                            deleteAlarm(
-                                                                alarm.id
+                                                            deleteAlarmMiddleware(
+                                                                alarm.id,
+                                                                getStateData
                                                             )
                                                         )
                                                     }
