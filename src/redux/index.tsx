@@ -49,11 +49,13 @@ export {
 export { setCurrentHomePage } from "./features/bottomNavbar/actions";
 
 export {
+    setInitialStatesForAlarm,
     getAllAlarm,
     setAlarm,
     updateAlarmTime,
     updateAlarmScheduleFlag,
     updateAlarmLabel,
+    setAlarmSound,
     deleteAlarm,
     setRepeatAlarm,
 } from "./features/home/alarm/actions";
@@ -72,7 +74,6 @@ export {
     updateRemainingTimerTime,
     updateTimerScheduleFlag,
     updateTimerLabel,
-    // setTimerSound,
     deleteTimer,
     updateTimerIntervalRef,
     updatePauseFlag,

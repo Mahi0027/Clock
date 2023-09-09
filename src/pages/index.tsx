@@ -134,8 +134,6 @@ export default function Home() {
                     {currentHomePage === 1 && <AlarmHome />}
                     {currentHomePage === 2 && (
                         <TimerHome
-                        // runTimer={runTimer}
-                        // timerIntervalRef={timerIntervalRef}
                         />
                     )}
                     {currentHomePage === 3 && (

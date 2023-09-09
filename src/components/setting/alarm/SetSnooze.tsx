@@ -20,7 +20,6 @@ function SetSnooze() {
         (value?: string) => {
             setOpen(false);
             if (value) {
-                // dispatch(setSnoozeInterval(value));
                 dispatch(setCurrentAlarmSnoozeMiddleware(value));
             }
         },

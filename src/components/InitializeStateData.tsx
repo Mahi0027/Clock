@@ -1,3 +1,4 @@
+import { initializeAlarmStatesMiddleware } from "@/middleware/home/alarm";
 import { initializeAlarmSilentStatesMiddleware } from "@/middleware/setting/alarm/silent";
 import { initializeAlarmSnoozeStatesMiddleware } from "@/middleware/setting/alarm/snooze";
 import { initializeAlarmVolumeStatesMiddleware } from "@/middleware/setting/alarm/volume";
@@ -25,6 +26,7 @@ function InitializeStateData({ setCompletedInitializationFlag }: any) {
         dispatch(initializeAlarmSnoozeStatesMiddleware());
         dispatch(initializeAlarmVolumeStatesMiddleware());
         dispatch(initializeTimerSettingStatesMiddleware());
+        dispatch(initializeAlarmStatesMiddleware());
         setTimeout(() => {
             setCompletedInitializationFlag(true);
         }, 1000);
