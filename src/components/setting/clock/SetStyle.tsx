@@ -22,11 +22,6 @@ function SetStyle() {
     );
     const dispatch = useDispatch();
 
-    // useEffect(() => {
-    //     console.log(stateData);
-    //     dispatch(fetchAllStyles());
-    // }, [dispatch]);
-
     const [openDialog, setOpenDialog] = useState<boolean>(false);
     const onSetClockStyle = useCallback(
         (value: string) => {

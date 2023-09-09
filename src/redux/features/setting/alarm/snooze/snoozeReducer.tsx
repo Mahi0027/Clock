@@ -26,17 +26,11 @@ const snoozeReducer = (state = initialStates, action: actionTypes) => {
     switch (action.type) {
         case SET_INITIAL_STATES_FOR_ALARM_SNOOZE:
             return action.payload;
-        case GET_ALL_SNOOZE_INTERVALS:
-            return {
-                ...state,
-                allSnoozeIntervals: allSnoozeIntervalStaticValues,
-            };
         case SET_SNOOZE_INTERVAL:
             return {
                 ...state,
                 currentSnoozeInterval: action.payload,
             };
-
         default:
             return state;
     }

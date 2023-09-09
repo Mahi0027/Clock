@@ -76,7 +76,6 @@ const TopNavbar = ({ heading, menuItemsProps, homepage }: topNavbarTypes) => {
     const [menuItems, setMenuItems] = useState(items);
 
     useEffect(() => {
-        console.log("themeStyle", themeStyle);
         setMenuItems(items.filter(({ name }) => menuItemsProps.includes(name)));
     }, []);
 

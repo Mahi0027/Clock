@@ -1,5 +1,6 @@
 import {
     GET_ALL_TIMER_SOUNDS,
+    SET_INITIAL_STATES_FOR_TIMER_SETTING,
     SET_TIMER_SILENT_INTERVAL,
     SET_TIMER_SOUND,
     SET_TIMER_VOLUME,
@@ -53,11 +54,8 @@ const initialStates: initialStatesTypes = {
 
 const timerSettingReducer = (state = initialStates, action: actionTypes) => {
     switch (action.type) {
-        case GET_ALL_TIMER_SOUNDS:
-            return {
-                ...state,
-                allTimerSounds: timerSounds,
-            };
+        case SET_INITIAL_STATES_FOR_TIMER_SETTING:
+            return action.payload;
         case SET_TIMER_SOUND:
             return {
                 ...state,

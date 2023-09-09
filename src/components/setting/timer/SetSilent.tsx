@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import CustomDialog from "@/components/miscellaneous/CustomDialog";
 import { useDispatch, useSelector } from "react-redux";
 import { setTimerSilentInterval } from "@/redux";
+import { setTimerSilentMiddleware } from "@/middleware/setting/timer";
 
 type stateTypes = {
     allTimerSilentIntervals: string[];
@@ -23,7 +24,7 @@ function SetSilent() {
         (newValue?: string) => {
             setOpen(false);
             if (newValue) {
-                dispatch(setTimerSilentInterval(newValue));
+                dispatch(setTimerSilentMiddleware(newValue));
             }
         },
         [dispatch]

@@ -5,7 +5,6 @@ import Typography from "@mui/material/Typography";
 import CustomDialog from "@/components/miscellaneous/CustomDialog";
 import { useDispatch, useSelector } from "react-redux";
 import { initialStatesTypes } from "@/redux/features/setting/alarm/snooze/snoozeReducer";
-import { getAllSnoozeIntervals, setSnoozeInterval } from "@/redux";
 import { setCurrentAlarmSnoozeMiddleware } from "@/middleware/setting/alarm/snooze";
 
 function SetSnooze() {
@@ -16,10 +15,6 @@ function SetSnooze() {
             currentSnoozeInterval: state.alarmSnooze.currentSnoozeInterval,
         }));
     const dispatch = useDispatch();
-
-    // useEffect(() => {
-    //     dispatch(getAllSnoozeIntervals());
-    // }, [dispatch]);
 
     const handleClose = useCallback(
         (value?: string) => {

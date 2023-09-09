@@ -9,6 +9,7 @@ import Box from "@mui/material/Box";
 import ListItem from "@mui/material/ListItem";
 import { useDispatch, useSelector } from "react-redux";
 import { setTimerVolume } from "@/redux";
+import { setTimerVolumeMiddleware } from "@/middleware/setting/timer";
 
 type stateTypes = {
     timerMinVolume: number;
@@ -52,7 +53,11 @@ function SetVolume() {
                             onChange={(
                                 event: Event,
                                 newValue: number | number[]
-                            ) => dispatch(setTimerVolume(newValue as number))}
+                            ) =>
+                                dispatch(
+                                    setTimerVolumeMiddleware(newValue as number)
+                                )
+                            }
                             valueLabelDisplay="auto"
                         />
                         <VolumeUp />

@@ -7,6 +7,7 @@ import { initializeSecondFlagStatesMiddleware } from "@/middleware/setting/clock
 import { initializeClockStyleStatesMiddleware } from "@/middleware/setting/clock/style";
 import { initializeTimeZoneStatesMiddleware } from "@/middleware/setting/clock/timeZone";
 import { initializeThemeStates } from "@/middleware/setting/personalize";
+import { initializeTimerSettingStatesMiddleware } from "@/middleware/setting/timer";
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
@@ -23,6 +24,7 @@ function InitializeStateData({ setCompletedInitializationFlag }: any) {
         dispatch(initializeAlarmSilentStatesMiddleware());
         dispatch(initializeAlarmSnoozeStatesMiddleware());
         dispatch(initializeAlarmVolumeStatesMiddleware());
+        dispatch(initializeTimerSettingStatesMiddleware());
         setTimeout(() => {
             setCompletedInitializationFlag(true);
         }, 1000);
