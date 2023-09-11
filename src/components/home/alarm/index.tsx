@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import Box from "@mui/material/Box";
 import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
@@ -6,14 +6,21 @@ import styles from "@/styles/components/home/alarm/index.module.scss";
 import { Dialog, DialogContent, DialogTitle } from "@mui/material";
 import ResponsiveTimePickers from "@/components/miscellaneous/ResponsiveTimePickers";
 import AlarmView from "@/components/home/alarm/AlarmView";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setAlarm } from "@/redux";
+import { setAlarmMiddleware } from "@/middleware/home/alarm";
+import { initialStatesTypes } from "@/database/indexedDB/home/alarm";
 
 function AlarmHome() {
+    const statesDetails = useSelector((state: any) => state.alarm);
     const dispatch = useDispatch();
     const [open, setOpen] = useState<boolean>(false);
     const [scrollToTop, setScrollToTop] = useState<boolean>(false);
+    const [stateDataValues, setStateDataValues] = useState(null);
 
+    const getStateData = () => {
+        return statesDetails;
+    }
     const addNewAlarm = useCallback(
         (alarmTime: Date) => {
             const currentTime = new Date();
@@ -21,7 +28,7 @@ function AlarmHome() {
             if (currentTime.getTime() > alarmTime.getTime()) {
                 alarmTime.setDate(alarmTime.getDate() + 1);
             }
-            dispatch(setAlarm(alarmTime));
+            dispatch(setAlarmMiddleware(alarmTime, getStateData));
             setScrollToTop(true);
         },
         [dispatch]

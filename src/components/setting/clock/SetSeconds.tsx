@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import Switch from "@mui/material/Switch";
 import { useDispatch, useSelector } from "react-redux";
 import { setSecondFlag } from "@/redux";
+import { setCurrentSecondFlagMiddleware } from "@/middleware/setting/clock/second";
 
 function SetSeconds() {
     const setSecond: boolean = useSelector(
@@ -17,7 +18,7 @@ function SetSeconds() {
         return (
             <ListItemButton
                 sx={{ pl: 9 }}
-                onChange={() => dispatch(setSecondFlag(!setSecond))}
+                onChange={() => dispatch(setCurrentSecondFlagMiddleware(!setSecond))}
                 disableRipple
             >
                 <ListItemText

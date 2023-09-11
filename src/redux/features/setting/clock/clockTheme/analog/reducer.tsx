@@ -1,4 +1,7 @@
-import { SET_ANALOG_CLOCK_THEME } from "./types";
+import {
+    SET_ANALOG_CLOCK_THEME,
+    SET_INITIAL_STATES_FOR_ANALOG_CLOCK,
+} from "./types";
 
 const themes = [
     "clock1",
@@ -20,7 +23,7 @@ export type initialStatesTypes = {
     allThemes: string[];
     currentTheme: string;
 };
-const initialStates = {
+const initialStates: initialStatesTypes = {
     allThemes: themes,
     currentTheme: themes[0],
 };
@@ -30,6 +33,8 @@ const AnalogClockThemeReducer = (
     action: actionTypes
 ) => {
     switch (action.type) {
+        case SET_INITIAL_STATES_FOR_ANALOG_CLOCK:
+            return action.payload;
         case SET_ANALOG_CLOCK_THEME:
             return {
                 ...state,

@@ -3,6 +3,7 @@ import {
     GET_ALL_ALARMS,
     SET_ALARM,
     SET_ALARM_SOUND,
+    SET_INITIAL_STATES_FOR_ALARM,
     SET_REPEAT_ALARM,
     UPDATE_ALARM_LABEL,
     UPDATE_ALARM_SCHEDULE_FLAG,
@@ -36,6 +37,7 @@ type actionTypes = {
     payload?: any;
 };
 export type initialStatesTypes = {
+    id: number;
     alarms: {
         id: number;
         alarmTime: Date;
@@ -78,12 +80,15 @@ export type initialStatesTypes = {
 };
 
 const initialStates: initialStatesTypes = {
+    id: 1,
     alarms: [],
     alarmSounds: alarmSounds,
 };
 
 const alarmReducer = (state = initialStates, action: actionTypes) => {
     switch (action.type) {
+        case SET_INITIAL_STATES_FOR_ALARM:
+            return action.payload;
         case GET_ALL_ALARMS:
             return state;
         case SET_ALARM:

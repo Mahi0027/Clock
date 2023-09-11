@@ -12,6 +12,7 @@ import CustomDialog from "@/components/miscellaneous/CustomDialog";
 import { initialStatesTypes } from "@/redux/features/setting/timer/reducer";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllTimerSounds, setTimerSound } from "@/redux";
+import { setTimerSoundMiddleware } from "@/middleware/setting/timer";
 
 type stateTypes = {
     allTimerSounds: string[];
@@ -36,7 +37,7 @@ function SetSound() {
             }
             setOpen(false);
             if (newValue) {
-                dispatch(setTimerSound(newValue));
+                dispatch(setTimerSoundMiddleware(newValue));
             }
         },
         [dispatch, allTimerSounds, timerAudio]

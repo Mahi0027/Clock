@@ -55,17 +55,15 @@ function CustomDialog({
     };
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const newValue = (event.target as HTMLInputElement).value;
         if (soundFlag) {
             playSound((event.target as HTMLInputElement).value);
         }
-        setValue((event.target as HTMLInputElement).value);
-    };
-
-    useEffect(() => {
-        if (!soundFlag) {
-            closeAndSetValue(value);
+        else{
+            closeAndSetValue(newValue);
         }
-    }, [value]);
+        setValue(newValue);
+    };
 
     const closeAndSetValue = (value: any, id = -1) => {
         id === -1 ? onClose(value) : onClose(value, id);

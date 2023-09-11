@@ -14,6 +14,8 @@ import DarkModeIcon from "@mui/icons-material/DarkMode";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllThemes, setTheme } from "@/redux";
 import { initialStatesTypes } from "@/redux/features/setting/personalize/theme/themeReducer";
+import { setCurrentTheme } from "@/middleware/setting/personalize";
+
 
 /* set dark mode. */
 function SetDarkMode() {
@@ -32,7 +34,7 @@ function SetDarkMode() {
     const onSetMode = useCallback(
         (value: string) => {
             setOpenDialog(false);
-            dispatch(setTheme(value));
+            dispatch(setCurrentTheme(value));
         },
         [dispatch]
     );

@@ -14,6 +14,7 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { useDispatch, useSelector } from "react-redux";
 import { initialStatesTypes } from "@/redux/features/setting/clock/style/styleReducer";
 import { fetchAllStyles, setStyle } from "@/redux";
+import { setCurrentClockStyleMiddleware } from "@/middleware/setting/clock/style";
 
 function SetStyle() {
     const stateData: initialStatesTypes = useSelector(
@@ -21,15 +22,11 @@ function SetStyle() {
     );
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        dispatch(fetchAllStyles());
-    }, [dispatch]);
-
     const [openDialog, setOpenDialog] = useState<boolean>(false);
     const onSetClockStyle = useCallback(
         (value: string) => {
             setOpenDialog(false);
-            dispatch(setStyle(value));
+            dispatch(setCurrentClockStyleMiddleware(value));
         },
         [dispatch]
     );

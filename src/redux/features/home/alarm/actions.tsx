@@ -3,11 +3,19 @@ import {
     GET_ALL_ALARMS,
     SET_ALARM,
     SET_ALARM_SOUND,
+    SET_INITIAL_STATES_FOR_ALARM,
     SET_REPEAT_ALARM,
     UPDATE_ALARM_LABEL,
     UPDATE_ALARM_SCHEDULE_FLAG,
     UPDATE_ALARM_TIME,
 } from "./types";
+
+export const setInitialStatesForAlarm = (value: any) => {
+    return {
+        type: SET_INITIAL_STATES_FOR_ALARM,
+        payload: value,
+    };
+};
 
 export const getAllAlarm = () => {
     return {

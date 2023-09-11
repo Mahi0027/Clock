@@ -1,18 +1,28 @@
 export {
+    setInitialStatesForClockStyle,
     fetchAllStyles,
     setStyle,
 } from "./features/setting/clock/style/styleActions";
 export {
+    setInitialStatesForThemes,
     fetchAllThemes,
     setTheme,
 } from "./features/setting/personalize/theme/themeActions";
-export { setAnalogClockTheme } from "./features/setting/clock/clockTheme/analog/actions";
-export { setDigitalClockTheme } from "./features/setting/clock/clockTheme/digital/actions";
 export {
+    setInitialStatesForAnalogClockThemes,
+    setAnalogClockTheme,
+} from "./features/setting/clock/clockTheme/analog/actions";
+export {
+    setInitialStatesForDigitalClockThemes,
+    setDigitalClockTheme,
+} from "./features/setting/clock/clockTheme/digital/actions";
+export {
+    setInitialStatesForSecondFlag,
     getSecondFlag,
     setSecondFlag,
 } from "./features/setting/clock/second/secondAction";
 export {
+    setInitialStatesForTimeZone,
     getAllTimeZones,
     setTimeZone,
     fetchTimeZoneRequest,
@@ -21,14 +31,17 @@ export {
     fetchTimeZone,
 } from "./features/setting/clock/timeZone/timeZoneActions";
 export {
-    getAllSilentIntervals,
+    setInitialStatesForAlarmSilent,
     setSilentInterval,
 } from "./features/setting/alarm/silent/silentActions";
 export {
-    getAllSnoozeIntervals,
+    setInitialStatesForAlarmSnooze,
     setSnoozeInterval,
 } from "./features/setting/alarm/snooze/snoozeActions";
-export { setVolume } from "./features/setting/alarm/volume/volumeActions";
+export {
+    setInitialStatesForAlarmVolume,
+    setVolume,
+} from "./features/setting/alarm/volume/volumeActions";
 export {
     getAllWeekOnValues,
     setWeekOnValue,
@@ -36,17 +49,19 @@ export {
 export { setCurrentHomePage } from "./features/bottomNavbar/actions";
 
 export {
+    setInitialStatesForAlarm,
     getAllAlarm,
     setAlarm,
     updateAlarmTime,
     updateAlarmScheduleFlag,
     updateAlarmLabel,
+    setAlarmSound,
     deleteAlarm,
     setRepeatAlarm,
 } from "./features/home/alarm/actions";
 
 export {
-    getAllTimerSounds,
+    setInitialStatesForTimerSetting,
     setTimerSound,
     setTimerVolume,
     setTimerSilentInterval,
@@ -59,7 +74,6 @@ export {
     updateRemainingTimerTime,
     updateTimerScheduleFlag,
     updateTimerLabel,
-    // setTimerSound,
     deleteTimer,
     updateTimerIntervalRef,
     updatePauseFlag,

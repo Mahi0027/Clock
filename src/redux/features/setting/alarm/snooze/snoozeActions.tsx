@@ -1,8 +1,13 @@
-import { GET_ALL_SNOOZE_INTERVALS, SET_SNOOZE_INTERVAL } from "./snoozeTypes";
+import {
+    GET_ALL_SNOOZE_INTERVALS,
+    SET_INITIAL_STATES_FOR_ALARM_SNOOZE,
+    SET_SNOOZE_INTERVAL,
+} from "./snoozeTypes";
 
-export const getAllSnoozeIntervals = () => {
+export const setInitialStatesForAlarmSnooze = (value: any) => {
     return {
-        type: GET_ALL_SNOOZE_INTERVALS,
+        type: SET_INITIAL_STATES_FOR_ALARM_SNOOZE,
+        payload: value,
     };
 };
 
