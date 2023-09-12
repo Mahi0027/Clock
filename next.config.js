@@ -1,10 +1,17 @@
 /** @type {import('next').NextConfig} */
-const path = require('path')
-const nextConfig = {
-  reactStrictMode: true,
-  sassOptions: {
-    includePaths: [path.join(__dirname, "styles")],
-  },
-};
+const path = require("path");
 
-module.exports = nextConfig
+const withPWA = require("next-pwa")({
+    dest: "public",
+    register: true,
+    skipWaiting: true,
+});
+
+const nextConfig = withPWA({
+    reactStrictMode: true,
+    sassOptions: {
+        includePaths: [path.join(__dirname, "styles")],
+    },
+});
+
+module.exports = nextConfig;

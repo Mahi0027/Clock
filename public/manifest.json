@@ -1,0 +1,39 @@
+{
+    "name": "Clock",
+    "short_name": "Clock",
+    "description": "This app provide all clock related services like different timezone's clocks, alarm, timer, stopwatch, calender etc.",
+    "scope": "/",
+    "start_url": "/",
+    "display": "fullscreen",
+    "orientation": "landscape",
+    "background_color": "#ffffff",
+    "theme_color": "#000000",
+    "icons": [
+        {
+            "src": "/assets/icons/icon-94x94.png",
+            "sizes": "94x94",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/assets/icons/icon-188x188.png",
+            "sizes": "188x188",
+            "type": "image/png"
+        },
+        {
+            "src": "/assets/icons/icon-375x375.png",
+            "sizes": "375x375",
+            "type": "image/png"
+        },
+        {
+            "src": "/assets/icons/icon-750x750.png",
+            "sizes": "750x750",
+            "type": "image/png"
+        },
+        {
+            "src": "/assets/icons/icon-1500x1500.png",
+            "sizes": "1500x1500",
+            "type": "image/png"
+        }
+    ]
+}
