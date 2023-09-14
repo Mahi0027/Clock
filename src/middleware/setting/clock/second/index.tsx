@@ -9,8 +9,10 @@ export const initializeSecondFlagStatesMiddleware = () => {
         try {
             const result = await storeInitialSecondFlagDataInDB();
             dispatch(setInitialStatesForSecondFlag(result));
+            return Promise.resolve(true);
         } catch (error) {
             console.log("Error:", error);
+            return Promise.reject(error);
         }
     };
 };

@@ -24,8 +24,10 @@ export const initializeAlarmStatesMiddleware = () => {
         try {
             const result = await storeInitialAlarmDataInDB();
             dispatch(setInitialStatesForAlarm(result));
+            return Promise.resolve(true);
         } catch (error) {
             console.log("Error:", error);
+            return Promise.reject(error);
         }
     };
 };

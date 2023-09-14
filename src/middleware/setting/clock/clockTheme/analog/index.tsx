@@ -12,8 +12,10 @@ export const initializeAnalogClockThemeStates = () => {
         try {
             const result = await storeInitialAnalogClockSettingDataInDB();
             dispatch(setInitialStatesForAnalogClockThemes(result));
+            return Promise.resolve(true);
         } catch (error) {
             console.log("Error:", error);
+            return Promise.reject(error);
         }
     };
 };

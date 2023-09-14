@@ -93,7 +93,7 @@ const TopNavbar = ({ heading, menuItemsProps, homepage }: topNavbarTypes) => {
     const topNavbarComponent = useMemo(() => {
         return (
             <>
-                <Paper sx={{ height: "4em", boxShadow: 0 }}>
+                <Paper sx={{ height: "3em", boxShadow: 0 }}>
                     <CssBaseline />
                     <AppBar position="fixed" elevation={0} sx={themeStyle}>
                         <Toolbar>
