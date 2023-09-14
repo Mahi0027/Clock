@@ -9,8 +9,10 @@ export const initializeTimeZoneStatesMiddleware = () => {
         try {
             const result = await storeInitialTimeZoneDataInDB();
             dispatch(setInitialStatesForTimeZone(result));
+            return Promise.resolve(true);
         } catch (error) {
             console.log("Error:", error);
+            return Promise.reject(error);
         }
     };
 };

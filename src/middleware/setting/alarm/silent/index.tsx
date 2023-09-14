@@ -9,8 +9,10 @@ export const initializeAlarmSilentStatesMiddleware = () => {
         try {
             const result = await storeInitialAlarmSilentDataInDB();
             dispatch(setInitialStatesForAlarmSilent(result));
+            return Promise.resolve(true);
         } catch (error) {
             console.log("Error:", error);
+            return Promise.reject(error);
         }
     };
 };

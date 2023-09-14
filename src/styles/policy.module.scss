@@ -1,0 +1,23 @@
+.headingTexts {
+    display: flex;
+    flex-direction: column;
+    padding: 5vh 0 2vh 0;
+    text-align: center;
+    justify-content: center;
+}
+
+.paragraph {
+    padding: 10px;
+}
+
+@media (orientation: portrait) {
+    .headingTexts {
+            padding: 5vh 0 2vh 0;
+        }
+}
+
+@media (orientation: landscape) {
+    .headingTexts {
+            padding: 5vw 0 2vw 0;
+        }
+}

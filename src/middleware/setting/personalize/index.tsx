@@ -6,8 +6,10 @@ export const initializeThemeStates = () => {
         try {
             const result = await storeInitialData();
             dispatch(setInitialStatesForThemes(result));
+            return Promise.resolve(true);
         } catch (error) {
             console.log("Error:", error);
+            return Promise.reject(error);
         }
     };
 };

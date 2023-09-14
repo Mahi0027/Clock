@@ -9,8 +9,10 @@ export const initializeAlarmVolumeStatesMiddleware = () => {
         try {
             const result = await storeInitialAlarmVolumeDataInDB();
             dispatch(setInitialStatesForAlarmVolume(result));
+            return Promise.resolve(true);
         } catch (error) {
             console.log("Error:", error);
+            return Promise.reject(error);
         }
     };
 };

@@ -12,8 +12,10 @@ export const initializeDigitalClockThemeStates = () => {
         try {
             const result = await storeInitialDigitalClockSettingDataInDB();
             dispatch(setInitialStatesForDigitalClockThemes(result));
+            return Promise.resolve(true);
         } catch (error) {
             console.log("Error:", error);
+            return Promise.reject(error);
         }
     };
 };

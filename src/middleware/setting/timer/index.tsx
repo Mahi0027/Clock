@@ -16,8 +16,10 @@ export const initializeTimerSettingStatesMiddleware = () => {
         try {
             const result = await storeInitialTimerSettingDataInDB();
             dispatch(setInitialStatesForTimerSetting(result));
+            return Promise.resolve(true);
         } catch (error) {
             console.log("Error:", error);
+            return Promise.reject(error);
         }
     };
 };

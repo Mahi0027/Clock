@@ -12,8 +12,10 @@ export const initializeClockStyleStatesMiddleware = () => {
         try {
             const result = await storeInitialClockStyleDataInDB();
             dispatch(setInitialStatesForClockStyle(result));
+            return Promise.resolve(true);
         } catch (error) {
             console.log("Error:", error);
+            return Promise.reject(error);
         }
     };
 };

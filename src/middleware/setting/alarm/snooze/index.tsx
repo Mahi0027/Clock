@@ -9,8 +9,10 @@ export const initializeAlarmSnoozeStatesMiddleware = () => {
         try {
             const result = await storeInitialAlarmSnoozeDataInDB();
             dispatch(setInitialStatesForAlarmSnooze(result));
+            return Promise.resolve(true);
         } catch (error) {
             console.log("Error:", error);
+            return Promise.reject(error);
         }
     };
 };

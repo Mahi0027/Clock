@@ -20,6 +20,7 @@ import {
     setShowSecond,
     setStopwatchTimer,
 } from "@/redux";
+import InitializeStateData from "@/components/InitializeStateData";
 
 const homePageTitle = ["Clock", "Alarm", "Timer", "Stopwatch"];
 const MenuItems = ["Setting", "Privacy policy", "Send feedback", "Help"];
@@ -33,6 +34,8 @@ type stateTypes = {
     hour: number;
 };
 export default function Home() {
+    const [completedInitializationFlag, setCompletedInitializationFlag] =
+        useState(false);
     const {
         currentHomePage,
         currentTheme,
@@ -124,26 +127,33 @@ export default function Home() {
     const indexPageComponent = useMemo(() => {
         return (
             <>
-                <TopNavbar
-                    heading={homePageTitle[currentHomePage]}
-                    menuItemsProps={MenuItems}
-                    homepage={true}
-                />
-                <Stack className={styles.container} sx={myTheme}>
-                    {currentHomePage === 0 && <ClockHome />}
-                    {currentHomePage === 1 && <AlarmHome />}
-                    {currentHomePage === 2 && (
-                        <TimerHome
+                {completedInitializationFlag ? (
+                    <>
+                        <TopNavbar
+                            heading={homePageTitle[currentHomePage]}
+                            menuItemsProps={MenuItems}
+                            homepage={true}
                         />
-                    )}
-                    {currentHomePage === 3 && (
-                        <StopwatchHome playStopwatch={playStopwatch} />
-                    )}
-                </Stack>
-                <BottomNavbar />
+                        <Stack className={styles.container} sx={myTheme}>
+                            {currentHomePage === 0 && <ClockHome />}
+                            {currentHomePage === 1 && <AlarmHome />}
+                            {currentHomePage === 2 && <TimerHome />}
+                            {currentHomePage === 3 && (
+                                <StopwatchHome playStopwatch={playStopwatch} />
+                            )}
+                        </Stack>
+                        <BottomNavbar />
+                    </>
+                ) : (
+                    <InitializeStateData
+                        setCompletedInitializationFlag={
+                            setCompletedInitializationFlag
+                        }
+                    />
+                )}
             </>
         );
-    }, [currentHomePage, myTheme, playStopwatch]);
+    }, [completedInitializationFlag, currentHomePage, myTheme, playStopwatch]);
 
     return <>{indexPageComponent}</>;
 }

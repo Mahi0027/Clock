@@ -1,0 +1,53 @@
+$portraitMaxClockSize: 60vw;
+$landscapeMaxClockSize: 60vh;
+$portraitClockSize: 60vw;
+$landscapeClockSize: 60vh;
+
+.container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+}
+
+#loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#loader::before {
+    content: '';
+    position: absolute;
+    width: 1vh;
+    height: 1vh;
+    background: #4d4b4b;
+    border-radius: 50%;
+    z-index: 1000;
+}
+
+#drop {
+    position: relative;
+    margin-top: 15vh;
+}
+
+@media (orientation: portrait) {
+    #drop #loader {
+        margin-top: 20vh;
+        max-width: $portraitMaxClockSize;
+        max-height: $portraitMaxClockSize;
+        width: $portraitClockSize;
+        height: $portraitClockSize;
+    }
+}
+
+@media (orientation: landscape) {
+    #drop #loader {
+        margin-top: 5vh;
+        max-width: $landscapeMaxClockSize;
+        max-height: $landscapeMaxClockSize;
+        width: $landscapeClockSize;
+        height: $landscapeClockSize;
+    }
+}
