@@ -1,23 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import TopNavbar from "@/components/TopNavbar";
 import Layout from "@/components/Layout";
 import { Button, Stack, TextField, TextareaAutosize } from "@mui/material";
 import { useSelector } from "react-redux";
-import SendMail from "@/components/miscellaneous/SendMail";
+import emailjs from "@emailjs/browser";
 
 const MenuItems = ["Setting", "Privacy policy", "Help"];
 function Feedback() {
+    const form = useRef();
     const { currentTheme }: { currentTheme: string } = useSelector(
         (state: any) => ({
             currentTheme: state.theme.currentTheme,
         })
     );
     const [myTheme, setMyTheme] = useState({});
-    const [sendMailFlag, SetSendMailFlag] = useState(false);
     const [formData, setFormData] = useState<any>({
-        sender: "",
-        subject: "",
-        feedback: "",
+        user_name: "",
+        user_email: "",
+        message: "",
     });
 
     useEffect(() => {
@@ -40,13 +40,24 @@ function Feedback() {
         });
     };
 
-    const handleSubmit = (event: any) => {
-        event.preventDefault();
-        // SetSendMailFlag(true);
-        // Do something with the form data, e.g., submit it to a server
-        console.log(formData);
-    };
+    const sendEmail = (e: any) => {
+        e.preventDefault();
 
+        const service_id = "service_xxmt0zo";
+        const template_id = "template_9ir6oi9";
+        const public_key = "O_QUHPMMDY1B-tPJD";
+        emailjs
+            .sendForm(service_id, template_id, form.current, public_key)
+            .then(
+                (result: any) => {
+                    console.log(result.text);
+                    setFormData({ user_name: "", user_email: "", message: "" });
+                },
+                (error: any) => {
+                    console.log(error.text);
+                }
+            );
+    };
     return (
         <Layout>
             <TopNavbar
@@ -56,29 +67,29 @@ function Feedback() {
             />
             <Stack sx={myTheme}>
                 <div style={{ margin: "10% 5% 0 5%" }}>
-                    <form onSubmit={handleSubmit}>
+                    <form ref={form} onSubmit={sendEmail}>
                         <TextField
-                            label="Email"
+                            label="Name"
                             variant="outlined"
-                            name="sender"
-                            type="email"
-                            value={formData.sender}
+                            name="user_name"
+                            value={formData.user_name}
                             onChange={handleChange}
                             fullWidth
                             margin="normal"
                         />
                         <TextField
-                            label="Subject"
+                            label="Email"
                             variant="outlined"
-                            name="subject"
-                            value={formData.subject}
+                            type="email"
+                            name="user_email"
+                            value={formData.user_email}
                             onChange={handleChange}
                             fullWidth
                             margin="normal"
                         />
                         <TextareaAutosize
-                            name="feedback"
-                            value={formData.feedback}
+                            name="message"
+                            value={formData.message}
                             onChange={handleChange}
                             minRows={20}
                             placeholder="Write your Feedback..."
