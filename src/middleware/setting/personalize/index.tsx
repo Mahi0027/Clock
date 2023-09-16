@@ -1,4 +1,4 @@
-import { setCurrentThemeInDB, storeInitialData } from "@/database/indexedDB/setting/personalize";
+import { getCurrentThemeInDB, setCurrentThemeInDB, storeInitialData } from "@/database/indexedDB/setting/personalize";
 import { setInitialStatesForThemes, setTheme } from "@/redux";
 
 export const initializeThemeStates = () => {
@@ -14,6 +14,8 @@ export const initializeThemeStates = () => {
     };
 };
 
+
+
 export const setCurrentTheme = (value: string) => {
     return async (dispatch:any) => {
         try {
@@ -24,3 +26,12 @@ export const setCurrentTheme = (value: string) => {
         }
     }
 }
+
+export const getCurrentTheme = async () => {
+    try {
+        const result = await getCurrentThemeInDB();
+        return Promise.resolve(result);
+    } catch (error) {
+        console.log("Error:", error);
+    }
+};

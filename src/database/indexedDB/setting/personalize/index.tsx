@@ -46,6 +46,13 @@ export const storeInitialData = async () => {
     });
 };
 
+/**
+ * The function `setCurrentThemeInDB` updates the current theme in a database and also updates the
+ * style object based on the new theme.
+ * @param {string} newCurrentTheme - The newCurrentTheme parameter is a string that represents the new
+ * theme that needs to be set in the database. It can have two possible values: "light" or "dark".
+ * @returns a Promise that resolves to the result of the `put` operation on the object store.
+ */
 export const setCurrentThemeInDB = async (newCurrentTheme: string) => {
     if (!db) await openDB();
     const transaction = db.transaction(COLLECTION_NAME, "readwrite");
@@ -68,5 +75,25 @@ export const setCurrentThemeInDB = async (newCurrentTheme: string) => {
     return new Promise((resolve, reject) => {
         request.onsuccess = () => resolve(request.result);
         request.onerror = () => reject(request.error);
+    });
+};
+
+/**
+ * The function retrieves the current theme object from a database.
+ * @returns The function `getCurrentThemeInDB` returns a promise that resolves to the existing theme
+ * object fetched from the object store in the database.
+ */
+export const getCurrentThemeInDB = async () => {
+    if (!db) await openDB();
+    const transaction = db.transaction(COLLECTION_NAME, "readwrite");
+    const objectStore = transaction.objectStore(COLLECTION_NAME);
+
+    /* fetch existing theme object. */
+    const existingResult = await objectStore.get(1);
+    return new Promise((resolve, reject) => {
+        existingResult.onsuccess = () => {
+            resolve(existingResult.result);
+        };
+        existingResult.onerror = () => reject(existingResult.error);
     });
 };
