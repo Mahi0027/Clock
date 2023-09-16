@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useMemo, useState } from "react";
 import TopNavbar from "@/components/TopNavbar";
 import Layout from "@/components/Layout";
 import ChatBot from "react-simple-chatbot";
@@ -17,6 +17,79 @@ const themeObj = {
     userBubbleColor: "#000000",
     userFontColor: "#fff",
 };
+
+const chatSteps = [
+    {
+        id: "greet",
+        message: "Hi, Welcome to our app.",
+        trigger: "ask name",
+    },
+    {
+        id: "ask name",
+        message: "Please enter your name.",
+        trigger: "waitingForName",
+    },
+    {
+        id: "waitingForName",
+        user: true,
+        validator: (value: string) => {
+            if (value.length === 0) {
+                return "Please enter your name";
+            }
+            return true;
+        },
+        trigger: "displayName",
+    },
+    {
+        id: "displayName",
+        message:
+            "Hi {previousValue}, nice to meet you. What kind of help I can do for you?",
+        trigger: "issuesList",
+    },
+    {
+        id: "issuesList",
+        options: [
+            { value: "clock", label: "Clock", trigger: "clockIssue" },
+            { value: "alarm", label: "Alarm", trigger: "alarmIssue" },
+            { value: "timer", label: "Timer", trigger: "timerIssue" },
+            {
+                value: "stopwatch",
+                label: "Stopwatch",
+                trigger: "stopwatchIssue",
+            },
+        ],
+    },
+    {
+        id: "clockIssue",
+        message: "What kind of help do you need right now in clock?",
+        trigger: "showFinalMessage",
+    },
+    {
+        id: "alarmIssue",
+        message: "What kind of help do you need right now in alarm?",
+        trigger: "showFinalMessage",
+    },
+    {
+        id: "timerIssue",
+        message: "What kind of help do you need right now in timer?",
+        trigger: "showFinalMessage",
+    },
+    {
+        id: "stopwatchIssue",
+        message: "What kind of help do you need right now in stopwatch?",
+        trigger: "showFinalMessage",
+    },
+    {
+        id: "completed",
+        user: true,
+        trigger: "showFinalMessage",
+    },
+    {
+        id: "showFinalMessage",
+        message: "Thank You",
+        end: true,
+    },
+];
 function Help() {
     const { currentTheme }: { currentTheme: string } = useSelector(
         (state: any) => ({
@@ -44,57 +117,48 @@ function Help() {
                 userFontColor: "#fff",
             });
         }
-    }, [currentTheme]);
-    return (
-        <Layout>
-            <TopNavbar
-                heading={"Help"}
-                menuItemsProps={menuItems}
-                homepage={false}
-            />
-            <Stack sx={{ marginTop: "1%" }}>
-                <ThemeProvider theme={theme}>
-                    <ChatBot
-                        steps={[
-                            {
-                                id: "1",
-                                message: "What is your name?",
-                                trigger: "2",
-                            },
-                            {
-                                id: "2",
-                                user: true,
-                                trigger: "3",
-                            },
-                            {
-                                id: "3",
-                                message:
-                                    "Hi {previousValue}, nice to meet you!",
-                                end: true,
-                            },
-                        ]}
-                        width="100vw"
-                        height="100.5vh"
-                        overflow="hidden"
-                        cache={true}
-                        enableMobileAutoFocus={true}
-                        hideHeader={true}
-                        hideSubmitButton={false}
-                        hideBotAvatar={true}
-                        hideUserAvatar={true}
-                        enableSmoothScroll={true}
-                        inputStyle={{
-                            background:
-                                currentTheme === "light" ? "#fff" : "#000000",
-                            color:
-                                currentTheme === "light" ? "#000000" : "#fff",
-                        }}
-                        style={{ overflow: "hidden" }}
-                    />
-                </ThemeProvider>
-            </Stack>
-        </Layout>
-    );
+    }, []);
+    const helpComponent = useMemo(() => {
+        console.log("calling help component");
+        return (
+            <Layout>
+                <TopNavbar
+                    heading={"Help"}
+                    menuItemsProps={menuItems}
+                    homepage={false}
+                />
+                <Stack sx={{ marginTop: "1%" }}>
+                    <ThemeProvider theme={theme}>
+                        <ChatBot
+                            steps={chatSteps}
+                            width="100vw"
+                            height="100.5vh"
+                            overflow="hidden"
+                            cache={false}
+                            enableMobileAutoFocus={true}
+                            hideHeader={true}
+                            hideSubmitButton={false}
+                            hideBotAvatar={true}
+                            hideUserAvatar={true}
+                            enableSmoothScroll={true}
+                            inputStyle={{
+                                background:
+                                    currentTheme === "light"
+                                        ? "#fff"
+                                        : "#000000",
+                                color:
+                                    currentTheme === "light"
+                                        ? "#000000"
+                                        : "#fff",
+                            }}
+                            style={{ overflow: "hidden" }}
+                        />
+                    </ThemeProvider>
+                </Stack>
+            </Layout>
+        );
+    }, [currentTheme, theme]);
+    return helpComponent;
 }
 
-export default Help;
+export default memo(Help);
