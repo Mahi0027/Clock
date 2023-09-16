@@ -1,5 +1,5 @@
 const DB_NAME: string = "clock";
-let DB_VERSION: number = 4;
+let DB_VERSION: number = 5;
 export let db: any;
 const allCollectionsName = [
     "personalizeSetting",

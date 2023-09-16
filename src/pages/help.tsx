@@ -91,12 +91,17 @@ const chatSteps = [
     },
 ];
 function Help() {
+    /* This code snippet is using the `useSelector` hook from the `react-redux` library to access the
+    `currentTheme` property from the Redux store. */
     const { currentTheme }: { currentTheme: string } = useSelector(
         (state: any) => ({
             currentTheme: state.theme.currentTheme,
         })
     );
     const [theme, setTheme] = useState(themeObj);
+    /* The `useEffect` hook is used to perform side effects in a functional component. In this code
+    snippet, the `useEffect` hook is used to update the `theme` state based on the value of the
+    `currentTheme` property from the Redux store. */
     useEffect(() => {
         if (currentTheme === "light") {
             setTheme({
