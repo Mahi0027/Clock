@@ -11,11 +11,14 @@ export interface ConfirmationDialogRawProps {
 function CustomHorizontalScrollableDialog({
     onComplete,
 }: ConfirmationDialogRawProps) {
+    /* The code snippet is defining and initializing several variables using React hooks. */
     const stateData = useSelector((state: any) => state);
     const dispatch = useDispatch();
     const [allThemes, setAllThemes] = useState([]);
     const [currentClockTheme, setCurrentClockTheme] = useState("");
 
+    /* The `useEffect` hook in the provided code is used to update the `currentClockTheme` state
+    variable whenever the `dispatch` function or any of its dependencies change. */
     useEffect(() => {
         if (stateData.clockStyle.currentStyle === "Analog") {
             //set all themes from analog themes.
@@ -26,6 +29,8 @@ function CustomHorizontalScrollableDialog({
         }
     }, [dispatch]);
 
+    /* The `useEffect` hook is used to perform side effects in a functional component. In this case,
+    the effect is triggered whenever the value of `stateData.clockStyle.currentStyle` changes. */
     useEffect(() => {
         if (stateData.clockStyle.currentStyle === "Analog") {
             //set all themes from analog themes.
@@ -36,13 +41,21 @@ function CustomHorizontalScrollableDialog({
         }
     }, [stateData.clockStyle.currentStyle]);
 
-    const handleOptionChange = (event: any) => {
+    /**
+     * The function handles the option change event and sets the current clock theme based on the
+     * selected value.
+     * @param {any} event - The `event` parameter is an object that represents the event that triggered
+     * the function. It contains information about the event, such as the target element and the value
+     * of the selected option.
+     */
+    const handleOptionChange = async (event: any) => {
         if (stateData.clockStyle.currentStyle === "Analog") {
             //set all themes from analog themes.
-            dispatch(setCurrentAnalogClockTheme(event.target.value));
+            (await setCurrentAnalogClockTheme(event.target.value))(dispatch);
         } else {
             //set all themes from digital themes.
-            dispatch(setCurrentDigitalClockTheme(event.target.value));
+            console.log("set digital clock theme");
+            (await setCurrentDigitalClockTheme(event.target.value))(dispatch);
         }
         setCurrentClockTheme(event.target.value);
         onComplete();

@@ -16,7 +16,6 @@ import { fetchAllThemes, setTheme } from "@/redux";
 import { initialStatesTypes } from "@/redux/features/setting/personalize/theme/themeReducer";
 import { setCurrentTheme } from "@/middleware/setting/personalize";
 
-
 /* set dark mode. */
 function SetDarkMode() {
     /* get state and dispatch */
@@ -32,9 +31,9 @@ function SetDarkMode() {
     }, [dispatch]);
 
     const onSetMode = useCallback(
-        (value: string) => {
+        async (value: string) => {
             setOpenDialog(false);
-            dispatch(setCurrentTheme(value));
+            (await setCurrentTheme(value))(dispatch);
         },
         [dispatch]
     );

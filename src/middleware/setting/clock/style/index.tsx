@@ -7,21 +7,20 @@ import {
     setStyle,
 } from "@/redux";
 
-export const initializeClockStyleStatesMiddleware = () => {
-    return async (dispatch: any) => {
-        try {
-            const result = await storeInitialClockStyleDataInDB();
+export const initializeClockStyleStatesMiddleware = async () => {
+    try {
+        const result = await storeInitialClockStyleDataInDB();
+        return (dispatch:any) => {
             dispatch(setInitialStatesForClockStyle(result));
-            return Promise.resolve(true);
-        } catch (error) {
-            console.log("Error:", error);
-            return Promise.reject(error);
         }
-    };
+    } catch (error) {
+        console.log("Error:", error);
+        return Promise.reject(error);
+    }
 };
 
 export const setCurrentClockStyleMiddleware = (value: string) => {
-    return async (dispatch: any) => {
+    return async (dispatch) => {
         try {
             await setCurrentClockStyleInDB(value);
             dispatch(setStyle(value));

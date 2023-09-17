@@ -7,26 +7,28 @@ import {
     setInitialStatesForAnalogClockThemes,
 } from "@/redux";
 
-export const initializeAnalogClockThemeStates = () => {
-    return async (dispatch: any) => {
-        try {
-            const result = await storeInitialAnalogClockSettingDataInDB();
-            dispatch(setInitialStatesForAnalogClockThemes(result));
-            return Promise.resolve(true);
-        } catch (error) {
-            console.log("Error:", error);
-            return Promise.reject(error);
-        }
+/**
+ * The function initializes analog clock theme states by storing initial data in a database and
+ * dispatching the initial states to the Redux store.
+ * @returns a dispatch function that sets the initial states for analog clock themes.
+ */
+export const initializeAnalogClockThemeStates = async () => {
+    const result = await storeInitialAnalogClockSettingDataInDB();
+    return (dispatch: any) => {
+        dispatch(setInitialStatesForAnalogClockThemes(result));
     };
 };
 
-export const setCurrentAnalogClockTheme = (value: string) => {
-    return async (dispatch: any) => {
-        try {
-            await setCurrentAnalogClockThemeInDB(value);
-            dispatch(setAnalogClockTheme(value));
-        } catch (error) {
-            console.log("Error:", error);
-        }
+/**
+ * The function sets the current analog clock theme in the database and dispatches an action to update
+ * the analog clock theme.
+ * @param {string} value - The value parameter is a string that represents the theme for the analog
+ * clock.
+ * @returns a dispatch function.
+ */
+export const setCurrentAnalogClockTheme = async (value: string) => {
+    await setCurrentAnalogClockThemeInDB(value);
+    return (dispatch: any) => {
+        dispatch(setAnalogClockTheme(value));
     };
 };

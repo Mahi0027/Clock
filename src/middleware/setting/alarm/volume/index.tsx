@@ -4,21 +4,20 @@ import {
 } from "@/database/indexedDB/setting/alarm/volume";
 import { setInitialStatesForAlarmVolume, setVolume } from "@/redux";
 
-export const initializeAlarmVolumeStatesMiddleware = () => {
-    return async (dispatch: any) => {
-        try {
-            const result = await storeInitialAlarmVolumeDataInDB();
+export const initializeAlarmVolumeStatesMiddleware = async () => {
+    try {
+        const result = await storeInitialAlarmVolumeDataInDB();
+        return (dispatch:any) => {
             dispatch(setInitialStatesForAlarmVolume(result));
-            return Promise.resolve(true);
-        } catch (error) {
-            console.log("Error:", error);
-            return Promise.reject(error);
         }
-    };
+    } catch (error) {
+        console.log("Error:", error);
+        return Promise.reject(error);
+    }
 };
 
 export const setCurrentAlarmVolumeMiddleware = (value: number) => {
-    return async (dispatch: any) => {
+    return async (dispatch) => {
         try {
             await setCurrentAlarmVolumeInDB(value);
             dispatch(setVolume(value));
