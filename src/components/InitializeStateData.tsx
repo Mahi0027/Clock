@@ -40,22 +40,23 @@ function InitializeStateData({ setCompletedInitializationFlag }: any) {
         }
     }, [currentTheme]);
 
-    const initializeStateValues = async() => {
-        await dispatch(initializeThemeStates());
-        await dispatch(initializeAnalogClockThemeStates());
-        await dispatch(initializeDigitalClockThemeStates());
-        await dispatch(initializeClockStyleStatesMiddleware());
-        await dispatch(initializeSecondFlagStatesMiddleware());
-        await dispatch(initializeTimeZoneStatesMiddleware());
-        await dispatch(initializeAlarmSilentStatesMiddleware());
-        await dispatch(initializeAlarmSnoozeStatesMiddleware());
-        await dispatch(initializeAlarmVolumeStatesMiddleware());
-        await dispatch(initializeTimerSettingStatesMiddleware());
-        await dispatch(initializeAlarmStatesMiddleware());
+    const initializeStateValues = async () => {
+        (await initializeThemeStates())(dispatch);
+        (await initializeAnalogClockThemeStates())(dispatch);
+        (await initializeDigitalClockThemeStates())(dispatch);
+        (await initializeClockStyleStatesMiddleware())(dispatch);
+        (await initializeSecondFlagStatesMiddleware())(dispatch);
+        (await initializeTimeZoneStatesMiddleware())(dispatch);
+        (await initializeAlarmSilentStatesMiddleware())(dispatch);
+        (await initializeAlarmSnoozeStatesMiddleware())(dispatch);
+        (await initializeAlarmVolumeStatesMiddleware())(dispatch);
+        (await initializeTimerSettingStatesMiddleware())(dispatch);
+        (await initializeAlarmStatesMiddleware())(dispatch);
         setTimeout(() => {
             setCompletedInitializationFlag(true);
         }, 2000);
-    }
+        return true;
+    };
     return (
         <>
             <div className={styles.container} style={myTheme}>

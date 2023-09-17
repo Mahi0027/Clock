@@ -111,12 +111,15 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
         values: boolean[];
         dependency: number;
     }>({ values: [], dependency: -1 });
-    const [openLabelDialogFlag, setOpenLabelDialogFlag] =
-        useState<boolean>(false);
-    const [openSoundDialogFlag, setOpenSoundDialogFlag] =
-        useState<boolean>(false);
-    const [idForOpenLabelDialogFlag, setIdForOpenLabelDialogFlag] =
-        useState<number>(0);
+    const [openLabelDialogFlag, setOpenLabelDialogFlag] = useState<boolean>(
+        false
+    );
+    const [openSoundDialogFlag, setOpenSoundDialogFlag] = useState<boolean>(
+        false
+    );
+    const [idForOpenLabelDialogFlag, setIdForOpenLabelDialogFlag] = useState<
+        number
+    >(0);
     const [openDatePicker, setOpenDatePicker] = useState<boolean>(false);
     const [labelText, setLabelText] = useState<string>("");
     const [alarmTimeOut, setAlarmTimeOut] = useState<any>([]);
@@ -156,11 +159,11 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
     }, [alarmDetail]);
 
     /* set all alarms. */
-    const setAlarms = () => {
+    const setAlarms = async () => {
         let tempAlarmTimeout = Array.from({
             length: alarmDetail.alarms.length,
         });
-        alarmDetail.alarms.map((value: any, index: number) => {
+        alarmDetail.alarms.map(async (value: any, index: number) => {
             if (value.currentScheduleFlag) {
                 const currentTime = new Date();
                 let repeatFlag = false;
@@ -189,13 +192,11 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
                             This functionality need to revise after adding date in alarm time.
                         */
                         PlayAlarmFlag = false;
-                        dispatch(
-                            updateAlarmScheduleFlagMiddleware(
-                                value.id,
-                                false,
-                                getStateData
-                            )
-                        );
+                        await updateAlarmScheduleFlagMiddleware(
+                            value.id,
+                            false,
+                            getStateData
+                        )(dispatch);
                     } else {
                         /* set alarm. */
                         finalAlarmTime =
@@ -469,11 +470,14 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
                 {!alarmRunningPage && (
                     <Box sx={{ marginBottom: "32vh" }}>
                         {alarmDetail.alarms.map((alarm: any, index: number) => {
-                            const [alarmDay, alarmTime, meridiem] =
-                                convertTimeInMeridiemForm(
-                                    alarm.alarmTime,
-                                    alarm.repeat
-                                );
+                            const [
+                                alarmDay,
+                                alarmTime,
+                                meridiem,
+                            ] = convertTimeInMeridiemForm(
+                                alarm.alarmTime,
+                                alarm.repeat
+                            );
                             return (
                                 <Box key={alarm.id} sx={{ margin: "2vh" }}>
                                     <Card

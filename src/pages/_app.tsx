@@ -6,7 +6,8 @@ import "@/styles/globals.scss";
 import Paper from "@mui/material/Paper";
 import type { AppProps } from "next/app";
 import { useEffect, useState } from "react";
-import { Provider, useDispatch, useSelector } from "react-redux";
+import { Provider } from "react-redux";
+import screenfull from "screenfull";
 
 export default function App({ Component, pageProps }: AppProps) {
     const [completedInitializationFlag, setCompletedInitializationFlag] =
@@ -15,6 +16,7 @@ export default function App({ Component, pageProps }: AppProps) {
     const [themeBackground, setThemeBackground] = useState({ backgroundColor: "#fff" });
 
     useEffect(() => {
+        // fullScreen();
         getSystemCurrentTheme();
     }, [])
 
@@ -36,6 +38,22 @@ export default function App({ Component, pageProps }: AppProps) {
             setTheme(result.currentTheme);
         }
     }
+
+//     function fullScreen(): void {
+//     if (screenfull.isEnabled) {
+//     const elem: any = document.documentElement; // You can use document.documentElement to request fullscreen for the entire document.
+    
+//     if (elem.requestFullscreen) {
+//       elem.requestFullscreen();
+//     } else if (elem.webkitRequestFullscreen) {
+//       /* Safari */
+//       elem.webkitRequestFullscreen();
+//     } else if (elem.msRequestFullscreen) {
+//       /* IE11 */
+//       elem.msRequestFullscreen();
+//     }
+//   }
+//   }
 
     return (
         <Provider store={store}>

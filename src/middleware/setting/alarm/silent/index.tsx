@@ -4,21 +4,20 @@ import {
 } from "@/database/indexedDB/setting/alarm/silent";
 import { setInitialStatesForAlarmSilent, setSilentInterval } from "@/redux";
 
-export const initializeAlarmSilentStatesMiddleware = () => {
-    return async (dispatch: any) => {
-        try {
-            const result = await storeInitialAlarmSilentDataInDB();
+export const initializeAlarmSilentStatesMiddleware = async () => {
+    try {
+        const result = await storeInitialAlarmSilentDataInDB();
+        return (dispatch:any) => {
             dispatch(setInitialStatesForAlarmSilent(result));
-            return Promise.resolve(true);
-        } catch (error) {
-            console.log("Error:", error);
-            return Promise.reject(error);
         }
-    };
+    } catch (error) {
+        console.log("Error:", error);
+        return Promise.reject(error);
+    }
 };
 
 export const setCurrentAlarmSilentMiddleware = (value: string) => {
-    return async (dispatch: any) => {
+    return async (dispatch) => {
         try {
             await setCurrentAlarmSilentInDB(value);
             dispatch(setSilentInterval(value));

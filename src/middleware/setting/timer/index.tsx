@@ -11,21 +11,20 @@ import {
     setTimerVolume,
 } from "@/redux";
 
-export const initializeTimerSettingStatesMiddleware = () => {
-    return async (dispatch: any) => {
-        try {
-            const result = await storeInitialTimerSettingDataInDB();
+export const initializeTimerSettingStatesMiddleware = async() => {
+    try {
+        const result = await storeInitialTimerSettingDataInDB();
+        return (dispatch:any) => {
             dispatch(setInitialStatesForTimerSetting(result));
-            return Promise.resolve(true);
-        } catch (error) {
-            console.log("Error:", error);
-            return Promise.reject(error);
         }
-    };
+    } catch (error) {
+        console.log("Error:", error);
+        return Promise.reject(error);
+    }
 };
 
 export const setTimerSoundMiddleware = (value: string) => {
-    return async (dispatch: any) => {
+    return async (dispatch) => {
         try {
             await setTimerSoundInDB(value);
             dispatch(setTimerSound(value));
@@ -36,7 +35,7 @@ export const setTimerSoundMiddleware = (value: string) => {
 };
 
 export const setTimerSilentMiddleware = (value: string) => {
-    return async (dispatch: any) => {
+    return async (dispatch) => {
         try {
             await setTimerSilentInDB(value);
             dispatch(setTimerSilentInterval(value));
@@ -47,7 +46,7 @@ export const setTimerSilentMiddleware = (value: string) => {
 };
 
 export const setTimerVolumeMiddleware = (value: number) => {
-    return async (dispatch: any) => {
+    return async (dispatch) => {
         try {
             await setTimerVolumeInDB(value);
             dispatch(setTimerVolume(value));
