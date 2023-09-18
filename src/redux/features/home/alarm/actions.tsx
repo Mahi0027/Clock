@@ -5,6 +5,7 @@ import {
     SET_ALARM_SOUND,
     SET_INITIAL_STATES_FOR_ALARM,
     SET_REPEAT_ALARM,
+    TOGGLE_TEMP_FLAG,
     UPDATE_ALARM_LABEL,
     UPDATE_ALARM_SCHEDULE_FLAG,
     UPDATE_ALARM_TIME,
@@ -76,5 +77,11 @@ export const setRepeatAlarm = (
     return {
         type: SET_REPEAT_ALARM,
         payload: { id, newAlarmTime, dayOfWeek },
+    };
+};
+
+export const toggleTempFlag = () => {
+    return {
+        type: TOGGLE_TEMP_FLAG,
     };
 };

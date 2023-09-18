@@ -50,7 +50,6 @@ function Feedback() {
             .sendForm(service_id, template_id, form.current, public_key)
             .then(
                 (result: any) => {
-                    console.log(result.text);
                     setFormData({ user_name: "", user_email: "", message: "" });
                 },
                 (error: any) => {

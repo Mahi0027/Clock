@@ -25,12 +25,15 @@ function SetTimeZone() {
         dispatch(fetchTimeZone());
     }, [dispatch]);
 
+    /* The `handleClose` function is a callback function that is used to handle the closing of the
+    dialog component. It takes an optional `newValue` parameter, which represents the selected value
+    from the dialog. */
     const handleClose = useCallback(
-        (newValue?: string) => {
+        async (newValue?: string) => {
             setOpen(false);
             if (newValue) {
                 // dispatch(setTimeZone(newValue));
-                dispatch(setCurrentTimeZoneMiddleware(newValue));
+                (await setCurrentTimeZoneMiddleware(newValue))(dispatch);
             }
         },
         [dispatch]

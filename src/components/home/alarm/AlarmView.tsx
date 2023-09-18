@@ -95,6 +95,10 @@ type stateTypes = {
     alarmCurrentSnoozeInterval: string;
 };
 function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
+    /* The above code is a TypeScript React component. It is using the useSelector and useDispatch
+    hooks from the react-redux library to access and update the state of the application. It is
+    retrieving specific properties from the state object, such as alarmDetail, alarmCurrentVolume,
+    alarmCurrentSilentInterval, and alarmCurrentSnoozeInterval. */
     const {
         alarmDetail,
         alarmCurrentVolume,
@@ -110,7 +114,10 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
     const [expand, setExpand] = useState<{
         values: boolean[];
         dependency: number;
-    }>({ values: [], dependency: -1 });
+    }>({
+        values: [],
+        dependency: -1,
+    });
     const [openLabelDialogFlag, setOpenLabelDialogFlag] = useState<boolean>(
         false
     );
@@ -126,24 +133,35 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
     const [alarmRunningPage, setAlarmRunningPage] = useState<boolean>(false);
     const [alarmRunningLabel, setAlarmRunningLabel] = useState<string>("");
     const [currentAlarmAudio, setCurrentAlarmAudio] = useState<any>(null);
-    const [prevTimeOut, setPrevTimeOut] = useState<number>(0);
     const [expandBox, setExpandBox] = useState<number>(-1);
     const alarmAudio = Array.from(
-        { length: alarmDetail.alarmSounds.length },
+        {
+            length: alarmDetail.alarmSounds.length,
+        },
         useRef
     );
 
-    const getStateData = () => {
-        return alarmDetail;
-    };
+    /* The above code is a useEffect hook in a TypeScript React component. It is used to perform side
+    effects in functional components. */
     useEffect(() => {
         setExpandState(alarmDetail.alarms.length, expandBox);
         setExpandBox(-1);
         dispatch(getAllAlarm());
     }, [dispatch]);
 
+    /* The above code is defining a function called `getStateData` using the `useCallback` hook in a
+    TypeScript React component. The function returns the value of the `alarmDetail` variable. The
+    `useCallback` hook is used to memoize the function, meaning that it will only be re-created if
+    the `alarmDetail` variable changes. */
+    const getStateData = useCallback(() => {
+        return alarmDetail;
+    }, [alarmDetail]);
+    /* The above code is a useEffect hook in a TypeScript React component. It is used to perform
+    certain actions when the dependencies specified in the second argument (in this case,
+    [alarmDetail]) change. */
     useEffect(() => {
-        dispatch(getAllAlarm());
+        // getStateData();
+        // dispatch(getAllAlarm());
         setExpandState(alarmDetail.alarms.length, expandBox);
         setExpandBox(-1);
         setAlarms();
@@ -159,6 +177,10 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
     }, [alarmDetail]);
 
     /* set all alarms. */
+    /**
+     * The `setAlarms` function sets alarms based on the provided alarm details and schedules them to
+     * ring at the specified times.
+     */
     const setAlarms = async () => {
         let tempAlarmTimeout = Array.from({
             length: alarmDetail.alarms.length,
@@ -226,7 +248,17 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
     };
 
     /* This function start ringing alarm. */
-    const startAlarmRinging = (
+    /**
+     * The function starts an alarm ringing, sets up the alarm audio, plays the sound, updates the
+     * alarm label, and stops the alarm after a specific time interval.
+     * @param {boolean} repeatFlag - A boolean flag indicating whether the alarm should repeat or not.
+     * @param {number} id - The `id` parameter is a number that represents the unique identifier of the
+     * alarm.
+     * @param {string} label - The label is a string that represents the label or name of the alarm.
+     * @param {string} sound - The `sound` parameter is a string that represents the name of the sound
+     * file to be played for the alarm. It is used to construct the file path for the audio file.
+     */
+    const startAlarmRinging = async (
         repeatFlag: boolean,
         id: number,
         label: string,
@@ -241,9 +273,11 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
         alarmDOM.play();
         setAlarmRunningLabel(label);
         if (!repeatFlag) {
-            dispatch(
-                updateAlarmScheduleFlagMiddleware(id, false, getStateData)
-            );
+            await updateAlarmScheduleFlagMiddleware(
+                id,
+                false,
+                getStateData
+            )(dispatch);
         }
         const timeInterval = Number(alarmCurrentSilentInterval.substring(0, 2));
         /* stop alarm after specific time. */
@@ -254,8 +288,20 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
     };
 
     /* it use to manage expand state variable */
+    /**
+     * The function `setExpandState` sets the expand state of an array of values, with one value being
+     * set to `true` and the rest being set to `false`, based on the provided index.
+     * @param {number} length - The length parameter is the total number of items in the list or array
+     * that you want to set the expand state for.
+     * @param index - The `index` parameter is an optional parameter that specifies the index of the
+     * element that should be expanded. If no index is provided, all elements will be set to the
+     * default state.
+     */
     const setExpandState = (length: number, index = -1) => {
-        setExpand({ values: [], dependency: -1 }); //set to default
+        setExpand({
+            values: [],
+            dependency: -1,
+        }); //set to default
         for (let i = 0; i < length; i++) {
             i === index
                 ? setExpand((prevState) => ({
@@ -269,14 +315,24 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
         }
     };
 
-    const handleExpand = (index: number) => {
-        const updatedTempExpand = expand.values;
-        updatedTempExpand[index] = !updatedTempExpand[index];
-        setExpand({ values: updatedTempExpand, dependency: index });
-    };
+    /* The above code is defining a function called `handleExpand` in a TypeScript React component.
+    This function takes an `index` parameter of type `number`. */
+    const handleExpand = useCallback(
+        (index: number) => {
+            const updatedTempExpand = expand.values;
+            updatedTempExpand[index] = !updatedTempExpand[index];
+            setExpand({
+                values: updatedTempExpand,
+                dependency: index,
+            });
+        },
+        [expand.values]
+    );
 
-    /* convert time into day/date, time, meridian */
-    const convertTimeInMeridiemForm = (time: Date, repeat: any) => {
+    /* The above code is a TypeScript React function that converts a given time into a specific format.
+    It takes in two parameters: `time` (a Date object) and `repeat` (an object containing
+    information about repeated alarms for different days). */
+    const convertTimeInMeridiemForm = useCallback((time: Date, repeat: any) => {
         let repeatFlag = false;
         let date = new Date(time);
         let hour = Number(date.getHours());
@@ -328,22 +384,44 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
             ":" +
             (minute < 10 ? "0" + minute.toString() : minute.toString());
         return [alarmDay, finalAlarmTime, meridiem];
-    };
+    }, []);
 
     /* make first character capital in string. */
+    /**
+     * The function capitalizes the first letter of a given string.
+     * @param {string} inputString - The inputString parameter is a string that represents the input
+     * text that you want to capitalize the first letter of.
+     * @returns the input string with the first letter capitalized.
+     */
     function capitalizeFirstLetter(inputString: string) {
         return inputString.charAt(0).toUpperCase() + inputString.slice(1);
     }
 
+    /* The above code is defining a function called `handleLabelText` in a TypeScript React component.
+    This function is using the `useCallback` hook to memoize the function and optimize performance. */
     const handleLabelText = useCallback(
-        (alarmId: number, label: string) => {
-            dispatch(updateAlarmLabelMiddleware(alarmId, label, getStateData));
+        async (alarmId: number, label: string) => {
+            await updateAlarmLabelMiddleware(
+                alarmId,
+                label,
+                getStateData
+            )(dispatch);
             setOpenLabelDialogFlag(false);
         },
-        [dispatch]
+        [dispatch, getStateData]
     );
 
     /* on click in label button icon event. */
+    /**
+     * The function `handleLabelButtonEvent` sets the state variables `openLabelDialogFlag`,
+     * `idForOpenLabelDialogFlag`, and `labelText` based on the provided parameters.
+     * @param {boolean} openDialogBoxFlag - A boolean flag indicating whether the label dialog box
+     * should be opened or closed.
+     * @param {number} alarmId - The alarmId parameter is a number that represents the unique
+     * identifier of an alarm.
+     * @param {string} alarmLabel - The `alarmLabel` parameter is a string that represents the label of
+     * an alarm.
+     */
     const handleLabelButtonEvent = (
         openDialogBoxFlag: boolean,
         alarmId: number,
@@ -355,22 +433,28 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
     };
 
     /* set alarm ringtone. */
+    /* The above code is defining a function called `handleCloseAlarmSoundDialog` using the
+    `useCallback` hook. This function is used to handle the closing of an alarm sound dialog. */
     const handleCloseAlarmSoundDialog = useCallback(
-        (newValue?: string, rowId?: number) => {
+        async (newValue?: string, rowId?: number) => {
             for (let i = 0; i < alarmDetail.alarmSounds.length; i++) {
                 alarmAudio[i].current.pause();
             }
             setOpenSoundDialogFlag(false);
             if (rowId !== -1 && newValue) {
-                dispatch(
-                    setAlarmSoundMiddleware(rowId, newValue, getStateData)
-                );
+                await setAlarmSoundMiddleware(
+                    rowId,
+                    newValue,
+                    getStateData
+                )(dispatch);
             }
         },
-        [alarmDetail.alarmSounds.length, alarmAudio, dispatch]
+        [alarmDetail.alarmSounds.length, alarmAudio, getStateData, dispatch]
     );
 
     /* play alarm ringtone. */
+    /* The above code is defining a function called `playAlarmSound` in TypeScript with React. This
+    function takes a parameter `value` of type string. */
     const playAlarmSound = useCallback(
         (value: string) => {
             for (let i = 0; i < alarmDetail.alarmSounds.length; i++) {
@@ -381,35 +465,69 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
         [alarmAudio, alarmDetail.alarmSounds]
     );
 
-    /* schedule alarm date. */
+    /* The above code is defining a function called `updateAlarmDate` using the `useCallback` hook in a
+    TypeScript React component. This function takes three parameters: `alarmId` (a number),
+    `currentAlarmTime` (a Date object), and `customDate` (a Date object). */
     const updateAlarmDate = useCallback(
         (alarmId: number, currentAlarmTime: Date, customDate: Date) => {
             customDate.setHours(currentAlarmTime.getHours());
             customDate.setMinutes(currentAlarmTime.getMinutes());
-            dispatch(
-                updateAlarmTimeMiddleware(alarmId, customDate, getStateData)
-            );
+            updateAlarmTimeMiddleware(
+                alarmId,
+                customDate,
+                getStateData
+            )(dispatch);
         },
-        [dispatch]
+        [dispatch, getStateData]
     );
 
     /* JSX code under useMemo for optimization and improving performance. */
+    /**
+     * The `alarmViewComponent` function is a React component that renders a list of alarms with
+     * various functionalities such as checking/unchecking alarm schedule flag, setting repeat alarms,
+     * editing labels, selecting alarm sounds, and deleting alarms.
+     * @param {number} alarmId - The `alarmId` parameter is a number that represents the unique
+     * identifier of an alarm.
+     * @param event - The `event` parameter is a React.ChangeEvent<HTMLInputElement> object. It
+     * represents the event that occurred when the user interacts with the input element, such as
+     * checking or unchecking a checkbox.
+     */
     const alarmViewComponent = useMemo(() => {
         /* check/uncheck alarm schedule flag. */
-        const handleChangeSwitch = (
+        /**
+         * The handleChangeSwitch function is an asynchronous function that updates the alarm schedule
+         * flag based on the event target's checked value.
+         * @param {number} alarmId - The alarmId parameter is a number that represents the unique
+         * identifier of an alarm.
+         * @param event - The `event` parameter is a React.ChangeEvent<HTMLInputElement> object. It
+         * represents the event that occurred when the user interacts with the input element, such as
+         * checking or unchecking a checkbox.
+         */
+        const handleChangeSwitch = async (
             alarmId: number,
             event: React.ChangeEvent<HTMLInputElement>
         ) => {
-            dispatch(
-                updateAlarmScheduleFlagMiddleware(
-                    alarmId,
-                    event.target.checked,
-                    getStateData
-                )
-            );
+            await updateAlarmScheduleFlagMiddleware(
+                alarmId,
+                event.target.checked,
+                getStateData
+            )(dispatch);
         };
         /* set repeat alarm.  */
-        const handleRepeatAlarm = (
+        /**
+         * The function `handleRepeatAlarm` sets a new alarm time based on the specified day of the
+         * week and updates the state with the new alarm time.
+         * @param {number} alarmId - The ID of the alarm that needs to be repeated.
+         * @param {Date} alarmTime - The time at which the alarm is set to go off. It is a Date object
+         * representing the specific date and time of the alarm.
+         * @param {number} dayOfWeek - The `dayOfWeek` parameter represents the day of the week for
+         * which the alarm should be repeated. It is a number that corresponds to the day of the week,
+         * where Sunday is 0, Monday is 1, and so on.
+         * @param {number} expandIndex - The `expandIndex` parameter is used to determine which alarm's
+         * details should be expanded or displayed. It is an index value that helps identify the
+         * specific alarm in a list or array.
+         */
+        const handleRepeatAlarm = async (
             alarmId: number,
             alarmTime: Date,
             dayOfWeek: number,
@@ -428,14 +546,12 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
                 );
             }
             setExpandBox(expandIndex);
-            dispatch(
-                setRepeatAlarmMiddleware(
-                    alarmId,
-                    newAlarmTime,
-                    dayOfWeek,
-                    getStateData
-                )
-            );
+            await setRepeatAlarmMiddleware(
+                alarmId,
+                newAlarmTime,
+                dayOfWeek,
+                getStateData
+            )(dispatch);
         };
 
         return (
@@ -468,7 +584,11 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
                     );
                 })}
                 {!alarmRunningPage && (
-                    <Box sx={{ marginBottom: "32vh" }}>
+                    <Box
+                        sx={{
+                            marginBottom: "32vh",
+                        }}
+                    >
                         {alarmDetail.alarms.map((alarm: any, index: number) => {
                             const [
                                 alarmDay,
@@ -479,7 +599,12 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
                                 alarm.repeat
                             );
                             return (
-                                <Box key={alarm.id} sx={{ margin: "2vh" }}>
+                                <Box
+                                    key={alarm.id}
+                                    sx={{
+                                        margin: "2vh",
+                                    }}
+                                >
                                     <Card
                                         variant="outlined"
                                         sx={{
@@ -510,7 +635,9 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
                                                 <LabelOutlinedIcon />
                                                 <Typography
                                                     variant="body1"
-                                                    sx={{ paddingLeft: "2vw" }}
+                                                    sx={{
+                                                        paddingLeft: "2vw",
+                                                    }}
                                                 >
                                                     {"  "}
                                                     {alarm.label}
@@ -577,7 +704,9 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
                                             ) : (
                                                 <Typography
                                                     variant="body2"
-                                                    sx={{ opacity: "0.5" }}
+                                                    sx={{
+                                                        opacity: "0.5",
+                                                    }}
                                                 >
                                                     Not Scheduled
                                                 </Typography>
@@ -727,13 +856,11 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
                                             <Divider />
                                             <Stack direction={"row"}>
                                                 <Button
-                                                    onClick={() =>
-                                                        dispatch(
-                                                            deleteAlarmMiddleware(
-                                                                alarm.id,
-                                                                getStateData
-                                                            )
-                                                        )
+                                                    onClick={async () =>
+                                                        await deleteAlarmMiddleware(
+                                                            alarm.id,
+                                                            getStateData
+                                                        )(dispatch)
                                                     }
                                                 >
                                                     <DeleteOutlineOutlinedIcon
@@ -762,6 +889,7 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
         currentAlarmAudio,
         dispatch,
         expand.values,
+        getStateData,
         handleCloseAlarmSoundDialog,
         handleExpand,
         handleLabelText,

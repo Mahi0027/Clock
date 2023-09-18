@@ -6,9 +6,9 @@ export const setInitialStatesForAlarmVolume = (value: any) => {
         payload: value,
     };
 };
-export const setVolume = (value: number) => {
-    return {
-        type: SET_VOLUME,
-        payload: value,
-    };
-};
+export const setVolume = (value: number | number[]) => {
+           return {
+               type: SET_VOLUME,
+               payload: value,
+           };
+       };
