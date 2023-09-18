@@ -134,7 +134,7 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
     const [alarmRunningLabel, setAlarmRunningLabel] = useState<string>("");
     const [currentAlarmAudio, setCurrentAlarmAudio] = useState<any>(null);
     const [expandBox, setExpandBox] = useState<number>(-1);
-    const alarmAudio = Array.from(
+    const alarmAudio: any[] = Array.from(
         {
             length: alarmDetail.alarmSounds.length,
         },
@@ -441,7 +441,7 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
                 alarmAudio[i].current.pause();
             }
             setOpenSoundDialogFlag(false);
-            if (rowId !== -1 && newValue) {
+            if (rowId !== undefined && rowId !== -1 && newValue) {
                 await setAlarmSoundMiddleware(
                     rowId,
                     newValue,
