@@ -31,13 +31,13 @@ function SetSound() {
 
     /* set timer Sound. */
     const handleClose = useCallback(
-        (newValue?: string) => {
+        async (newValue?: string) => {
             for (let i = 0; i < allTimerSounds.length; i++) {
                 timerAudio[i].current.pause();
             }
             setOpen(false);
             if (newValue) {
-                dispatch(setTimerSoundMiddleware(newValue));
+                (await setTimerSoundMiddleware(newValue))(dispatch);
             }
         },
         [dispatch, allTimerSounds, timerAudio]

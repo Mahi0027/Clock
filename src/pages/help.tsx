@@ -124,7 +124,6 @@ function Help() {
         }
     }, []);
     const helpComponent = useMemo(() => {
-        console.log("calling help component");
         return (
             <Layout>
                 <TopNavbar

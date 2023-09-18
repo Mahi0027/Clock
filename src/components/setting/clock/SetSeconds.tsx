@@ -8,17 +8,27 @@ import { setSecondFlag } from "@/redux";
 import { setCurrentSecondFlagMiddleware } from "@/middleware/setting/clock/second";
 
 function SetSeconds() {
+    /* The code `const setSecond: boolean = useSelector((state: any) => state.second.setSecond)` is
+    using the `useSelector` hook from the `react-redux` library to access the value of `setSecond`
+    from the Redux store. It selects the `setSecond` value from the `state` object, which is of type
+    `any`. The `setSecond` value is then assigned to the `setSecond` constant, which is of type
+    `boolean`. */
     const setSecond: boolean = useSelector(
         (state: any) => state.second.setSecond
     );
     const dispatch = useDispatch();
 
     /* JSX code under useMemo for optimization and improving performance. */
+    /* The `useMemo` hook is used to memoize the result of a function so that it is only recomputed
+    when its dependencies change. In this case, the function is creating a JSX component that
+    represents a list item button with a switch. */
     const setSecondsComponent = useMemo(() => {
         return (
             <ListItemButton
                 sx={{ pl: 9 }}
-                onChange={() => dispatch(setCurrentSecondFlagMiddleware(!setSecond))}
+                onChange={async () =>
+                    (await setCurrentSecondFlagMiddleware(!setSecond))(dispatch)
+                }
                 disableRipple
             >
                 <ListItemText

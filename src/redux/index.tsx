@@ -58,6 +58,7 @@ export {
     setAlarmSound,
     deleteAlarm,
     setRepeatAlarm,
+    toggleTempFlag,
 } from "./features/home/alarm/actions";
 
 export {

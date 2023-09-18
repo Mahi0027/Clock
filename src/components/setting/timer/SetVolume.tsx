@@ -18,15 +18,23 @@ type stateTypes = {
 };
 
 function SetVolume() {
-    const { timerMinVolume, timerMaxVolume, timerCurrentVolume }: stateTypes =
-        useSelector((state: any) => ({
-            timerMinVolume: state.timerSetting.timerMinVolume,
-            timerMaxVolume: state.timerSetting.timerMaxVolume,
-            timerCurrentVolume: state.timerSetting.timerCurrentVolume,
-        }));
+    /* The code is using the `useSelector` hook from the `react-redux` library to select specific data
+    from the Redux store. It is extracting the `timerMinVolume`, `timerMaxVolume`, and
+    `timerCurrentVolume` values from the `timerSetting` slice of the Redux store. */
+    const {
+        timerMinVolume,
+        timerMaxVolume,
+        timerCurrentVolume,
+    }: stateTypes = useSelector((state: any) => ({
+        timerMinVolume: state.timerSetting.timerMinVolume,
+        timerMaxVolume: state.timerSetting.timerMaxVolume,
+        timerCurrentVolume: state.timerSetting.timerCurrentVolume,
+    }));
     const dispatch = useDispatch();
 
-    /* JSX code under useMemo for optimization and improving performance. */
+    /* The `useMemo` hook is used to memoize the result of a function so that it is only recomputed
+    when its dependencies change. In this case, the `setVolumeComponent` variable is memoized using
+    `useMemo` to optimize performance. */
     const setVolumeComponent = useMemo(() => {
         return (
             <ListItem sx={{ pl: 9 }}>
@@ -50,13 +58,15 @@ function SetVolume() {
                             value={timerCurrentVolume}
                             min={timerMinVolume}
                             max={timerMaxVolume}
-                            onChange={(
+                            onChange={async (
                                 event: Event,
                                 newValue: number | number[]
                             ) =>
-                                dispatch(
-                                    setTimerVolumeMiddleware(newValue as number)
-                                )
+                                (
+                                    await setTimerVolumeMiddleware(
+                                        newValue as number
+                                    )
+                                )(dispatch)
                             }
                             valueLabelDisplay="auto"
                         />

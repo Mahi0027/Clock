@@ -5,6 +5,7 @@ import {
     SET_ALARM_SOUND,
     SET_INITIAL_STATES_FOR_ALARM,
     SET_REPEAT_ALARM,
+    TOGGLE_TEMP_FLAG,
     UPDATE_ALARM_LABEL,
     UPDATE_ALARM_SCHEDULE_FLAG,
     UPDATE_ALARM_TIME,
@@ -77,12 +78,14 @@ export type initialStatesTypes = {
         label: string | null;
     }[];
     alarmSounds: string[];
+    tempFlag: boolean;
 };
 
 const initialStates: initialStatesTypes = {
     id: 1,
     alarms: [],
     alarmSounds: alarmSounds,
+    tempFlag: false,
 };
 
 const alarmReducer = (state = initialStates, action: actionTypes) => {
@@ -193,7 +196,7 @@ const alarmReducer = (state = initialStates, action: actionTypes) => {
                 ...state,
             };
         case SET_REPEAT_ALARM:
-            const updatedAlarmForRepeat = state.alarms.map((alarm) => {
+            const updatedAlarmForRepeat = state.alarms.map((alarm: any) => {
                 const flagStatus: boolean =
                     alarm.repeat[dayHashTable[action.payload.dayOfWeek]].flag;
                 return alarm.id === action.payload.id
@@ -216,6 +219,11 @@ const alarmReducer = (state = initialStates, action: actionTypes) => {
             return {
                 ...state,
                 alarms: updatedAlarmForRepeat,
+            };
+        case TOGGLE_TEMP_FLAG:
+            return {
+                ...state,
+                tempFlag: !state.tempFlag,
             };
         default:
             return state;

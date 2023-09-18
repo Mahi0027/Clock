@@ -13,15 +13,23 @@ import { setVolume } from "@/redux";
 import { setCurrentAlarmVolumeMiddleware } from "@/middleware/setting/alarm/volume";
 
 function SetVolume() {
-    const { minValue, maxValue, currentValue }: initialStatesTypes =
-        useSelector((state: any) => ({
-            minValue: state.alarmVolume.minValue,
-            maxValue: state.alarmVolume.maxValue,
-            currentValue: state.alarmVolume.currentValue,
-        }));
+    /* The code block is using the `useSelector` hook from the `react-redux` library to select specific
+    values from the Redux store. It is extracting the `minValue`, `maxValue`, and `currentValue`
+    properties from the `state.alarmVolume` object in the Redux store. */
+    const {
+        minValue,
+        maxValue,
+        currentValue,
+    }: initialStatesTypes = useSelector((state: any) => ({
+        minValue: state.alarmVolume.minValue,
+        maxValue: state.alarmVolume.maxValue,
+        currentValue: state.alarmVolume.currentValue,
+    }));
     const dispatch = useDispatch();
 
-    /* JSX code under useMemo for optimization and improving performance. */
+    /* The `useMemo` hook is used to memoize the result of a function so that it is only recomputed
+    when its dependencies change. In this case, the `useMemo` hook is used to optimize and improve
+    performance by memoizing the JSX code that represents the `SetVolume` component. */
     const setVolumeComponent = useMemo(() => {
         return (
             <ListItem sx={{ pl: 9 }}>
@@ -45,13 +53,15 @@ function SetVolume() {
                             value={currentValue}
                             min={minValue}
                             max={maxValue}
-                            onChange={(
+                            onChange={async (
                                 event: Event,
                                 newValue: number | number[]
                             ) =>
-                                dispatch(
-                                    setCurrentAlarmVolumeMiddleware(newValue)
-                                )
+                                (
+                                    await setCurrentAlarmVolumeMiddleware(
+                                        newValue
+                                    )
+                                )(dispatch)
                             }
                             valueLabelDisplay="auto"
                         />

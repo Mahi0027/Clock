@@ -54,7 +54,6 @@ function CustomHorizontalScrollableDialog({
             (await setCurrentAnalogClockTheme(event.target.value))(dispatch);
         } else {
             //set all themes from digital themes.
-            console.log("set digital clock theme");
             (await setCurrentDigitalClockTheme(event.target.value))(dispatch);
         }
         setCurrentClockTheme(event.target.value);

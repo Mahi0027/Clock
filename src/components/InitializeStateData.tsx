@@ -16,6 +16,8 @@ import loader from "@/../public/animations/loader.json";
 import styles from "@/styles/components/home/InitializeStateData.module.scss";
 
 function InitializeStateData({ setCompletedInitializationFlag }: any) {
+    /* The code block is using the `useSelector` and `useDispatch` hooks from the `react-redux` library
+    to access the Redux store and dispatch actions. */
     const { currentTheme }: { currentTheme: string } = useSelector(
         (state: any) => ({
             currentTheme: state.theme.currentTheme,
@@ -24,10 +26,16 @@ function InitializeStateData({ setCompletedInitializationFlag }: any) {
     const dispatch = useDispatch();
     const [myTheme, setMyTheme] = useState({});
 
+    /* The `useEffect(() => { initializeStateValues(); }, []);` hook is used to call the
+    `initializeStateValues` function when the component mounts. The empty array `[]` as the second
+    argument ensures that the effect is only triggered once, when the component is initially
+    rendered. */
     useEffect(() => {
         initializeStateValues();
     }, []);
 
+    /* The `useEffect` hook is used to perform side effects in a functional component. In this case,
+    the effect is triggered whenever the `currentTheme` value changes. */
     useEffect(() => {
         if (currentTheme === "light") {
             setMyTheme({
@@ -40,6 +48,11 @@ function InitializeStateData({ setCompletedInitializationFlag }: any) {
         }
     }, [currentTheme]);
 
+    /**
+     * The function initializes various state values and sets a completed initialization flag after a
+     * delay of 2 seconds.
+     * @returns The function `initializeStateValues` is returning a boolean value of `true`.
+     */
     const initializeStateValues = async () => {
         (await initializeThemeStates())(dispatch);
         (await initializeAnalogClockThemeStates())(dispatch);

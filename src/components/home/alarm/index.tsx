@@ -12,29 +12,36 @@ import { setAlarmMiddleware } from "@/middleware/home/alarm";
 import { initialStatesTypes } from "@/database/indexedDB/home/alarm";
 
 function AlarmHome() {
+    /* The code snippet is using React Redux hooks to interact with the Redux store. */
     const statesDetails = useSelector((state: any) => state.alarm);
     const dispatch = useDispatch();
     const [open, setOpen] = useState<boolean>(false);
     const [scrollToTop, setScrollToTop] = useState<boolean>(false);
-    const [stateDataValues, setStateDataValues] = useState(null);
 
-    const getStateData = () => {
+    /* The `getStateData` constant is a memoized callback function created using the `useCallback`
+    hook. It returns the value of the `statesDetails` variable. */
+    const getStateData = useCallback(() => {
         return statesDetails;
-    }
+    }, [statesDetails]);
+
+    /* The `addNewAlarm` function is a callback function created using the `useCallback` hook. It is
+    used to add a new alarm by setting the alarm time and dispatching an action to update the alarm
+    state in the Redux store. */
     const addNewAlarm = useCallback(
-        (alarmTime: Date) => {
+        async (alarmTime: Date) => {
             const currentTime = new Date();
             /* set alarm for next day if chosen time is gone today. */
             if (currentTime.getTime() > alarmTime.getTime()) {
                 alarmTime.setDate(alarmTime.getDate() + 1);
             }
-            dispatch(setAlarmMiddleware(alarmTime, getStateData));
+            await setAlarmMiddleware(alarmTime, getStateData)(dispatch);
             setScrollToTop(true);
         },
-        [dispatch]
+        [dispatch, getStateData]
     );
 
-    /* JSX code under useMemo for optimization and improving performance. */
+    /* The `alarmHomeComponent` constant is using the `useMemo` hook to memoize the rendering of a JSX
+    component. */
     const alarmHomeComponent = useMemo(() => {
         return (
             <>

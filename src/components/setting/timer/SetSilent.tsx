@@ -12,25 +12,34 @@ type stateTypes = {
     currentSilentInterval: string;
 };
 function SetSilent() {
-    const { allTimerSilentIntervals, currentSilentInterval }: stateTypes =
-        useSelector((state: any) => ({
-            allTimerSilentIntervals: state.timerSetting.allTimerSilentIntervals,
-            currentSilentInterval: state.timerSetting.currentSilentInterval,
-        }));
+    /* The code block is using the `useSelector` hook from the `react-redux` library to select specific
+    data from the Redux store. It is extracting the `allTimerSilentIntervals` and
+    `currentSilentInterval` values from the `timerSetting` slice of the Redux store. */
+    const {
+        allTimerSilentIntervals,
+        currentSilentInterval,
+    }: stateTypes = useSelector((state: any) => ({
+        allTimerSilentIntervals: state.timerSetting.allTimerSilentIntervals,
+        currentSilentInterval: state.timerSetting.currentSilentInterval,
+    }));
     const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
 
+    /* The `handleClose` function is a callback function that is created using the `useCallback` hook.
+    It is used to handle the closing of the dialog component and update the timer silent interval
+    value. */
     const handleClose = useCallback(
-        (newValue?: string) => {
+        async (newValue?: string) => {
             setOpen(false);
             if (newValue) {
-                dispatch(setTimerSilentMiddleware(newValue));
+                (await setTimerSilentMiddleware(newValue))(dispatch);
             }
         },
         [dispatch]
     );
 
-    /* JSX code under useMemo for optimization and improving performance. */
+    /* The `setSilentComponent` constant is using the `useMemo` hook to memoize the rendering of a JSX
+    component. */
     const setSilentComponent = useMemo(() => {
         return (
             <>

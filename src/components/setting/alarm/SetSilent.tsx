@@ -8,24 +8,35 @@ import { initialStatesTypes } from "@/redux/features/setting/alarm/silent/silent
 import { setCurrentAlarmSilentMiddleware } from "@/middleware/setting/alarm/silent";
 
 function SetSilent() {
-    const { allSilentIntervals, currentSilentInterval }: initialStatesTypes =
-        useSelector((state: any) => ({
-            allSilentIntervals: state.alarmSilent.allSilentIntervals,
-            currentSilentInterval: state.alarmSilent.currentSilentInterval,
-        }));
+    /* The code is using the `useSelector` hook from the `react-redux` library to select specific state
+    values from the Redux store. It is extracting the `allSilentIntervals` and
+    `currentSilentInterval` values from the `state.alarmSilent` slice of the Redux store and
+    assigning them to the variables `allSilentIntervals` and `currentSilentInterval` respectively. */
+    const {
+        allSilentIntervals,
+        currentSilentInterval,
+    }: initialStatesTypes = useSelector((state: any) => ({
+        allSilentIntervals: state.alarmSilent.allSilentIntervals,
+        currentSilentInterval: state.alarmSilent.currentSilentInterval,
+    }));
     const dispatch = useDispatch();
     const [open, setOpen] = useState<boolean>(false);
 
+    /* The `handleClose` function is a callback function that is used to handle the closing of the
+    dialog component. It takes an optional `value` parameter, which represents the selected value
+    from the dialog. */
     const handleClose = useCallback(
-        (value?: string) => {
+        async (value?: string) => {
             setOpen(false);
             if (value) {
-                dispatch(setCurrentAlarmSilentMiddleware(value));
+                (await setCurrentAlarmSilentMiddleware(value))(dispatch);
             }
         },
         [dispatch]
     );
-    /* JSX code under useMemo for optimization and improving performance. */
+
+    /* The `useMemo` hook is used to memoize the result of a computation. In this case, the
+    `setSilentComponent` variable is assigned the result of the `useMemo` hook. */
     const setSilentComponent = useMemo(() => {
         return (
             <>
