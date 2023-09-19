@@ -7,7 +7,7 @@ import React, {
     useState,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import styles from "@/styles/components/home/alarm/alarmView.module.scss";
+import styles from "@/styles/components/home/alarm/AlarmView.module.scss";
 import { getAllAlarm } from "@/redux";
 import { styled } from "@mui/material/styles";
 import {
