@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Stack } from "@mui/material";
 import BottomNavbar from "@/components/BottomNavbar";
 import TopNavbar from "@/components/TopNavbar";
-import styles from "@/styles/Home.module.scss";
+import styles from "@/styles/home.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import ClockHome from "@/components/home/clock";
 import AlarmHome from "@/components/home/alarm";

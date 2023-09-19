@@ -13,7 +13,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Lottie from "lottie-react";
 import loader from "@/../public/animations/loader.json";
-import styles from "@/styles/components/home/InitializeStateData.module.scss";
+import styles from "@/styles/components/home/initializeStateData.module.scss";
 
 function InitializeStateData({ setCompletedInitializationFlag }: any) {
     /* The code block is using the `useSelector` and `useDispatch` hooks from the `react-redux` library

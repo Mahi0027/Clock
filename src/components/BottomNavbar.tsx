@@ -6,7 +6,7 @@ import HourglassBottomIcon from "@mui/icons-material/HourglassBottom";
 import TimerOutlinedIcon from "@mui/icons-material/TimerOutlined";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentHomePage } from "@/redux";
-import styles from "../styles/components/BottomNavbar.module.scss";
+import styles from "@/styles/components/bottomNavbar.module.scss";
 
 type stateTypes = {
     currentHomePage: number;

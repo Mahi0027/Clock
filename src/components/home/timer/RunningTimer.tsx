@@ -16,7 +16,7 @@ import React, {
     useState,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import styles from "@/styles/components/home/timer/RunningTimer.module.scss";
+import styles from "@/styles/components/home/timer/runningTimer.module.scss";
 import AddIcon from "@mui/icons-material/Add";
 import LabelOutlinedIcon from "@mui/icons-material/LabelOutlined";
 import CircularWithValueLabel from "./miscellanceous/CircularWithValueLabel";
