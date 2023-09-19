@@ -7,7 +7,7 @@ import { TransitionProps } from "@mui/material/transitions";
 import timer from "@/../public/animations/timer.json";
 import Lottie from "lottie-react";
 import { Grid } from "@mui/material";
-import styles from "@/styles/components/home/timer/TimerCompletedRingingScreen.module.scss";
+import styles from "@/styles/components/home/timer/timerCompletedRingingScreen.module.scss";
 
 const Transition = React.forwardRef(function Transition(
     props: TransitionProps & {

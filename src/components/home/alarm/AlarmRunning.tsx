@@ -7,7 +7,7 @@ import { TransitionProps } from "@mui/material/transitions";
 import alarm from "@/../public/animations/alarm.json";
 import Lottie from "lottie-react";
 import { Box, Grid } from "@mui/material";
-import styles from "@/styles/components/home/alarm/AlarmRunning.module.scss";
+import styles from "@/styles/components/home/alarm/alarmRunning.module.scss";
 
 const Transition = React.forwardRef(function Transition(
     props: TransitionProps & {

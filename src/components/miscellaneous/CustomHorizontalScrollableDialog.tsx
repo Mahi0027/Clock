@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import styles from "@/styles/miscellaneous/Dialog.module.scss";
+import styles from "@/styles/miscellaneous/dialog.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import DigitalClock from "../home/clock/DigitalClock";
 import { setCurrentAnalogClockTheme } from "@/middleware/setting/clock/clockTheme/analog";
