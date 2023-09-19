@@ -845,7 +845,7 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
                                                     keepMounted
                                                     value={alarm.sound}
                                                     open={openSoundDialogFlag}
-                                                    onClose={
+                                                    onClose={() =>
                                                         handleCloseAlarmSoundDialog
                                                     }
                                                     rowId={alarm.id}

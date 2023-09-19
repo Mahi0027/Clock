@@ -22,7 +22,11 @@ function SetTimeZone() {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(fetchTimeZone());
+        fetchAllDifferentTimeZoneLists;
+    }, [dispatch]);
+
+    const fetchAllDifferentTimeZoneLists = useCallback(async () => {
+        await fetchTimeZone()(dispatch);
     }, [dispatch]);
 
     /* The `handleClose` function is a callback function that is used to handle the closing of the
@@ -32,7 +36,6 @@ function SetTimeZone() {
         async (newValue?: string) => {
             setOpen(false);
             if (newValue) {
-                // dispatch(setTimeZone(newValue));
                 (await setCurrentTimeZoneMiddleware(newValue))(dispatch);
             }
         },

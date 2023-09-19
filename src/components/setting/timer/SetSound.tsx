@@ -11,7 +11,6 @@ import Typography from "@mui/material/Typography";
 import CustomDialog from "@/components/miscellaneous/CustomDialog";
 import { initialStatesTypes } from "@/redux/features/setting/timer/reducer";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllTimerSounds, setTimerSound } from "@/redux";
 import { setTimerSoundMiddleware } from "@/middleware/setting/timer";
 
 type stateTypes = {
@@ -27,7 +26,7 @@ function SetSound() {
     );
     const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
-    const timerAudio = Array.from({ length: allTimerSounds.length }, useRef);
+    const timerAudio:any[] = Array.from({ length: allTimerSounds.length }, useRef);
 
     /* set timer Sound. */
     const handleClose = useCallback(
