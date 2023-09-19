@@ -29,9 +29,9 @@
 }
 
 @media (orientation: portrait) {
-    .stopwatchTime {
-        font-size: 25vw;
-    }
+    // .stopwatchTime {
+    //     font-size: 25vw;
+    // }
 
     .buttons>Button {
         width: 20vw;
@@ -49,9 +49,9 @@
 }
 
 @media (orientation: landscape) {
-    .stopwatchTime {
-        font-size: 25vh;
-    }
+    // .stopwatchTime {
+    //     font-size: 25vh;
+    // }
 
     .buttons>Button {
         width: 20vh;
