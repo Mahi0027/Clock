@@ -74,7 +74,15 @@ function StopwatchHome({ playStopwatch }: stopwatchHomePropsTypes) {
                     spacing={2}
                 >
                     <Grid item sm={4}>
-                        <Typography className={styles.stopwatchTime}>
+                        <Typography
+                            className={styles.stopwatchTime}
+                            sx={{
+                                fontSize: "25vw",
+                                "@media (orientation: landscape)": {
+                                    fontSize: "25vh",
+                                },
+                            }}
+                        >
                             <Grid container>
                                 <Grid item sm={12}>
                                     {showHour}:{showMinute}
