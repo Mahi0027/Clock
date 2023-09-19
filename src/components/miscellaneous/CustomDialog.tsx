@@ -16,7 +16,10 @@ export interface ConfirmationDialogRawProps {
     keepMounted: boolean;
     value: string;
     open: boolean;
-    onClose: () => void /* parameter type: value?: string | boolean, id?: number */;
+    onClose: (
+        newValue?: string,
+        rowId?: number
+    ) => void /* parameter type: value?: string | boolean, id?: number */;
     clockThemeFlag?: boolean;
     rowId?: number;
     soundFlag?: boolean;
@@ -57,15 +60,15 @@ function CustomDialog({
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = (event.target as HTMLInputElement).value;
         if (soundFlag) {
-            playSound((event.target as HTMLInputElement).value);
-        }
-        else{
+            if (playSound) playSound((event.target as HTMLInputElement).value);
+        } else {
             closeAndSetValue(newValue);
         }
         setValue(newValue);
     };
 
     const closeAndSetValue = (value: any, id = -1) => {
+        // onClose(value, id);
         id === -1 ? onClose(value) : onClose(value, id);
     };
     return (

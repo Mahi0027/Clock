@@ -1,4 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, {
+    ChangeEvent,
+    FormEvent,
+    useEffect,
+    useRef,
+    useState,
+} from "react";
 import TopNavbar from "@/components/TopNavbar";
 import Layout from "@/components/Layout";
 import { Button, Stack, TextField, TextareaAutosize } from "@mui/material";
@@ -7,7 +13,7 @@ import emailjs from "@emailjs/browser";
 
 const MenuItems = ["Setting", "Privacy policy", "Help"];
 function Feedback() {
-    const form = useRef();
+    const form = useRef<HTMLFormElement | null>(null);
     const { currentTheme }: { currentTheme: string } = useSelector(
         (state: any) => ({
             currentTheme: state.theme.currentTheme,
@@ -32,7 +38,9 @@ function Feedback() {
         }
     }, [currentTheme]);
 
-    const handleChange = (event: any) => {
+    const handleChange = (
+        event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    ) => {
         const { name, value } = event.target;
         setFormData({
             ...formData,
@@ -40,22 +48,28 @@ function Feedback() {
         });
     };
 
-    const sendEmail = (e: any) => {
+    const sendEmail = (e: FormEvent) => {
         e.preventDefault();
 
         const service_id = "service_xxmt0zo";
         const template_id = "template_9ir6oi9";
         const public_key = "O_QUHPMMDY1B-tPJD";
-        emailjs
-            .sendForm(service_id, template_id, form.current, public_key)
-            .then(
-                (result: any) => {
-                    setFormData({ user_name: "", user_email: "", message: "" });
-                },
-                (error: any) => {
-                    console.log(error.text);
-                }
-            );
+        if (form.current) {
+            emailjs
+                .sendForm(service_id, template_id, form.current, public_key)
+                .then(
+                    (result: any) => {
+                        setFormData({
+                            user_name: "",
+                            user_email: "",
+                            message: "",
+                        });
+                    },
+                    (error: any) => {
+                        console.log(error.text);
+                    }
+                );
+        }
     };
     return (
         <Layout>
