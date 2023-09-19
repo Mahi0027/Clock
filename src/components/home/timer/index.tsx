@@ -29,8 +29,9 @@ function TimerHome() {
     const [minute, setMinute] = useState<string>("00");
     const [second, setSecond] = useState<string>("00");
     const [userValue, setUserValue] = useState<string>("");
-    const [startTimerDisplayFlag, setStartTimerDisplayFlag] =
-        useState<boolean>(false);
+    const [startTimerDisplayFlag, setStartTimerDisplayFlag] = useState<boolean>(
+        false
+    );
 
     useEffect(() => {
         setTime();
@@ -178,6 +179,19 @@ function TimerHome() {
                                                         )
                                                     }
                                                     className={styles.button}
+                                                    sx={{
+                                                        width: "4rem",
+                                                        height: "4rem",
+                                                        fontSize: "1.5rem",
+                                                        fontWeight: "lighter",
+                                                        borderRadius: "2rem",
+                                                        "@media (orientation: landscape)": {
+                                                            width: "2.5rem",
+                                                            height: "2rem",
+                                                            borderRadius:
+                                                                "1.25rem",
+                                                        },
+                                                    }}
                                                 >
                                                     <BackspaceIcon />
                                                 </Button>
