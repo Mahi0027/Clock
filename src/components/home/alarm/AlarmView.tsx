@@ -43,6 +43,20 @@ import {
     updateAlarmTimeMiddleware,
 } from "@/middleware/home/alarm";
 
+const scheduleByDayStyle = {
+    margin: "2vh 0",
+    minWidth: "auto",
+    width: "10vw",
+    height: "10vw",
+    borderRadius: "50%",
+    "@media (orientation: landscape)": {
+        margin: "2vw 0",
+        minWidth: "auto",
+        width: "10vh",
+        height: "10vh",
+        borderRadius: "50%",
+    },
+};
 interface ExpandMoreProps extends IconButtonProps {
     expand: boolean;
 }
@@ -757,6 +771,9 @@ function AlarmView({ scrollToTop, closeScrollToTop }: AlarmViewProps) {
                                                             }
                                                             className={
                                                                 styles.scheduleByDay
+                                                            }
+                                                            sx={
+                                                                scheduleByDayStyle
                                                             }
                                                             onClick={() =>
                                                                 handleRepeatAlarm(

@@ -11,6 +11,24 @@ import { setAlarm } from "@/redux";
 import { setAlarmMiddleware } from "@/middleware/home/alarm";
 import { initialStatesTypes } from "@/database/indexedDB/home/alarm";
 
+const addAlarmButtonStyle = {
+    position: "fixed",
+    margin: "auto",
+    left: "50%",
+    maxWidth: "100px",
+    maxHeight: "100px",
+    width: "20vw",
+    height: "20vw",
+    bottom: "10vh",
+    transform: "translateX(-50%)",
+    "@media (orientation: landscape)": {
+        width: "20vh",
+        height: "20vh",
+        left: "85%",
+        top: "50%",
+        transform: "translate(-50%, -50%)",
+    },
+};
 function AlarmHome() {
     /* The code snippet is using React Redux hooks to interact with the Redux store. */
     const statesDetails = useSelector((state: any) => state.alarm);
@@ -55,6 +73,7 @@ function AlarmHome() {
                         color="secondary"
                         aria-label="add"
                         onClick={() => setOpen(true)}
+                        sx={{ addAlarmButtonStyle }}
                     >
                         <AddIcon />
                     </Fab>
