@@ -26,8 +26,8 @@ export default function Document() {
                     <meta name="x5-fullscreen" content="true" />
                     <meta name="360-fullscreen" content="true" />
 
-                    <meta name="screen-orientation" content="landscape" />
-                    <meta name="x5-orientation" content="landscape"></meta>
+                    <meta name="screen-orientation" content="portrait" />
+                    <meta name="x5-orientation" content="portrait"></meta>
                     <link
                         rel="icon"
                         type="image/png"
