@@ -33,6 +33,25 @@ import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import CustomDialog from "@/components/miscellaneous/CustomDialog";
 import { initialStatesTypes } from "@/redux/features/home/timer/reducer";
 
+const addAlarmButtonStyle = {
+    position: "fixed",
+    margin: "auto",
+    left: "50%",
+    maxWidth: "100px",
+    maxHeight: "100px",
+    width: "20vw",
+    height: "20vw",
+    bottom: "10vh",
+    transform: "translateX(-50%)",
+    "@media (orientation: landscape)": {
+        width: "20vh",
+        height: "20vh",
+        left: "85%",
+        top: "50%",
+        transform: "translate(-50%, -50%)",
+    },
+};
+
 type RunningTimerProps = {
     closeRunningTimer: () => void;
 };
@@ -148,6 +167,7 @@ function RunningTimer(props: RunningTimerProps) {
                     color="secondary"
                     aria-label="add"
                     onClick={() => props.closeRunningTimer()}
+                    sx={addAlarmButtonStyle}
                 >
                     <AddIcon />
                 </Fab>
