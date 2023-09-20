@@ -263,6 +263,7 @@ function TimerHome() {
                                                         className={
                                                             styles.button
                                                         }
+                                                        sx={buttonStyle}
                                                     >
                                                         <PlayArrowIcon />
                                                     </Button>
