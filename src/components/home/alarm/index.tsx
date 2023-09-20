@@ -73,7 +73,7 @@ function AlarmHome() {
                         color="secondary"
                         aria-label="add"
                         onClick={() => setOpen(true)}
-                        sx={{ addAlarmButtonStyle }}
+                        sx={ addAlarmButtonStyle }
                     >
                         <AddIcon />
                     </Fab>
