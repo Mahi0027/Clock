@@ -9,6 +9,43 @@ import { useDispatch, useSelector } from "react-redux";
 import { setTimer } from "@/redux";
 import ListIcon from "@mui/icons-material/List";
 
+const buttonStyle = {
+    width: "4rem",
+    height: "4rem",
+    fontSize: "1.5rem",
+    fontWeight: "lighter",
+    borderRadius: "2rem",
+    "@media (orientation: landscape)": {
+        width: "2.5rem",
+        height: "2rem",
+        borderRadius: "1.25rem",
+    },
+};
+const addAlarmButtonStyle = {
+    position: "fixed",
+    margin: "auto",
+    left: "50%",
+    maxWidth: "100px",
+    maxHeight: "100px",
+    width: "20vw",
+    height: "20vw",
+    bottom: "10vh",
+    transform: "translateX(-50%)",
+    "@media (orientation: landscape)": {
+        width: "20vh",
+        height: "20vh",
+        bottom: "10vh",
+    },
+};
+
+const otherButtonStyle = {
+    fontSize: "6vw",
+    marginTop: "2vw",
+    "@media (orientation: landscape)": {
+        fontSize: "6vh",
+        marginTop: "2vh",
+    },
+};
 type stateTypes = {
     timers: {
         id: number;
@@ -111,7 +148,16 @@ function TimerHome() {
                 {!startTimerDisplayFlag && (
                     <Grid container spacing={2} className={styles.container}>
                         <Grid item sm={6}>
-                            <Typography className={styles.timerTypography}>
+                            <Typography
+                                className={styles.timerTypography}
+                                sx={{
+                                    fontSize: "18vw",
+                                    "@media (orientation: landscape)": {
+                                        fontSize: "18vh",
+                                        marginTop: "12vh",
+                                    },
+                                }}
+                            >
                                 <span
                                     style={{
                                         opacity: userValue.length > 4 ? 1 : 0.5,
@@ -120,6 +166,7 @@ function TimerHome() {
                                     {hour}
                                     <span
                                         className={styles.timerTypographyType}
+                                        style={otherButtonStyle}
                                     >
                                         h
                                     </span>
@@ -132,6 +179,7 @@ function TimerHome() {
                                     {minute}
                                     <span
                                         className={styles.timerTypographyType}
+                                        style={otherButtonStyle}
                                     >
                                         m
                                     </span>
@@ -144,6 +192,7 @@ function TimerHome() {
                                     {second}
                                     <span
                                         className={styles.timerTypographyType}
+                                        style={otherButtonStyle}
                                     >
                                         s
                                     </span>
@@ -179,19 +228,7 @@ function TimerHome() {
                                                         )
                                                     }
                                                     className={styles.button}
-                                                    sx={{
-                                                        width: "4rem",
-                                                        height: "4rem",
-                                                        fontSize: "1.5rem",
-                                                        fontWeight: "lighter",
-                                                        borderRadius: "2rem",
-                                                        "@media (orientation: landscape)": {
-                                                            width: "2.5rem",
-                                                            height: "2rem",
-                                                            borderRadius:
-                                                                "1.25rem",
-                                                        },
-                                                    }}
+                                                    sx={buttonStyle}
                                                 >
                                                     <BackspaceIcon />
                                                 </Button>
@@ -207,6 +244,7 @@ function TimerHome() {
                                                         setUserValue("")
                                                     }
                                                     className={styles.button}
+                                                    sx={buttonStyle}
                                                 >
                                                     <DeleteOutlineIcon />
                                                 </Button>
@@ -243,6 +281,7 @@ function TimerHome() {
                                                         )
                                                     }
                                                     className={styles.button}
+                                                    sx={buttonStyle}
                                                 >
                                                     {number}
                                                 </Button>
@@ -263,6 +302,7 @@ function TimerHome() {
                         color="secondary"
                         aria-label="add"
                         onClick={() => setStartTimerDisplayFlag(true)}
+                        sx={{ addAlarmButtonStyle }}
                     >
                         <ListIcon />
                     </Fab>
