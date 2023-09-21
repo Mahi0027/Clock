@@ -7,7 +7,6 @@ import Paper from "@mui/material/Paper";
 import type { AppProps } from "next/app";
 import { useEffect, useState } from "react";
 import { Provider } from "react-redux";
-import screenfull from "screenfull";
 
 export default function App({ Component, pageProps }: AppProps) {
     const [completedInitializationFlag, setCompletedInitializationFlag] =
